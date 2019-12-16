@@ -20,11 +20,14 @@ import java.util.stream.Collectors;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import de.ipk_gatersleben.bit.bi.isa.components.OntologyTerm;
 import de.ipk_gatersleben.bit.bi.isa.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
+import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
  * Class to represent an Investigation in the ISA Context, which contains the
@@ -67,12 +70,12 @@ public class Investigation {
 	/**
 	 * A list of {@link Comment}s used to further describe the {@link Investigation}
 	 */
-	//private ArrayList<Comment> comments = new ArrayList<>();
+	private ArrayList<Comment> comments = new ArrayList<>();
 
 	/**
 	 * Connected {@link Publication}s of this {@link Investigation}
 	 */
-	//private ArrayList<Publication> publications = new ArrayList<>();
+	private ArrayList<Publication> publications = new ArrayList<>();
 
 	/**
 	 * People, who are associated with the {@link Investigation}
@@ -120,18 +123,18 @@ public class Investigation {
 	 *
 	 * @param comment comment
 	 */
-//	public void addComment(Comment comment) {
-//		this.comments.add(comment);
-//	}
+	public void addComment(Comment comment) {
+		this.comments.add(comment);
+	}
 
 	/**
 	 * Add a publication to list
 	 *
 	 * @param publication publication
 	 */
-//	public void addPublication(Publication publication) {
-//		publications.add(publication);
-//	}
+	public void addPublication(Publication publication) {
+		publications.add(publication);
+	}
 
 	/**
 	 * Add a study to study list The identifier and filename must be alone, 2
@@ -272,36 +275,36 @@ public class Investigation {
 	 *
 	 * @return comments of investigation
 	 */
-//	public ArrayList<Comment> getComments() {
-//		return comments;
-//	}
+	public ArrayList<Comment> getComments() {
+		return comments;
+	}
 
 	/**
 	 * Set comments of investigation
 	 *
 	 * @param comments comment of investigation
 	 */
-//	public void setComments(ArrayList<Comment> comments) {
-//		this.comments = comments;
-//	}
+	public void setComments(ArrayList<Comment> comments) {
+		this.comments = comments;
+	}
 
 	/**
 	 * Get Publication of investigation
 	 *
 	 * @return Publication of investigation
 	 */
-//	public ArrayList<Publication> getPublications() {
-//		return publications;
-//	}
+	public ArrayList<Publication> getPublications() {
+		return publications;
+	}
 
 	/**
 	 * Set Publication of investigation
 	 *
 	 * @param publications Publication of investigation
 	 */
-//	public void setPublications(ArrayList<Publication> publications) {
-//		this.publications = publications;
-//	}
+	public void setPublications(ArrayList<Publication> publications) {
+		this.publications = publications;
+	}
 
 	/**
 	 * Get contact of investigation
@@ -389,33 +392,126 @@ public class Investigation {
 					.collect(Collectors.joining(Symbol.TAB.toString())));
 			writer.write(Symbol.ENTER.toString());
 		
-			// INVESTIGATION
+		// INVESTIGATION
 			
-				// Identifier, Title, Description
-				writer.write((InvestigationAttribute.INVESTIGATION.toString()
-						+ InvestigationAttribute.INVESTIGATION_IDENTIFIER
-						+ (this.identifier == null ? Symbol.EMPTY : this.identifier) + Symbol.ENTER
-						+ InvestigationAttribute.INVESTIGATION_TITLE + (title == null ? Symbol.EMPTY : title)
-						+ Symbol.ENTER + InvestigationAttribute.INVESTIGATION_DESCRIPTION
-						+ (this.description == null ? Symbol.EMPTY : this.description) + Symbol.ENTER));
+			// Identifier, Title, Description
+			writer.write((InvestigationAttribute.INVESTIGATION.toString()
+					+ InvestigationAttribute.INVESTIGATION_IDENTIFIER
+					+ (this.identifier == null ? Symbol.EMPTY : this.identifier) + Symbol.ENTER
+					+ InvestigationAttribute.INVESTIGATION_TITLE + (title == null ? Symbol.EMPTY : title)
+					+ Symbol.ENTER + InvestigationAttribute.INVESTIGATION_DESCRIPTION
+					+ (this.description == null ? Symbol.EMPTY : this.description) + Symbol.ENTER));
 
-				// Submission Date
-				writer.write(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE.toString());
-				if(this.submissionDate != null)
-					writer.write(this.submissionDate.toString());
-				writer.write(Symbol.ENTER.toString());
+			// Submission Date
+			writer.write(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE.toString());
+			if(this.submissionDate != null)
+				writer.write(this.submissionDate.toString());
+			writer.write(Symbol.ENTER.toString());
 				
-				// Public Release Date
-				writer.write(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE.toString());
-				if(this.publicReleaseDate != null)
-					writer.write(this.publicReleaseDate.toString());
-				writer.write(Symbol.ENTER.toString());
-
-	    // This is how I'm going to go through all the Attributes (what he tried to do with getAllValueOfClassAttribute)
-		Map<Integer,String> map = Map.of(1, "A", 2, "B", 3, "C"); // Investigation Attribute -> Method Name.
+			// Public Release Date
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE.toString());
+			if(this.publicReleaseDate != null)
+				writer.write(this.publicReleaseDate.toString());
+			writer.write(Symbol.ENTER.toString());
 			
-		Method method = Ontology.class.getMethod("getName");
-		System.out.println();
+			// Investigation Comments
+			StringBuilder sb = new StringBuilder();
+			for (Comment c : this.comments) {
+				sb.append(InvestigationAttribute.COMMENT);
+				sb = StringUtil.putParameterInStringBuilder(sb, c.getType());
+				sb.append(c.getContent()).append(Symbol.ENTER);
+			}
+			writer.write(sb.toString());
+			
+		// INVESTIGATION PUBLICATIONS
+			
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString());
+		
+			// Pubmed ID	
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBMED_ID.toString());
+			writer.write(this.publications.stream()
+					.map(obj -> { return obj.getPubmedID() == null ? Symbol.EMPTY.toString() : obj.getPubmedID().toString(); })
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+			
+			// Pubmed DOI	
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI.toString());
+			writer.write(this.publications.stream()
+					.map(obj -> { return obj.getDOI() == null ? Symbol.EMPTY.toString() : obj.getDOI().toString(); })
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+			
+			// Author List	
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST.toString());
+			writer.write(this.publications.stream()
+					.map(obj -> { 
+						return obj.getAuthorList().stream()
+							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
+							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
+						})
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+			
+			// Publication Title	
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE.toString());
+			writer.write(this.publications.stream()
+					.map(obj -> { return obj.getTitle() == null ? Symbol.EMPTY.toString() : obj.getTitle().toString(); })
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+			
+			// Publication Status	
+			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString());
+			writer.write(this.publications.stream()
+					.map(obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getName(); })
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+			
+			// Publication Status Accession Number
+			writer.write(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()));
+			writer.write(this.publications.stream()
+					.map(obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccessionNumber(); })
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+			
+			// Publication Status Source REF
+			writer.write(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()));
+			writer.write(this.publications.stream()
+					.map(obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); })
+					.collect(Collectors.joining(Symbol.TAB.toString())));
+			writer.write(Symbol.ENTER.toString());
+		
+		
+//		// Map every Publication attribute to the method needed to retrieve it
+//		Map<InvestigationAttribute,String> publication_attributes = Map.of(
+//			InvestigationAttribute.INVESTIGATION_PUBMED_ID, "getPubmedID",
+//			InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, "getDOI",
+//			InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, "getAuthorList",
+//			InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, "getTitle"
+//		);
+//		
+//		for(InvestigationAttribute attribute :publication_attributes.keySet()) {
+//			writer.write(attribute.toString());
+//			// Get the method needed to retrieve the attribute
+//			Method method = Publication.class.getMethod(publication_attributes.get(attribute));
+//			// Like above, loop through all publications, get the attribute, and join them with tabs
+//			writer.write(this.publications.stream()
+//					.map(obj -> { try {
+//						return method.invoke(obj) == null ? Symbol.EMPTY.toString() : method.invoke(obj).toString();
+//					// Now Java wants some error handling which it seems we're not allowed to put anywhere else... 
+//					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//						return "";
+//					} })
+//					.collect(Collectors.joining(Symbol.TAB.toString())));
+//			
+//			System.out.println(attribute.toString());
+//			System.out.println();
+//			writer.write(Symbol.ENTER.toString());
+//		}
+		
 		
 		writer.close();
 		return true;
