@@ -24,7 +24,17 @@ public class Playground {
 		investigation.addComment(new Comment("Another Comment", "Hello"));
 		
 		Contact karlheinz = new Contact("Schmidt", "Karl-Heinz", "khschmitt@wunderland.de", "Schmidt GmbH", "Schmidtstraße 1, 543423 Schmidttown");
+		karlheinz.setFax("FAxi1223");
 		Contact ursel = new Contact("Wurst", "Ursel", null, "Wurstwaren Ursel", null);
+		OntologyTerm role1 = new OntologyTerm();
+		role1.setName("Terminator");
+		role1.setSourceREF(ontology2);
+		role1.setTermAccessionNumber("ACredIT#1321");
+		ursel.setRolesOntology(role1);
+		
+		OntologyTerm role2 = new OntologyTerm();
+		role2.setName("Secret Role");
+		karlheinz.setRolesOntology(role2);
 		
 		Publication paper1 = new Publication();
 		paper1.addAuthor(karlheinz);
@@ -45,6 +55,9 @@ public class Playground {
 		paper1Status.setName("Published");
 		paper1Status.setTermAccessionNumber("Term Accession alala");
 		paper1.setStatusOntology(paper1Status);
+		
+		investigation.addContact(ursel);
+		investigation.addContact(karlheinz);
 		
 		investigation.writeToFile("test.txt");
 	}

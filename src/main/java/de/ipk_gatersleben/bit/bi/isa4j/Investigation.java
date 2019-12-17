@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import de.ipk_gatersleben.bit.bi.isa.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
@@ -82,7 +83,7 @@ public class Investigation {
 	/**
 	 * People, who are associated with the {@link Investigation}
 	 */
-	//private ArrayList<Contact> contacts = new ArrayList<>();
+	private ArrayList<Contact> contacts = new ArrayList<>();
 
 	/**
 	 * Studies of investigations {@link Study}
@@ -115,10 +116,10 @@ public class Investigation {
 	 *
 	 * @param contact the contact of a people,which will be add
 	 */
-//	public void addContact(Contact contact) {
-//		contacts.add(contact);
-//
-//	}
+	public void addContact(Contact contact) {
+		contacts.add(contact);
+
+	}
 
 	/**
 	 * Add a comment to list
@@ -313,19 +314,19 @@ public class Investigation {
 	 *
 	 * @return contact of investigation
 	 */
-//	public ArrayList<Contact> getContacts() {
-//		return contacts;
-//	}
+	public ArrayList<Contact> getContacts() {
+		return contacts;
+	}
 
 	/**
 	 * Set contact of investigation
 	 *
 	 * @param contacts contact of investigation
 	 */
-//	public void setContacts(ArrayList<Contact> contacts) {
-//
-//		this.contacts = contacts;
-//	}
+	public void setContacts(ArrayList<Contact> contacts) {
+
+		this.contacts = contacts;
+	}
 
 	/**
 	 * Get studies of investigation
@@ -391,8 +392,7 @@ public class Investigation {
 		
 		// ONTOLOGY SOURCE REFERENCE
 			writer.write(InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString());
-			
-			
+				
 			// Build a HashMap with one entry for each line. The key is the line name and the value is the
 			// function used to extract the corresponding value from an Ontology.
 			LinkedHashMap<InvestigationAttribute,Function<Ontology, String>> ontology_attributes = new LinkedHashMap<InvestigationAttribute,Function<Ontology, String>>();
@@ -407,9 +407,9 @@ public class Investigation {
 			for(InvestigationAttribute lineName : ontology_attributes.keySet()) {
 				writer.write(lineFromList(lineName, this.ontologies, ontology_attributes.get(lineName)));
 			}
-		
-		// INVESTIGATION
 			
+		
+		// INVESTIGATION	
 			// Identifier, Title, Description
 			writer.write((InvestigationAttribute.INVESTIGATION.toString()
 					+ InvestigationAttribute.INVESTIGATION_IDENTIFIER
@@ -439,8 +439,8 @@ public class Investigation {
 			}
 			writer.write(sb.toString());
 			
-		// INVESTIGATION PUBLICATIONS
 			
+		// INVESTIGATION PUBLICATIONS
 			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString());
 			
 			LinkedHashMap<InvestigationAttribute,Function<Publication, String>> publication_attributes = new LinkedHashMap<InvestigationAttribute,Function<Publication, String>>();
@@ -477,7 +477,42 @@ public class Investigation {
 					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.publications,
 					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
 			));
-		
+			
+			
+		// INVESTIGATION CONTACTS
+			writer.write(InvestigationAttribute.INVESTIGATION_CONTACTS.toString());
+			LinkedHashMap<InvestigationAttribute,Function<Contact, String>> contact_attributes = new LinkedHashMap<InvestigationAttribute,Function<Contact, String>>();
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, (o) -> o.getLastName());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, (o) -> o.getFirstName());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, (o) -> o.getMidInitials());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_EMAIL, (o) -> o.getEmail());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_PHONE, (o) -> o.getPhone());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_FAX, (o) -> o.getFax());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ADDRESS, (o) -> o.getAddress());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, (o) -> o.getAffiliation());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, (o) -> o.getRolesOntology().getName());
+	
+			for(InvestigationAttribute lineName : contact_attributes.keySet()) {
+				writer.write(lineFromList(lineName, this.contacts, contact_attributes.get(lineName)));
+			}
+			
+			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
+					obj -> { return obj.getRolesOntology() == null ? Symbol.EMPTY.toString() : obj.getRolesOntology().getTermAccessionNumber(); }
+			));
+			
+			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
+					obj -> {
+						OntologyTerm role = obj.getRolesOntology();
+						// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
+						if(role == null || role.getSourceREF() == null )
+							return Symbol.EMPTY.toString();
+						// Otherwise return the Ontology's name
+						return obj.getRolesOntology().getSourceREF().getName(); 
+					}
+			));
+			
 		writer.close();
 		return true;
 	}
