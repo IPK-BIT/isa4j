@@ -349,6 +349,37 @@ public class Investigation {
 //		}
 //	}
 	
+	private static String formatComments(List<List<Comment>> commentBuckets) {
+		StringBuilder sb = new StringBuilder();
+		// Get a List of all Comment types present in any of the Comment Buckets (Contact, Study..., anything with comments)
+		List<String> commentLevels = commentBuckets.stream()
+				.flatMap(bucket -> bucket.stream()) // flatten
+				.map(comment -> comment.getType())
+				.distinct() // remove duplicates
+				.collect(Collectors.toList());
+		// Now loop through all comment types and create a line for each
+		for(String commentType : commentLevels) {
+			// @ TODO Use the Investigation Attribute Comment thingy instead of the plain string
+			sb.append("Comment[" + commentType + "]" + Symbol.TAB.toString());
+			// Now loop through all the buckets and see if that comment type is present
+			String commentLine = commentBuckets.stream()
+				// For each bucket -> go through each comment
+				.map(bucket -> bucket.stream()
+					// Filter out only comments of the current type
+					.filter(comment -> comment.getType().equals(commentType))
+					// Get the contents of these comments
+					.map(comment -> comment.getContent())
+					// Join them all together by semicolons (it could be the case that a person has two comments with the same type)
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+				// Join all the buckets by TABs
+				.collect(Collectors.joining(Symbol.TAB.toString()));
+			sb.append(commentLine);
+			sb.append(Symbol.ENTER.toString());
+		}
+		System.out.println(commentLevels);
+		return sb.toString();
+	}
+	
 	/**
 	 * This handy function creates a line of the investigation file from a list of Objects (Ontologies, Publications,
 	 * Contacts etc.) and a function to execute on each element of that list (each Ontology, Publication etc.) in order
@@ -512,6 +543,13 @@ public class Investigation {
 						return obj.getRolesOntology().getSourceREF().getName(); 
 					}
 			));
+		
+		// Publication Contact Comments
+		writer.write(formatComments(this.contacts.stream()
+				.map(o -> o.getComments())
+				.collect(Collectors.toList()))
+		);
+		
 			
 		writer.close();
 		return true;

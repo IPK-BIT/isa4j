@@ -31,10 +31,14 @@ public class Playground {
 		role1.setSourceREF(ontology2);
 		role1.setTermAccessionNumber("ACredIT#1321");
 		ursel.setRolesOntology(role1);
+		ursel.addComment(new Comment("Person REF", "urselRef"));
+		ursel.addComment(new Comment("Ursel says", "Bye bye World"));
 		
 		OntologyTerm role2 = new OntologyTerm();
 		role2.setName("Secret Role");
 		karlheinz.setRolesOntology(role2);
+		karlheinz.addComment(new Comment("Person REF", "karlheinzREf"));
+		karlheinz.addComment(new Comment("Karlheinz says", "Hello World!"));
 		
 		Publication paper1 = new Publication();
 		paper1.addAuthor(karlheinz);
