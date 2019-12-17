@@ -14,8 +14,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -345,6 +347,34 @@ public class Investigation {
 //			study.setInvestigation(this);
 //		}
 //	}
+	
+	/**
+	 * This handy function creates a line of the investigation file from a list of Objects (Ontologies, Publications,
+	 * Contacts etc.) and a function to execute on each element of that list (each Ontology, Publication etc.) in order
+	 * to extract the content from that object that should go into the line. So, for example, if you want to create a line
+	 * containing all the names of the ontologies, your ontologies would be the list that's passed, and the function to get the
+	 * name of each ontology would be { ontology -> ontology.getName(); }
+	 * That function is then executed for each ontology in the list and the results are joined with TABs (one column for each ontology).
+	 * In the beginning, the name of the line is printed and finally the line is finished with an ENTER.
+	 * @param <C> Type of Line Name (InvestigationAttribute, String...)
+	 * @param <T> Type of objects to iterate over (Ontology, Contact, Publication...)
+	 * @param lineName Name of the line
+	 * @param list List of objects to iterate over
+	 * @param lambda Function to execute on each object in the list
+	 * @return The complete line
+	 */
+	private static <C, T> String lineFromList(C lineName, List<T> list, Function<T, String> lambda) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(lineName.toString()); // Append the Line name
+		sb.append(list.stream()
+				.map(obj -> { // on each object in the list:
+					String result = lambda.apply(obj); // execute the function that was passed
+					return result == null ? Symbol.EMPTY.toString() : result; // if the result was null, replace with an empty string
+				})
+				.collect(Collectors.joining(Symbol.TAB.toString()))); // join all the strings together by TABs
+		sb.append(Symbol.ENTER.toString()); // Close the line with ENTER
+		return sb.toString();
+	}
 
 	/**
 	 * Collection of units, those by this investigation are used
@@ -360,37 +390,23 @@ public class Investigation {
 
 		
 		// ONTOLOGY SOURCE REFERENCE
-		writer.write(InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString());
-		
-			// Term Source Name
-			writer.write(InvestigationAttribute.TERM_SOURCE_NAME.toString());
-			writer.write(ontologies.stream()
-					.map(obj -> obj.getName())
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString());
 			
-			// Term Source File	
-			writer.write(InvestigationAttribute.TERM_SOURCE_FILE.toString());
-			writer.write(ontologies.stream()
-					// In the case of a ternary operator we have to wrap it in a function return because otherwise
-					// Eclipse complains that it can't infer the type... Annoying Java Things (TM)
-					.map(obj -> { return obj.getURL() == null ? Symbol.EMPTY.toString() : obj.getURL().toString(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
 			
-			// Term Source Version
-			writer.write(InvestigationAttribute.TERM_SOURCE_VERSION.toString());
-			writer.write(ontologies.stream()
-					.map(obj -> { return obj.getVersion() == null ? Symbol.EMPTY.toString() : obj.getVersion().toString(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
-			
-			// Term Source Description
-			writer.write(InvestigationAttribute.TERM_SOURCE_DESCRIPTION.toString());
-			writer.write(ontologies.stream()
-					.map(obj -> { return obj.getDescription() == null ? Symbol.EMPTY.toString() : obj.getDescription().toString(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
+			// Build a HashMap with one entry for each line. The key is the line name and the value is the
+			// function used to extract the corresponding value from an Ontology.
+			LinkedHashMap<InvestigationAttribute,Function<Ontology, String>> ontology_attributes = new LinkedHashMap<InvestigationAttribute,Function<Ontology, String>>();
+			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_NAME, (o) -> o.getName());
+			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_FILE, (o) -> o.getURL().toString());
+			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_VERSION, (o) -> o.getVersion());
+			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_DESCRIPTION, (o) -> o.getDescription());
+	
+			// Use our lineFromList function on each of the lines defined above; the line name is the key of the 
+			// HashMap, the list are the ontologies, and the method to extract the value from the Ontology is
+			// the value of the HashMap.
+			for(InvestigationAttribute lineName : ontology_attributes.keySet()) {
+				writer.write(lineFromList(lineName, this.ontologies, ontology_attributes.get(lineName)));
+			}
 		
 		// INVESTIGATION
 			
@@ -426,92 +442,41 @@ public class Investigation {
 		// INVESTIGATION PUBLICATIONS
 			
 			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString());
-		
-			// Pubmed ID	
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBMED_ID.toString());
-			writer.write(this.publications.stream()
-					.map(obj -> { return obj.getPubmedID() == null ? Symbol.EMPTY.toString() : obj.getPubmedID().toString(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
 			
-			// Pubmed DOI	
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI.toString());
-			writer.write(this.publications.stream()
-					.map(obj -> { return obj.getDOI() == null ? Symbol.EMPTY.toString() : obj.getDOI().toString(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
+			LinkedHashMap<InvestigationAttribute,Function<Publication, String>> publication_attributes = new LinkedHashMap<InvestigationAttribute,Function<Publication, String>>();
+			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBMED_ID, (o) -> o.getPubmedID());
+			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, (o) -> o.getDOI());
+			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, 
+					// This method is a bit more complicated than the previous ones because we have to combine
+					// multiple fields in a certain way, but in principle it still works like before.
+					(o) -> {
+						return o.getAuthorList().stream()
+								.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
+								.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
+					});
+			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, (o) -> o.getTitle());
+			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, 
+					(o) -> {
+						return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getName();
+					});
+	
+			for(InvestigationAttribute lineName : publication_attributes.keySet()) {
+				writer.write(lineFromList(lineName, this.publications, publication_attributes.get(lineName)));
+			}
 			
-			// Author List	
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST.toString());
-			writer.write(this.publications.stream()
-					.map(obj -> { 
-						return obj.getAuthorList().stream()
-							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
-							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-						})
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
-			
-			// Publication Title	
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE.toString());
-			writer.write(this.publications.stream()
-					.map(obj -> { return obj.getTitle() == null ? Symbol.EMPTY.toString() : obj.getTitle().toString(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
-			
-			// Publication Status	
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString());
-			writer.write(this.publications.stream()
-					.map(obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getName(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
-			
+			// For the next ones we can't put them into the above HashMap because the key here is a String and not a InvestigationAttribute.
+			// AFAIK there is no method of joining InvestigationAttributes without converting them into a String.
 			// Publication Status Accession Number
-			writer.write(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()));
-			writer.write(this.publications.stream()
-					.map(obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccessionNumber(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
+			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.publications,
+					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccessionNumber(); }
+			));
 			
 			// Publication Status Source REF
-			writer.write(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()));
-			writer.write(this.publications.stream()
-					.map(obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); })
-					.collect(Collectors.joining(Symbol.TAB.toString())));
-			writer.write(Symbol.ENTER.toString());
-		
-		
-//		// Map every Publication attribute to the method needed to retrieve it
-//		Map<InvestigationAttribute,String> publication_attributes = Map.of(
-//			InvestigationAttribute.INVESTIGATION_PUBMED_ID, "getPubmedID",
-//			InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, "getDOI",
-//			InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, "getAuthorList",
-//			InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, "getTitle"
-//		);
-//		
-//		for(InvestigationAttribute attribute :publication_attributes.keySet()) {
-//			writer.write(attribute.toString());
-//			// Get the method needed to retrieve the attribute
-//			Method method = Publication.class.getMethod(publication_attributes.get(attribute));
-//			// Like above, loop through all publications, get the attribute, and join them with tabs
-//			writer.write(this.publications.stream()
-//					.map(obj -> { try {
-//						return method.invoke(obj) == null ? Symbol.EMPTY.toString() : method.invoke(obj).toString();
-//					// Now Java wants some error handling which it seems we're not allowed to put anywhere else... 
-//					} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//						return "";
-//					} })
-//					.collect(Collectors.joining(Symbol.TAB.toString())));
-//			
-//			System.out.println(attribute.toString());
-//			System.out.println();
-//			writer.write(Symbol.ENTER.toString());
-//		}
-		
+			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.publications,
+					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
+			));
 		
 		writer.close();
 		return true;

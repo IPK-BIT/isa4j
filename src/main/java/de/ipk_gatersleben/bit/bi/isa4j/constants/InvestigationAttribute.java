@@ -87,7 +87,6 @@ public enum InvestigationAttribute {
 	STUDY_PERSON_ROLES("Study Person Roles" + Symbol.TAB);
 
 	
-	// @TODO do we need this?
 	private String value;
 
 	private InvestigationAttribute(String val) {
