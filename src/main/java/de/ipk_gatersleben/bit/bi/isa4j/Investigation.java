@@ -8,6 +8,8 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j;
 
+import static de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil.mergeAttributes;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,16 +18,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 import de.ipk_gatersleben.bit.bi.isa.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
+import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
@@ -145,25 +145,25 @@ public class Investigation {
 	 *
 	 * @param study the study of investigation, which will be add
 	 */
-//	public boolean addStudy(Study study) {
-//		for (Study studyInInvestigation : studies) {
-//			if (study.getIdentifier().equals(studyInInvestigation.getIdentifier())) {
+	public boolean addStudy(Study study) {
+		for (Study studyInInvestigation : studies) {
+			if (study.getIdentifier().equals(studyInInvestigation.getIdentifier())) {
 //				LoggerUtil.logger.error("The investigation " + identifier + " can't add the study. "
 //						+ "There is a study in the investigation, that its identifier is " + study.getIdentifier()
 //						+ ", please change that identifier!");
-//				return false;
-//			}
-//			if (study.getFileName().equals(studyInInvestigation.getFileName())) {
+				return false;
+			}
+			if (study.getFileName().equals(studyInInvestigation.getFileName())) {
 //				LoggerUtil.logger.error("The investigation " + identifier + " can't add the study. "
 //						+ "There is a study in the investigation, that its fileName is " + study.getFileName()
 //						+ ", please change that identifier!");
-//				return false;
-//			}
-//		}
+				return false;
+			}
+		}
 //		study.setInvestigation(this);
-//		this.studies.add(study);
-//		return true;
-//	}
+		this.studies.add(study);
+		return true;
+	}
 
 	/**
 	 * Aet id of invesigation
@@ -342,12 +342,12 @@ public class Investigation {
 	 *
 	 * @param studies studies of investigation
 	 */
-//	public void setStudies(ArrayList<Study> studies) {
-//		this.studies = studies;
-//		for (Study study : studies) {
+	public void setStudies(ArrayList<Study> studies) {
+		this.studies = studies;
+		for (Study study : studies) {
 //			study.setInvestigation(this);
-//		}
-//	}
+		}
+	}
 	
 	private static String formatComments(List<List<Comment>> commentBuckets) {
 		StringBuilder sb = new StringBuilder();
@@ -416,7 +416,7 @@ public class Investigation {
 	 */
 //	public static final Map<String, OntologyTerm> unitMap = new ConcurrentHashMap<>();
 	
-	public boolean writeToFile(String filepath) throws IOException, NoSuchMethodException, SecurityException {
+	public boolean writeToFile(String filepath) throws IOException {
 		OutputStream os = new FileOutputStream(filepath);
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 
@@ -465,6 +465,7 @@ public class Investigation {
 			StringBuilder sb = new StringBuilder();
 			for (Comment c : this.comments) {
 				sb.append(InvestigationAttribute.COMMENT);
+				// @ TODO I think this is a problem because what if the Comment value contains a ?
 				sb = StringUtil.putParameterInStringBuilder(sb, c.getType());
 				sb.append(c.getContent()).append(Symbol.ENTER);
 			}
@@ -549,6 +550,65 @@ public class Investigation {
 				.map(o -> o.getComments())
 				.collect(Collectors.toList()))
 		);
+		
+		// STUDIES
+		for(Study study: this.studies) {
+			writer.write(InvestigationAttribute.STUDY.toString());
+			writer.write(InvestigationAttribute.STUDY_IDENTIFIER.toString()
+					+ (study.getIdentifier() == null ? Symbol.EMPTY.toString() : study.getIdentifier()) + Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.STUDY_FILE_NAME.toString()
+					+ (study.getFileName() == null ? Symbol.EMPTY.toString() : study.getFileName()) + Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.STUDY_TITLE.toString()
+					+ (study.getTitle() == null ? Symbol.EMPTY.toString() : study.getTitle()) + Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.STUDY_DESCRIPTION.toString()
+					+ (study.getDescription() == null ? Symbol.EMPTY.toString() : study.getDescription()) + Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.STUDY_SUBMISSION_DATE.toString()
+					+ (study.getSubmissionDate() == null ? Symbol.EMPTY.toString() : study.getSubmissionDate()) + Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE.toString()
+					+ (study.getPublicReleaseDate() == null ? Symbol.EMPTY.toString() : study.getPublicReleaseDate()) + Symbol.ENTER.toString());
+			
+			// Study Comments
+			sb = new StringBuilder();
+			for (Comment c : study.getComments()) {
+				sb.append(InvestigationAttribute.COMMENT);
+				// @ TODO I think this is a problem because what if the Comment value contains a ?
+				sb = StringUtil.putParameterInStringBuilder(sb, c.getType());
+				sb.append(c.getContent()).append(Symbol.ENTER);
+			}
+			writer.write(sb.toString());
+			
+			// STUDY DESIGN DESCRIPTORS
+			writer.write(InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString());
+			
+			writer.write(lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getType()));
+			
+			writer.write(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
+					study.getDesignDescriptors(),
+					descriptor -> {
+						if(descriptor.getTypeOntologyTerm() == null || descriptor.getTypeOntologyTerm().getTermAccessionNumber() == null)
+							return Symbol.EMPTY.toString();
+						else
+							return descriptor.getTypeOntologyTerm().getTermAccessionNumber();
+					}
+					));
+			
+			writer.write(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
+					study.getDesignDescriptors(),
+					descriptor -> {
+						if(descriptor.getTypeOntologyTerm() == null || descriptor.getTypeOntologyTerm().getSourceREF() == null)
+							return Symbol.EMPTY.toString();
+						else
+							return descriptor.getTypeOntologyTerm().getSourceREF().getName();
+					}
+					));
+			
+			// Publication Contact Comments
+			writer.write(formatComments(study.getDesignDescriptors().stream()
+					.map(o -> o.getComments())
+					.collect(Collectors.toList()))
+			);
+
+		}
 		
 			
 		writer.close();

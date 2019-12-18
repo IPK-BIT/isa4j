@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.net.URL;
 
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
+import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
+import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
@@ -62,6 +64,21 @@ public class Playground {
 		
 		investigation.addContact(ursel);
 		investigation.addContact(karlheinz);
+		
+		Study study1 = new Study("Study #1", "s_study1.txt");
+		Study study2 = new Study("Study #2", "s_study2.txt");
+		
+		study1.setTitle("A super great Study");
+		study2.setDescription("This one is even greater");
+		study1.addComment(new Comment("Comment1", "Value"));
+		study1.addComment(new Comment("Comment 2", "value"));
+		
+		study2.addDesignDescriptor(new DesignDescriptor("Simple"));
+		study2.addDesignDescriptor(new DesignDescriptor(paper1Status));
+		
+		investigation.addStudy(study1);
+		investigation.addStudy(study2);
+		
 		
 		investigation.writeToFile("test.txt");
 	}
