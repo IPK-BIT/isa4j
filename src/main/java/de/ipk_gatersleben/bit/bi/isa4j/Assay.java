@@ -16,8 +16,10 @@ import de.ipk_gatersleben.bit.bi.isa.io.ThreadPool;
 import de.ipk_gatersleben.bit.bi.isa.io.Writer;
 import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
-import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
+import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -58,12 +60,12 @@ public class Assay {
 	/**
 	 * The measurement being observed in this assay
 	 */
-	private OntologyTerm measurementOntology;
+	private OntologyAnnotation measurementOntology;
 
 	/**
 	 * The technology being employed to observe this measurement
 	 */
-	private OntologyTerm technologyOntology;
+	private OntologyAnnotation technologyOntology;
 
 	/**
 	 * The technology platform used
@@ -149,7 +151,7 @@ public class Assay {
 	 *
 	 * @return type of measurement
 	 */
-	public OntologyTerm getMeasurementOntology() {
+	public OntologyAnnotation getMeasurementOntology() {
 		return measurementOntology;
 	}
 
@@ -176,7 +178,7 @@ public class Assay {
 	 *
 	 * @return type of technology
 	 */
-	public OntologyTerm getTechnologyOntology() {
+	public OntologyAnnotation getTechnologyOntology() {
 		return technologyOntology;
 	}
 
@@ -212,7 +214,7 @@ public class Assay {
 	 *
 	 * @param measurementOntology type of measurement
 	 */
-	public void setMeasurementOntology(OntologyTerm measurementOntology) {
+	public void setMeasurementOntology(OntologyAnnotation measurementOntology) {
 		this.measurementOntology = measurementOntology;
 	}
 
@@ -234,7 +236,7 @@ public class Assay {
 	 *
 	 * @param technologyOntology type of technology
 	 */
-	public void setTechnologyOntology(OntologyTerm technologyOntology) {
+	public void setTechnologyOntology(OntologyAnnotation technologyOntology) {
 		this.technologyOntology = technologyOntology;
 	}
 

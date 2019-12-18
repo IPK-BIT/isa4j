@@ -17,9 +17,12 @@ import de.ipk_gatersleben.bit.bi.isa.io.ThreadPool;
 import de.ipk_gatersleben.bit.bi.isa.io.Writer;
 import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 
 import java.io.*;
@@ -34,7 +37,7 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author liufe, arendd
  */
-public class Study {
+public class Study extends Commentable {
 
 	/**
 	 * A user defined identifier for the study.
@@ -65,11 +68,6 @@ public class Study {
 	 * The date the study was released publicly.
 	 */
 	private Date publicReleaseDate;
-
-	/**
-	 * List of {@link Comment}s of this {@link Study}
-	 */
-	private ArrayList<Comment> comments = new ArrayList<>();
 
 	/**
 	 * List of {@link DesignDescriptor}s to describe the {@link Study}
@@ -174,28 +172,6 @@ public class Study {
 	}
 
 	/**
-	 * Add new {@link Comment} to the list
-	 *
-	 * @param comment new {@link Comment} to add
-	 */
-	public boolean addComment(Comment comment) {
-		if (comment == null) {
-//			LoggerUtil.logger.error("Can not add an empty Comment");
-			return false;
-		}
-		if (comments == null) {
-			comments = new ArrayList<>(2);
-		}
-		if (!comments.contains(comment)) {
-			this.comments.add(comment);
-			return true;
-		} else {
-//			LoggerUtil.logger.error("The Study contains already a Comment '" + comment.getType() + "'");
-			return false;
-		}
-	}
-
-	/**
 	 * Add new {@link Contact} to the list
 	 *
 	 * @param contact new {@link Contact} to add
@@ -263,15 +239,6 @@ public class Study {
 	 */
 	public List<Assay> getAssays() {
 		return assays;
-	}
-
-	/**
-	 * Get comments of study
-	 *
-	 * @return comments of study
-	 */
-	public ArrayList<Comment> getComments() {
-		return comments;
 	}
 
 	/**
@@ -383,15 +350,6 @@ public class Study {
 		for (Assay assay : assays) {
 			assay.setStudy(this);
 		}
-	}
-
-	/**
-	 * Set comments of study
-	 *
-	 * @param comments comments of study
-	 */
-	public void setComments(ArrayList<Comment> comments) {
-		this.comments = comments;
 	}
 
 	/**

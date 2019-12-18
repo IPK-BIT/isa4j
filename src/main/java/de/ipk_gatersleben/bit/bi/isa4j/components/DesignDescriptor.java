@@ -26,7 +26,7 @@ public class DesignDescriptor {
     /**
      * ontology term of type
      */
-    private OntologyTerm typeOntologyTerm;
+    private OntologyAnnotation typeOntologyTerm;
 
     /**
      * Comments of design
@@ -53,11 +53,11 @@ public class DesignDescriptor {
     /**
      * Constructor, the design has ontologyTerm
      *
-     * @param ontologyTerm ontology term of design
+     * @param ontologyAnnotation ontology term of design
      */
-    public DesignDescriptor(OntologyTerm ontologyTerm) {
-        this.typeOntologyTerm = ontologyTerm;
-        this.type = ontologyTerm.getName();
+    public DesignDescriptor(OntologyAnnotation ontologyAnnotation) {
+        this.typeOntologyTerm = ontologyAnnotation;
+        this.type = ontologyAnnotation.getName();
     }
 
     /**
@@ -105,7 +105,7 @@ public class DesignDescriptor {
      *
      * @return ontology Term of type
      */
-    public OntologyTerm getTypeOntologyTerm() {
+    public OntologyAnnotation getTypeOntologyTerm() {
         return typeOntologyTerm;
     }
 
@@ -114,7 +114,7 @@ public class DesignDescriptor {
      *
      * @param typeOntologyTerm ontology Term of type
      */
-    public void setTypeOntologyTerm(OntologyTerm typeOntologyTerm) {
+    public void setTypeOntologyTerm(OntologyAnnotation typeOntologyTerm) {
         this.typeOntologyTerm = typeOntologyTerm;
     }
 

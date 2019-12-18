@@ -6,15 +6,16 @@ import java.net.URL;
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
-import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
+import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 
 public class Playground {
 
-	public static void main(String[] args) throws IOException, NoSuchMethodException, SecurityException {
+	public static void main(String[] args) throws IOException, NoSuchMethodException, SecurityException {		
 		Investigation investigation = new Investigation("investigation_id");
 		
 		Ontology ontology1 = new Ontology("UO", new URL("http://data.bioontology.org/ontologies/UO"), null, "Description of lala");
@@ -28,7 +29,7 @@ public class Playground {
 		Contact karlheinz = new Contact("Schmidt", "Karl-Heinz", "khschmitt@wunderland.de", "Schmidt GmbH", "Schmidtstraße 1, 543423 Schmidttown");
 		karlheinz.setFax("FAxi1223");
 		Contact ursel = new Contact("Wurst", "Ursel", null, "Wurstwaren Ursel", null);
-		OntologyTerm role1 = new OntologyTerm();
+		OntologyAnnotation role1 = new OntologyAnnotation();
 		role1.setName("Terminator");
 		role1.setSourceREF(ontology2);
 		role1.setTermAccessionNumber("ACredIT#1321");
@@ -36,7 +37,7 @@ public class Playground {
 		ursel.addComment(new Comment("Person REF", "urselRef"));
 		ursel.addComment(new Comment("Ursel says", "Bye bye World"));
 		
-		OntologyTerm role2 = new OntologyTerm();
+		OntologyAnnotation role2 = new OntologyAnnotation();
 		role2.setName("Secret Role");
 		karlheinz.setRolesOntology(role2);
 		karlheinz.addComment(new Comment("Person REF", "karlheinzREf"));
@@ -56,7 +57,7 @@ public class Playground {
 		investigation.addPublication(paper1);
 		investigation.addPublication(paper2);
 		
-		OntologyTerm paper1Status = new OntologyTerm();
+		OntologyAnnotation paper1Status = new OntologyAnnotation();
 		paper1Status.setSourceREF(ontology1);
 		paper1Status.setName("Published");
 		paper1Status.setTermAccessionNumber("Term Accession alala");

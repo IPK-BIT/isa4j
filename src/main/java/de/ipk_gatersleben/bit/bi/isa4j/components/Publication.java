@@ -20,7 +20,7 @@ import java.util.List;
  *
  * @author liufe, arendd
  */
-public class Publication {
+public class Publication extends Commentable {
 
     /**
      * Mandatory attributes for the {@link Publication} entries in the
@@ -53,7 +53,7 @@ public class Publication {
     /**
      * The status of this {@link Publication}, e.g. Published, Submitted, etc.
      */
-    private OntologyTerm statusOntology;
+    private OntologyAnnotation statusOntology;
 
     /**
      * Add a {@link Contact} to the list of authors of the {@link Publication}
@@ -99,7 +99,7 @@ public class Publication {
      *
      * @return status of the {@link Publication}
      */
-    public OntologyTerm getStatusOntology() {
+    public OntologyAnnotation getStatusOntology() {
         return this.statusOntology;
     }
 
@@ -144,7 +144,7 @@ public class Publication {
      *
      * @param statusOntology status of publication
      */
-    public void setStatusOntology(OntologyTerm statusOntology) {
+    public void setStatusOntology(OntologyAnnotation statusOntology) {
         this.statusOntology = statusOntology;
     }
 

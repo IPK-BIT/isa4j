@@ -24,10 +24,11 @@ import java.util.stream.Collectors;
 import de.ipk_gatersleben.bit.bi.isa.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
-import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyTerm;
+import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
@@ -38,7 +39,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
  *
  * @author liufe, arendd
  */
-public class Investigation {
+public class Investigation extends Commentable {
 
 	/**
 	 * The defined identifier for the {@link Investigation}.
@@ -69,11 +70,6 @@ public class Investigation {
 	 * The date the {@link Investigation} was released.
 	 */
 	private Date publicReleaseDate;
-
-	/**
-	 * A list of {@link Comment}s used to further describe the {@link Investigation}
-	 */
-	private ArrayList<Comment> comments = new ArrayList<>();
 
 	/**
 	 * Connected {@link Publication}s of this {@link Investigation}
@@ -119,15 +115,6 @@ public class Investigation {
 	public void addContact(Contact contact) {
 		contacts.add(contact);
 
-	}
-
-	/**
-	 * Add a comment to list
-	 *
-	 * @param comment comment
-	 */
-	public void addComment(Comment comment) {
-		this.comments.add(comment);
 	}
 
 	/**
@@ -195,7 +182,7 @@ public class Investigation {
 	/**
 	 * Set linked {@link Ontology}
 	 *
-	 * @param ontologies the library of {@link OntologyTerm}
+	 * @param ontologies the library of {@link OntologyAnnotation}
 	 */
 	public void setOntologies(ArrayList<Ontology> ontologies) {
 		this.ontologies = ontologies;
@@ -271,24 +258,6 @@ public class Investigation {
 	 */
 	public void setPublicReleaseDate(Date publicReleaseDate) {
 		this.publicReleaseDate = publicReleaseDate;
-	}
-
-	/**
-	 * Get comments of investigation
-	 *
-	 * @return comments of investigation
-	 */
-	public ArrayList<Comment> getComments() {
-		return comments;
-	}
-
-	/**
-	 * Set comments of investigation
-	 *
-	 * @param comments comment of investigation
-	 */
-	public void setComments(ArrayList<Comment> comments) {
-		this.comments = comments;
 	}
 
 	/**
@@ -414,7 +383,7 @@ public class Investigation {
 	 * @throws SecurityException 
 	 * @throws NoSuchMethodException 
 	 */
-//	public static final Map<String, OntologyTerm> unitMap = new ConcurrentHashMap<>();
+//	public static final Map<String, OntologyAnnotation> unitMap = new ConcurrentHashMap<>();
 	
 	public boolean writeToFile(String filepath) throws IOException {
 		OutputStream os = new FileOutputStream(filepath);
@@ -463,7 +432,7 @@ public class Investigation {
 			
 			// Investigation Comments
 			StringBuilder sb = new StringBuilder();
-			for (Comment c : this.comments) {
+			for (Comment c : this.getComments()) {
 				sb.append(InvestigationAttribute.COMMENT);
 				// @ TODO I think this is a problem because what if the Comment value contains a ?
 				sb = StringUtil.putParameterInStringBuilder(sb, c.getType());
@@ -536,7 +505,7 @@ public class Investigation {
 			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
 					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
 					obj -> {
-						OntologyTerm role = obj.getRolesOntology();
+						OntologyAnnotation role = obj.getRolesOntology();
 						// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
 						if(role == null || role.getSourceREF() == null )
 							return Symbol.EMPTY.toString();

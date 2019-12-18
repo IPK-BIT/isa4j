@@ -46,6 +46,10 @@ public class Comment {
 	public String getType() {
 		return type;
 	}
+	
+	public String getName() {
+		return type;
+	}
 
 	/**
 	 * Set the type of the {@link Comment}

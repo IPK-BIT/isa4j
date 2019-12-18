@@ -9,12 +9,12 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 /**
- * Class representing a {@link Ontology} based term. Every {@link OntologyTerm} has
+ * Class representing a {@link Ontology} based term. Every {@link OntologyAnnotation} has
  * three Attributes: Name, AccessionNumber and SourceREF
  *
  * @author liufe, arendd
  */
-public class OntologyTerm {
+public class OntologyAnnotation extends Commentable {
 
     /**
      * name of Ontology term
@@ -32,8 +32,8 @@ public class OntologyTerm {
     private Ontology sourceREF;
 
     /**
-     * members for Class OntologyTerm,
-     * Constants, every item is a member of OntologyTerm
+     * members for Class OntologyAnnotation,
+     * Constants, every item is a member of OntologyAnnotation
      *
      * @author liufe
      */

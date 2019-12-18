@@ -65,7 +65,7 @@ public class Contact {
 	 * The role of the person in this {@link Investigation}
 	 * @ TODO a person can have more than one role.
 	 */
-	private OntologyTerm rolesOntology;
+	private OntologyAnnotation rolesOntology;
 
 	/**
 	 * A list of {@link Comment}s for the {@link Contact}
@@ -253,7 +253,7 @@ public class Contact {
 	 *
 	 * @return role of the {@link Contact}
 	 */
-	public OntologyTerm getRolesOntology() {
+	public OntologyAnnotation getRolesOntology() {
 		return this.rolesOntology;
 	}
 
@@ -262,7 +262,7 @@ public class Contact {
 	 *
 	 * @param rolesOntology role of the {@link Contact}
 	 */
-	public void setRolesOntology(OntologyTerm rolesOntology) {
+	public void setRolesOntology(OntologyAnnotation rolesOntology) {
 		this.rolesOntology = rolesOntology;
 	}
 
