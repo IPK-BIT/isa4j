@@ -18,7 +18,7 @@ import de.ipk_gatersleben.bit.bi.isa.io.Writer;
 import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
@@ -85,9 +85,9 @@ public class Study extends Commentable {
 	private List<Assay> assays = new ArrayList<>(2);
 
 	/**
-	 * People, who take part to the Investigation {@link Contact}
+	 * People, who take part to the Investigation {@link Person}
 	 */
-	private ArrayList<Contact> contacts = new ArrayList<>(2);
+	private ArrayList<Person> contacts = new ArrayList<>(2);
 
 	/**
 	 * Data in study file
@@ -172,20 +172,20 @@ public class Study extends Commentable {
 	}
 
 	/**
-	 * Add new {@link Contact} to the list
+	 * Add new {@link Person} to the list
 	 *
-	 * @param contact new {@link Contact} to add
+	 * @param person new {@link Person} to add
 	 */
-	public void addContact(Contact contact) {
+	public void addContact(Person person) {
 
-		if (contact == null) {
-//			LoggerUtil.logger.error("Can not add an empty Contact");
+		if (person == null) {
+//			LoggerUtil.logger.error("Can not add an empty Person");
 		}
 
 		if (contacts == null) {
 			contacts = new ArrayList<>(2);
 		}
-		this.contacts.add(contact);
+		this.contacts.add(person);
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class Study extends Commentable {
 	 *
 	 * @return contacts of study
 	 */
-	public ArrayList<Contact> getContacts() {
+	public ArrayList<Person> getContacts() {
 		return contacts;
 	}
 
@@ -357,7 +357,7 @@ public class Study extends Commentable {
 	 *
 	 * @param contacts contacts of study
 	 */
-	public void setContacts(ArrayList<Contact> contacts) {
+	public void setContacts(ArrayList<Person> contacts) {
 		this.contacts = contacts;
 	}
 

@@ -21,9 +21,9 @@ import de.ipk_gatersleben.bit.bi.isa4j.Study;
 public class Comment {
 
 	/**
-	 * The type of the {@link Comment}.
+	 * The name of the {@link Comment}.
 	 */
-	private String type;
+	private String name;
 
 	/**
 	 * The value of the {@link Comment}.
@@ -34,34 +34,30 @@ public class Comment {
 	 * Constructor.
 	 */
 	public Comment(String type, String value) {
-		this.type = type;
+		this.name = type;
 		this.value = value;
 	}
 
 	/**
-	 * Get the type of the {@link Comment}
+	 * Get the name of the {@link Comment}
 	 *
-	 * @return the type of {@link Comment}
+	 * @return the name of {@link Comment}
 	 */
-	public String getType() {
-		return type;
-	}
-	
 	public String getName() {
-		return type;
+		return name;
 	}
 
 	/**
-	 * Set the type of the {@link Comment}
+	 * Set the name of the {@link Comment}
 	 *
-	 * @param type type of the {@link Comment}
+	 * @param name name of the {@link Comment}
 	 */
-	public void setType(String type) {
-		if (type == null) {
-//			LoggerUtil.logger.error("The type of comment can't be null!");
+	public void setName(String name) {
+		if (name == null) {
+//			LoggerUtil.logger.error("The name of comment can't be null!");
 			return;
 		}
-		this.type = type;
+		this.name = name;
 	}
 
 	/**
@@ -69,7 +65,7 @@ public class Comment {
 	 *
 	 * @return the value of {@link Comment}
 	 */
-	public String getContent() {
+	public String getValue() {
 		return value;
 	}
 
@@ -78,7 +74,7 @@ public class Comment {
 	 *
 	 * @param value the value of the {@link Comment}
 	 */
-	public void setContent(String value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 

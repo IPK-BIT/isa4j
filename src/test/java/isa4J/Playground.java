@@ -7,7 +7,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
@@ -26,20 +26,21 @@ public class Playground {
 		investigation.addComment(new Comment("Investigation Type", "Value"));
 		investigation.addComment(new Comment("Another Comment", "Hello"));
 		
-		Contact karlheinz = new Contact("Schmidt", "Karl-Heinz", "khschmitt@wunderland.de", "Schmidt GmbH", "Schmidtstraße 1, 543423 Schmidttown");
+		Person karlheinz = new Person("Schmidt", "Karl-Heinz", "khschmitt@wunderland.de", "Schmidt GmbH", "Schmidtstraße 1, 543423 Schmidttown");
 		karlheinz.setFax("FAxi1223");
-		Contact ursel = new Contact("Wurst", "Ursel", null, "Wurstwaren Ursel", null);
+		Person ursel = new Person("Wurst", "Ursel", null, "Wurstwaren Ursel", null);
 		OntologyAnnotation role1 = new OntologyAnnotation();
 		role1.setName("Terminator");
 		role1.setSourceREF(ontology2);
 		role1.setTermAccessionNumber("ACredIT#1321");
-		ursel.setRolesOntology(role1);
+		ursel.addRole(role1);
 		ursel.addComment(new Comment("Person REF", "urselRef"));
 		ursel.addComment(new Comment("Ursel says", "Bye bye World"));
 		
 		OntologyAnnotation role2 = new OntologyAnnotation();
 		role2.setName("Secret Role");
-		karlheinz.setRolesOntology(role2);
+		karlheinz.addRole(role2);
+		karlheinz.addRole(role1);
 		karlheinz.addComment(new Comment("Person REF", "karlheinzREf"));
 		karlheinz.addComment(new Comment("Karlheinz says", "Hello World!"));
 		

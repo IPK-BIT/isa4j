@@ -43,7 +43,7 @@ public class Publication extends Commentable {
     /**
      * The list of authors who contributed to this {@link Publication}
      */
-    private List<Contact> authorList;
+    private List<Person> authorList;
 
     /**
      * The title of the {@link Publication}
@@ -56,11 +56,11 @@ public class Publication extends Commentable {
     private OntologyAnnotation statusOntology;
 
     /**
-     * Add a {@link Contact} to the list of authors of the {@link Publication}
+     * Add a {@link Person} to the list of authors of the {@link Publication}
      *
-     * @param person the {@link Contact} to add
+     * @param person the {@link Person} to add
      */
-    public void addAuthor(Contact person) {
+    public void addAuthor(Person person) {
         if (authorList == null) {
             authorList = new ArrayList<>();
         }
@@ -72,7 +72,7 @@ public class Publication extends Commentable {
      *
      * @return authors the {@link List} of the authors of this {@link Publication}
      */
-    public List<Contact> getAuthorList() {
+    public List<Person> getAuthorList() {
         return this.authorList;
     }
 
@@ -117,7 +117,7 @@ public class Publication extends Commentable {
      *
      * @param authorList authors' name of publication
      */
-    public void setAuthorList(List<Contact> authorList) {
+    public void setAuthorList(List<Person> authorList) {
         this.authorList = authorList;
     }
 

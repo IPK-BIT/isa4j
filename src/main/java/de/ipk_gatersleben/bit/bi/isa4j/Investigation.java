@@ -25,7 +25,7 @@ import de.ipk_gatersleben.bit.bi.isa.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Contact;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
@@ -79,7 +79,7 @@ public class Investigation extends Commentable {
 	/**
 	 * People, who are associated with the {@link Investigation}
 	 */
-	private ArrayList<Contact> contacts = new ArrayList<>();
+	private ArrayList<Person> contacts = new ArrayList<>();
 
 	/**
 	 * Studies of investigations {@link Study}
@@ -110,10 +110,10 @@ public class Investigation extends Commentable {
 	/**
 	 * Add a contact to the {@link Investigation}
 	 *
-	 * @param contact the contact of a people,which will be add
+	 * @param person the contact of a people,which will be add
 	 */
-	public void addContact(Contact contact) {
-		contacts.add(contact);
+	public void addContact(Person person) {
+		contacts.add(person);
 
 	}
 
@@ -283,7 +283,7 @@ public class Investigation extends Commentable {
 	 *
 	 * @return contact of investigation
 	 */
-	public ArrayList<Contact> getContacts() {
+	public ArrayList<Person> getContacts() {
 		return contacts;
 	}
 
@@ -292,7 +292,7 @@ public class Investigation extends Commentable {
 	 *
 	 * @param contacts contact of investigation
 	 */
-	public void setContacts(ArrayList<Contact> contacts) {
+	public void setContacts(ArrayList<Person> contacts) {
 
 		this.contacts = contacts;
 	}
@@ -320,10 +320,10 @@ public class Investigation extends Commentable {
 	
 	private static String formatComments(List<List<Comment>> commentBuckets) {
 		StringBuilder sb = new StringBuilder();
-		// Get a List of all Comment types present in any of the Comment Buckets (Contact, Study..., anything with comments)
+		// Get a List of all Comment types present in any of the Comment Buckets (Person, Study..., anything with comments)
 		List<String> commentLevels = commentBuckets.stream()
 				.flatMap(bucket -> bucket.stream()) // flatten
-				.map(comment -> comment.getType())
+				.map(comment -> comment.getName())
 				.distinct() // remove duplicates
 				.collect(Collectors.toList());
 		// Now loop through all comment types and create a line for each
@@ -335,9 +335,9 @@ public class Investigation extends Commentable {
 				// For each bucket -> go through each comment
 				.map(bucket -> bucket.stream()
 					// Filter out only comments of the current type
-					.filter(comment -> comment.getType().equals(commentType))
+					.filter(comment -> comment.getName().equals(commentType))
 					// Get the contents of these comments
-					.map(comment -> comment.getContent())
+					.map(comment -> comment.getValue())
 					// Join them all together by semicolons (it could be the case that a person has two comments with the same type)
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
 				// Join all the buckets by TABs
@@ -358,7 +358,7 @@ public class Investigation extends Commentable {
 	 * That function is then executed for each ontology in the list and the results are joined with TABs (one column for each ontology).
 	 * In the beginning, the name of the line is printed and finally the line is finished with an ENTER.
 	 * @param <C> Type of Line Name (InvestigationAttribute, String...)
-	 * @param <T> Type of objects to iterate over (Ontology, Contact, Publication...)
+	 * @param <T> Type of objects to iterate over (Ontology, Person, Publication...)
 	 * @param lineName Name of the line
 	 * @param list List of objects to iterate over
 	 * @param lambda Function to execute on each object in the list
@@ -435,8 +435,8 @@ public class Investigation extends Commentable {
 			for (Comment c : this.getComments()) {
 				sb.append(InvestigationAttribute.COMMENT);
 				// @ TODO I think this is a problem because what if the Comment value contains a ?
-				sb = StringUtil.putParameterInStringBuilder(sb, c.getType());
-				sb.append(c.getContent()).append(Symbol.ENTER);
+				sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
+				sb.append(c.getValue()).append(Symbol.ENTER);
 			}
 			writer.write(sb.toString());
 			
@@ -482,7 +482,7 @@ public class Investigation extends Commentable {
 			
 		// INVESTIGATION CONTACTS
 			writer.write(InvestigationAttribute.INVESTIGATION_CONTACTS.toString());
-			LinkedHashMap<InvestigationAttribute,Function<Contact, String>> contact_attributes = new LinkedHashMap<InvestigationAttribute,Function<Contact, String>>();
+			LinkedHashMap<InvestigationAttribute,Function<Person, String>> contact_attributes = new LinkedHashMap<InvestigationAttribute,Function<Person, String>>();
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, (o) -> o.getLastName());
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, (o) -> o.getFirstName());
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, (o) -> o.getMidInitials());
@@ -491,7 +491,9 @@ public class Investigation extends Commentable {
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_FAX, (o) -> o.getFax());
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ADDRESS, (o) -> o.getAddress());
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, (o) -> o.getAffiliation());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, (o) -> o.getRolesOntology().getName());
+			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, 
+					(o) -> o.getRoles().stream()
+						.map(c -> c.getName()).collect(Collectors.joining(Symbol.SEMICOLON.toString())));
 	
 			for(InvestigationAttribute lineName : contact_attributes.keySet()) {
 				writer.write(lineFromList(lineName, this.contacts, contact_attributes.get(lineName)));
@@ -499,22 +501,23 @@ public class Investigation extends Commentable {
 			
 			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
 					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
-					obj -> { return obj.getRolesOntology() == null ? Symbol.EMPTY.toString() : obj.getRolesOntology().getTermAccessionNumber(); }
+					obj -> { return obj.getRoles().stream().map(
+								r -> r.getTermAccessionNumber() == null ? Symbol.EMPTY.toString() : r.getTermAccessionNumber()
+							).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
 			));
 			
 			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
 					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
 					obj -> {
-						OntologyAnnotation role = obj.getRolesOntology();
-						// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
-						if(role == null || role.getSourceREF() == null )
-							return Symbol.EMPTY.toString();
-						// Otherwise return the Ontology's name
-						return obj.getRolesOntology().getSourceREF().getName(); 
+						return obj.getRoles().stream().map(
+								// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
+								// Otherwise return the Ontology's name
+								r -> r == null || r.getSourceREF() == null ? Symbol.EMPTY.toString() : r.getSourceREF().getName()
+							).collect(Collectors.joining(Symbol.SEMICOLON.toString())); 
 					}
 			));
 		
-		// Publication Contact Comments
+		// Publication Person Comments
 		writer.write(formatComments(this.contacts.stream()
 				.map(o -> o.getComments())
 				.collect(Collectors.toList()))
@@ -541,8 +544,8 @@ public class Investigation extends Commentable {
 			for (Comment c : study.getComments()) {
 				sb.append(InvestigationAttribute.COMMENT);
 				// @ TODO I think this is a problem because what if the Comment value contains a ?
-				sb = StringUtil.putParameterInStringBuilder(sb, c.getType());
-				sb.append(c.getContent()).append(Symbol.ENTER);
+				sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
+				sb.append(c.getValue()).append(Symbol.ENTER);
 			}
 			writer.write(sb.toString());
 			
@@ -571,7 +574,7 @@ public class Investigation extends Commentable {
 					}
 					));
 			
-			// Publication Contact Comments
+			// Publication Person Comments
 			writer.write(formatComments(study.getDesignDescriptors().stream()
 					.map(o -> o.getComments())
 					.collect(Collectors.toList()))
