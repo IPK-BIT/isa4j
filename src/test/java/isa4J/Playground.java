@@ -6,9 +6,7 @@ import java.net.URL;
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
-import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
@@ -29,16 +27,16 @@ public class Playground {
 		Person karlheinz = new Person("Schmidt", "Karl-Heinz", "khschmitt@wunderland.de", "Schmidt GmbH", "Schmidtstraße 1, 543423 Schmidttown");
 		karlheinz.setFax("FAxi1223");
 		Person ursel = new Person("Wurst", "Ursel", null, "Wurstwaren Ursel", null);
-		OntologyAnnotation role1 = new OntologyAnnotation();
-		role1.setName("Terminator");
+		OntologyAnnotation role1 = new OntologyAnnotation("Huz");
+		role1.setTerm("Terminator");
 		role1.setSourceREF(ontology2);
-		role1.setTermAccessionNumber("ACredIT#1321");
+		role1.setTermAccession("ACredIT#1321");
 		ursel.addRole(role1);
 		ursel.addComment(new Comment("Person REF", "urselRef"));
 		ursel.addComment(new Comment("Ursel says", "Bye bye World"));
 		
-		OntologyAnnotation role2 = new OntologyAnnotation();
-		role2.setName("Secret Role");
+		OntologyAnnotation role2 = new OntologyAnnotation("Hs");
+		role2.setTerm("Secret Role");
 		karlheinz.addRole(role2);
 		karlheinz.addRole(role1);
 		karlheinz.addComment(new Comment("Person REF", "karlheinzREf"));
@@ -58,10 +56,10 @@ public class Playground {
 		investigation.addPublication(paper1);
 		investigation.addPublication(paper2);
 		
-		OntologyAnnotation paper1Status = new OntologyAnnotation();
+		OntologyAnnotation paper1Status = new OntologyAnnotation("hey");
 		paper1Status.setSourceREF(ontology1);
-		paper1Status.setName("Published");
-		paper1Status.setTermAccessionNumber("Term Accession alala");
+		paper1Status.setTerm("Published");
+		paper1Status.setTermAccession("Term Accession alala");
 		paper1.setStatusOntology(paper1Status);
 		
 		investigation.addContact(ursel);
@@ -75,8 +73,8 @@ public class Playground {
 		study1.addComment(new Comment("Comment1", "Value"));
 		study1.addComment(new Comment("Comment 2", "value"));
 		
-		study2.addDesignDescriptor(new DesignDescriptor("Simple"));
-		study2.addDesignDescriptor(new DesignDescriptor(paper1Status));
+		study2.addDesignDescriptor(new OntologyAnnotation("Simple"));
+		study2.addDesignDescriptor(paper1Status);
 		
 		investigation.addStudy(study1);
 		investigation.addStudy(study2);

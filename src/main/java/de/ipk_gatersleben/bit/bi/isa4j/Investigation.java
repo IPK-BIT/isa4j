@@ -26,7 +26,6 @@ import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
-import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
@@ -318,10 +317,21 @@ public class Investigation extends Commentable {
 		}
 	}
 	
-	private static String formatComments(List<List<Comment>> commentBuckets) {
+	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
+	private static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
-		// Get a List of all Comment types present in any of the Comment Buckets (Person, Study..., anything with comments)
-		List<String> commentLevels = commentBuckets.stream()
+		for (Comment c : comments) {
+			sb.append(InvestigationAttribute.COMMENT);
+			sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
+			sb.append(c.getValue()).append(Symbol.ENTER);
+		}
+		return sb.toString();
+	}
+	
+	private static String formatComments(List<List<Comment>> commentables) {
+		StringBuilder sb = new StringBuilder();
+		// Get a List of all Comment types present in any of the Commentables (Person, Study..., anything with comments)
+		List<String> commentLevels = commentables.stream()
 				.flatMap(bucket -> bucket.stream()) // flatten
 				.map(comment -> comment.getName())
 				.distinct() // remove duplicates
@@ -331,7 +341,7 @@ public class Investigation extends Commentable {
 			// @ TODO Use the Investigation Attribute Comment thingy instead of the plain string
 			sb.append("Comment[" + commentType + "]" + Symbol.TAB.toString());
 			// Now loop through all the buckets and see if that comment type is present
-			String commentLine = commentBuckets.stream()
+			String commentLine = commentables.stream()
 				// For each bucket -> go through each comment
 				.map(bucket -> bucket.stream()
 					// Filter out only comments of the current type
@@ -431,14 +441,7 @@ public class Investigation extends Commentable {
 			writer.write(Symbol.ENTER.toString());
 			
 			// Investigation Comments
-			StringBuilder sb = new StringBuilder();
-			for (Comment c : this.getComments()) {
-				sb.append(InvestigationAttribute.COMMENT);
-				// @ TODO I think this is a problem because what if the Comment value contains a ?
-				sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
-				sb.append(c.getValue()).append(Symbol.ENTER);
-			}
-			writer.write(sb.toString());
+			writer.write(formatSimpleComments(this.getComments()));
 			
 			
 		// INVESTIGATION PUBLICATIONS
@@ -458,7 +461,7 @@ public class Investigation extends Commentable {
 			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, (o) -> o.getTitle());
 			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, 
 					(o) -> {
-						return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getName();
+						return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
 					});
 	
 			for(InvestigationAttribute lineName : publication_attributes.keySet()) {
@@ -470,7 +473,7 @@ public class Investigation extends Commentable {
 			// Publication Status Accession Number
 			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
 					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.publications,
-					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccessionNumber(); }
+					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
 			));
 			
 			// Publication Status Source REF
@@ -493,7 +496,7 @@ public class Investigation extends Commentable {
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, (o) -> o.getAffiliation());
 			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, 
 					(o) -> o.getRoles().stream()
-						.map(c -> c.getName()).collect(Collectors.joining(Symbol.SEMICOLON.toString())));
+						.map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString())));
 	
 			for(InvestigationAttribute lineName : contact_attributes.keySet()) {
 				writer.write(lineFromList(lineName, this.contacts, contact_attributes.get(lineName)));
@@ -502,7 +505,7 @@ public class Investigation extends Commentable {
 			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
 					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
 					obj -> { return obj.getRoles().stream().map(
-								r -> r.getTermAccessionNumber() == null ? Symbol.EMPTY.toString() : r.getTermAccessionNumber()
+								r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
 							).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
 			));
 			
@@ -540,37 +543,30 @@ public class Investigation extends Commentable {
 					+ (study.getPublicReleaseDate() == null ? Symbol.EMPTY.toString() : study.getPublicReleaseDate()) + Symbol.ENTER.toString());
 			
 			// Study Comments
-			sb = new StringBuilder();
-			for (Comment c : study.getComments()) {
-				sb.append(InvestigationAttribute.COMMENT);
-				// @ TODO I think this is a problem because what if the Comment value contains a ?
-				sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
-				sb.append(c.getValue()).append(Symbol.ENTER);
-			}
-			writer.write(sb.toString());
+			writer.write(formatSimpleComments(study.getComments()));
 			
 			// STUDY DESIGN DESCRIPTORS
 			writer.write(InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString());
 			
-			writer.write(lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getType()));
+			writer.write(lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getTerm()));
 			
 			writer.write(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
 					study.getDesignDescriptors(),
 					descriptor -> {
-						if(descriptor.getTypeOntologyTerm() == null || descriptor.getTypeOntologyTerm().getTermAccessionNumber() == null)
+						if(descriptor.getTermAccession() == null)
 							return Symbol.EMPTY.toString();
 						else
-							return descriptor.getTypeOntologyTerm().getTermAccessionNumber();
+							return descriptor.getTermAccession();
 					}
 					));
 			
 			writer.write(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
 					study.getDesignDescriptors(),
 					descriptor -> {
-						if(descriptor.getTypeOntologyTerm() == null || descriptor.getTypeOntologyTerm().getSourceREF() == null)
+						if(descriptor.getSourceREF() == null)
 							return Symbol.EMPTY.toString();
 						else
-							return descriptor.getTypeOntologyTerm().getSourceREF().getName();
+							return descriptor.getSourceREF().getName();
 					}
 					));
 			

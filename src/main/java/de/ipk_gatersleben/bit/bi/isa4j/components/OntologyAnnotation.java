@@ -17,14 +17,14 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 public class OntologyAnnotation extends Commentable {
 
     /**
-     * name of Ontology term
+     * term of Ontology term
      */
-    private String name;
+    private String term;
 
     /**
      * accession number of ontology term
      */
-    private String termAccessionNumber;
+    private String termAccession;
 
     /**
      * sourceREF of ontology term
@@ -40,27 +40,38 @@ public class OntologyAnnotation extends Commentable {
     public enum OntologyTermAttributes {
         NAME, SOURCE_REF, TERM_ACCESSION_NUMBER;
     }
+    
+    public OntologyAnnotation(String term, String termAccessionNumber, Ontology sourceREF) {
+    	this.term = term;
+    	this.termAccession = termAccessionNumber;
+    	this.sourceREF = sourceREF;
+    }
+    
+    public OntologyAnnotation(String term) {
+    	this(term,  null, null);
+    }
+   
 
     /**
-     * get name of ontology term
+     * get term of ontology term
      *
-     * @return name of ontology term
+     * @return term of ontology term
      */
-    public String getName() {
-        return name;
+    public String getTerm() {
+        return term;
     }
 
     /**
-     * set name of ontology term
+     * set term of ontology term
      *
-     * @param name name of ontology term
+     * @param term term of ontology term
      */
-    public void setName(String name) {
-        if (name == null) {
-//            LoggerUtil.logger.error("The name of ontologyTern can't be null!");
+    public void setTerm(String term) {
+        if (term == null) {
+//            LoggerUtil.logger.error("The term of ontologyTern can't be null!");
             return;
         }
-        this.name = name;
+        this.term = term;
     }
 
     /**
@@ -68,17 +79,17 @@ public class OntologyAnnotation extends Commentable {
      *
      * @return accession number of ontology term
      */
-    public String getTermAccessionNumber() {
-        return termAccessionNumber;
+    public String getTermAccession() {
+        return termAccession;
     }
 
     /**
      * set accession number of ontology term
      *
-     * @param termAccessionNumber accession number of ontology term
+     * @param termAccession accession number of ontology term
      */
-    public void setTermAccessionNumber(String termAccessionNumber) {
-        this.termAccessionNumber = termAccessionNumber;
+    public void setTermAccession(String termAccession) {
+        this.termAccession = termAccession;
     }
 
     /**
@@ -93,7 +104,7 @@ public class OntologyAnnotation extends Commentable {
     /**
      * set source REF
      *
-     * @param sourceREF sourve REF
+     * @param sourceREF source REF
      */
     public void setSourceREF(Ontology sourceREF) {
         this.sourceREF = sourceREF;

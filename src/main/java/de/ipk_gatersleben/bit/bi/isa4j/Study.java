@@ -19,9 +19,9 @@ import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
-import de.ipk_gatersleben.bit.bi.isa4j.components.DesignDescriptor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
+import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 
@@ -72,7 +72,7 @@ public class Study extends Commentable {
 	/**
 	 * List of {@link DesignDescriptor}s to describe the {@link Study}
 	 */
-	private ArrayList<DesignDescriptor> designDescriptors = new ArrayList<>(2);
+	private ArrayList<OntologyAnnotation> designDescriptors = new ArrayList<OntologyAnnotation>();
 
 	/**
 	 * {@link Publication} of study
@@ -193,13 +193,10 @@ public class Study extends Commentable {
 	 *
 	 * @param designDescriptor new {@link DesignDescriptor} to add
 	 */
-	public boolean addDesignDescriptor(DesignDescriptor designDescriptor) {
+	public boolean addDesignDescriptor(OntologyAnnotation designDescriptor) {
 		if (designDescriptor == null) {
 //			LoggerUtil.logger.error("Can not add an empty DesignDescriptor");
 			return false;
-		}
-		if (designDescriptors == null) {
-			designDescriptors = new ArrayList<>(2);
 		}
 		if (!designDescriptors.contains(designDescriptor)) {
 			this.designDescriptors.add(designDescriptor);
@@ -264,7 +261,7 @@ public class Study extends Commentable {
 	 *
 	 * @return descriptor of design for study
 	 */
-	public ArrayList<DesignDescriptor> getDesignDescriptors() {
+	public ArrayList<OntologyAnnotation> getDesignDescriptors() {
 		return designDescriptors;
 	}
 
@@ -375,7 +372,8 @@ public class Study extends Commentable {
 	 *
 	 * @param desigenDescriptors descriptor of design for study
 	 */
-	public void setDesignDescriptors(ArrayList<DesignDescriptor> desigenDescriptors) {
+	public void setDesignDescriptors(ArrayList<OntologyAnnotation> desigenDescriptors) {
+		// TODO don't allow null
 		this.designDescriptors = desigenDescriptors;
 	}
 
