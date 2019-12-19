@@ -317,6 +317,15 @@ public class Investigation extends Commentable {
 		}
 	}
 	
+	// Meant for simple, one-value attributes like Investigation Title
+	private static String formatSimpleAttribute(InvestigationAttribute lineName, String value) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(lineName.toString());
+		sb.append(value == null ? Symbol.EMPTY.toString() : value);
+		sb.append(Symbol.ENTER.toString());
+		return sb.toString();		
+	}
+	
 	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
 	private static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
@@ -328,6 +337,7 @@ public class Investigation extends Commentable {
 		return sb.toString();
 	}
 	
+	// @ TODO actually make this function accept a list of commentables and extract comments myself
 	private static String formatComments(List<List<Comment>> commentables) {
 		StringBuilder sb = new StringBuilder();
 		// Get a List of all Comment types present in any of the Commentables (Person, Study..., anything with comments)
@@ -419,26 +429,16 @@ public class Investigation extends Commentable {
 			}
 			
 		
-		// INVESTIGATION	
+		// INVESTIGATION
 			// Identifier, Title, Description
-			writer.write((InvestigationAttribute.INVESTIGATION.toString()
-					+ InvestigationAttribute.INVESTIGATION_IDENTIFIER
-					+ (this.identifier == null ? Symbol.EMPTY : this.identifier) + Symbol.ENTER
-					+ InvestigationAttribute.INVESTIGATION_TITLE + (title == null ? Symbol.EMPTY : title)
-					+ Symbol.ENTER + InvestigationAttribute.INVESTIGATION_DESCRIPTION
-					+ (this.description == null ? Symbol.EMPTY : this.description) + Symbol.ENTER));
-
-			// Submission Date
-			writer.write(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE.toString());
-			if(this.submissionDate != null)
-				writer.write(this.submissionDate.toString());
-			writer.write(Symbol.ENTER.toString());
-				
-			// Public Release Date
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE.toString());
-			if(this.publicReleaseDate != null)
-				writer.write(this.publicReleaseDate.toString());
-			writer.write(Symbol.ENTER.toString());
+			writer.write(InvestigationAttribute.INVESTIGATION.toString());
+			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_IDENTIFIER, this.identifier));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_TITLE, this.title));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_DESCRIPTION, this.description));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE, 
+					this.submissionDate == null ? null : this.submissionDate.toString()));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE, 
+					this.publicReleaseDate == null ? null : this.publicReleaseDate.toString()));
 			
 			// Investigation Comments
 			writer.write(formatSimpleComments(this.getComments()));
@@ -528,19 +528,16 @@ public class Investigation extends Commentable {
 		
 		// STUDIES
 		for(Study study: this.studies) {
+			// @ Use formatSimpleAttribute method here
 			writer.write(InvestigationAttribute.STUDY.toString());
-			writer.write(InvestigationAttribute.STUDY_IDENTIFIER.toString()
-					+ (study.getIdentifier() == null ? Symbol.EMPTY.toString() : study.getIdentifier()) + Symbol.ENTER.toString());
-			writer.write(InvestigationAttribute.STUDY_FILE_NAME.toString()
-					+ (study.getFileName() == null ? Symbol.EMPTY.toString() : study.getFileName()) + Symbol.ENTER.toString());
-			writer.write(InvestigationAttribute.STUDY_TITLE.toString()
-					+ (study.getTitle() == null ? Symbol.EMPTY.toString() : study.getTitle()) + Symbol.ENTER.toString());
-			writer.write(InvestigationAttribute.STUDY_DESCRIPTION.toString()
-					+ (study.getDescription() == null ? Symbol.EMPTY.toString() : study.getDescription()) + Symbol.ENTER.toString());
-			writer.write(InvestigationAttribute.STUDY_SUBMISSION_DATE.toString()
-					+ (study.getSubmissionDate() == null ? Symbol.EMPTY.toString() : study.getSubmissionDate()) + Symbol.ENTER.toString());
-			writer.write(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE.toString()
-					+ (study.getPublicReleaseDate() == null ? Symbol.EMPTY.toString() : study.getPublicReleaseDate()) + Symbol.ENTER.toString());
+			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier()));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName()));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle()));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription()));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
+					study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString()));
+			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
+					study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString()));
 			
 			// Study Comments
 			writer.write(formatSimpleComments(study.getComments()));
@@ -570,7 +567,7 @@ public class Investigation extends Commentable {
 					}
 					));
 			
-			// Publication Person Comments
+			// Study Design Comemnts
 			writer.write(formatComments(study.getDesignDescriptors().stream()
 					.map(o -> o.getComments())
 					.collect(Collectors.toList()))
