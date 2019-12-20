@@ -331,6 +331,7 @@ public class Investigation extends Commentable {
 		StringBuilder sb = new StringBuilder();
 		for (Comment c : comments) {
 			sb.append(InvestigationAttribute.COMMENT);
+      // TODO This is not nice, because what if a comment contains a ? ? Or does it only replace the last occurence?
 			sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
 			sb.append(c.getValue()).append(Symbol.ENTER);
 		}
@@ -528,7 +529,6 @@ public class Investigation extends Commentable {
 		
 		// STUDIES
 		for(Study study: this.studies) {
-			// @ Use formatSimpleAttribute method here
 			writer.write(InvestigationAttribute.STUDY.toString());
 			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier()));
 			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName()));
@@ -572,6 +572,32 @@ public class Investigation extends Commentable {
 					.map(o -> o.getComments())
 					.collect(Collectors.toList()))
 			);
+			
+			// STUDY PUBLICATIONS
+			writer.write(InvestigationAttribute.STUDY_PUBLICATIONS.toString());
+			
+			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID()));
+			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI()));
+			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
+					(o) -> {
+						return o.getAuthorList().stream()
+								.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
+								.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
+					}));
+			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle()));
+			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), 
+					(o) -> {
+						return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
+					}));
+			
+			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getPublications(),
+					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
+			));
+			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getPublications(),
+					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
+			));
 
 		}
 		
