@@ -405,200 +405,210 @@ public class Investigation extends Commentable {
 	 */
 //	public static final Map<String, OntologyAnnotation> unitMap = new ConcurrentHashMap<>();
 	
-	public boolean writeToFile(String filepath) throws IOException {
-		// TODO SPlit this up into many little functions like formatInvestigationHead, formatStudyFactors ...
-		OutputStream os = new FileOutputStream(filepath);
-		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
+	private String formatOntologies() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString());
+		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_NAME, this.ontologies, o -> o.getName()));
+		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_FILE, this.ontologies, o -> o.getURL().toString()));
+		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_VERSION, this.ontologies, o -> o.getVersion()));
+		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_DESCRIPTION, this.ontologies, o -> o.getDescription()));
+		
+		return sb.toString();
+	}
+	
+	private String formatInvestigationHeaders() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(InvestigationAttribute.INVESTIGATION.toString());
+		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_IDENTIFIER, this.identifier));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_TITLE, this.title));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_DESCRIPTION, this.description));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE, 
+				this.submissionDate == null ? null : this.submissionDate.toString()));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE, 
+				this.publicReleaseDate == null ? null : this.publicReleaseDate.toString()));
+		
+		// Investigation Comments
+		sb.append(formatSimpleComments(this.getComments()));
+		
+		return sb.toString();
+	}
+	
+	private String formatInvestigationPublications() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString());
+		
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBMED_ID, this.publications, (o) -> o.getPubmedID()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, this.publications, (o) -> o.getDOI()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, this.publications, 
+				// This method is a bit more complicated than the previous ones because we have to combine
+				// multiple fields in a certain way, but in principle it still works like before.
+				(o) -> {
+					return o.getAuthorList().stream()
+							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
+							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
+				}));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, this.publications, (o) -> o.getTitle()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications,
+				(o) -> {
+					return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
+				}));
+		
+		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.publications,
+				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
+		));
+		
+		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+				InvestigationAttribute.TERM_SOURCE_REF.toString()), this.publications,
+				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
+		));
+		
+		// TODO Comments
+		
+		return sb.toString();
+	}
 
+	private String formatInvestigationContacts() {
+		StringBuilder sb = new StringBuilder();
 		
-		// ONTOLOGY SOURCE REFERENCE
-			writer.write(InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString());
-				
-			// Build a HashMap with one entry for each line. The key is the line name and the value is the
-			// function used to extract the corresponding value from an Ontology.
-			LinkedHashMap<InvestigationAttribute,Function<Ontology, String>> ontology_attributes = new LinkedHashMap<InvestigationAttribute,Function<Ontology, String>>();
-			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_NAME, (o) -> o.getName());
-			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_FILE, (o) -> o.getURL().toString());
-			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_VERSION, (o) -> o.getVersion());
-			ontology_attributes.put(InvestigationAttribute.TERM_SOURCE_DESCRIPTION, (o) -> o.getDescription());
-	
-			// Use our lineFromList function on each of the lines defined above; the line name is the key of the 
-			// HashMap, the list are the ontologies, and the method to extract the value from the Ontology is
-			// the value of the HashMap.
-			for(InvestigationAttribute lineName : ontology_attributes.keySet()) {
-				writer.write(lineFromList(lineName, this.ontologies, ontology_attributes.get(lineName)));
-			}
-			
+		sb.append(InvestigationAttribute.INVESTIGATION_CONTACTS.toString());
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, this.contacts, (o) -> o.getLastName()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, this.contacts,(o) -> o.getFirstName()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, this.contacts,(o) -> o.getMidInitials()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_EMAIL, this.contacts,(o) -> o.getEmail()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_PHONE, this.contacts,(o) -> o.getPhone()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FAX, this.contacts,(o) -> o.getFax()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ADDRESS, this.contacts,(o) -> o.getAddress()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, this.contacts,(o) -> o.getAffiliation()));
+		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, this.contacts,
+				(o) -> o.getRoles().stream()
+					.map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString()))));
 		
-		// INVESTIGATION
-			// Identifier, Title, Description
-			writer.write(InvestigationAttribute.INVESTIGATION.toString());
-			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_IDENTIFIER, this.identifier));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_TITLE, this.title));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_DESCRIPTION, this.description));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE, 
-					this.submissionDate == null ? null : this.submissionDate.toString()));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE, 
-					this.publicReleaseDate == null ? null : this.publicReleaseDate.toString()));
-			
-			// Investigation Comments
-			writer.write(formatSimpleComments(this.getComments()));
-			
-			
-		// INVESTIGATION PUBLICATIONS
-			writer.write(InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString());
-			
-			LinkedHashMap<InvestigationAttribute,Function<Publication, String>> publication_attributes = new LinkedHashMap<InvestigationAttribute,Function<Publication, String>>();
-			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBMED_ID, (o) -> o.getPubmedID());
-			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, (o) -> o.getDOI());
-			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, 
-					// This method is a bit more complicated than the previous ones because we have to combine
-					// multiple fields in a certain way, but in principle it still works like before.
-					(o) -> {
-						return o.getAuthorList().stream()
-								.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
-								.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-					});
-			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, (o) -> o.getTitle());
-			publication_attributes.put(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, 
-					(o) -> {
-						return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
-					});
-	
-			for(InvestigationAttribute lineName : publication_attributes.keySet()) {
-				writer.write(lineFromList(lineName, this.publications, publication_attributes.get(lineName)));
-			}
-			
-			// For the next ones we can't put them into the above HashMap because the key here is a String and not a InvestigationAttribute.
-			// AFAIK there is no method of joining InvestigationAttributes without converting them into a String.
-			// Publication Status Accession Number
-			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.publications,
-					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
-			));
-			
-			// Publication Status Source REF
-			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.publications,
-					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
-			));
-			
-			
-		// INVESTIGATION CONTACTS
-			writer.write(InvestigationAttribute.INVESTIGATION_CONTACTS.toString());
-			LinkedHashMap<InvestigationAttribute,Function<Person, String>> contact_attributes = new LinkedHashMap<InvestigationAttribute,Function<Person, String>>();
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, (o) -> o.getLastName());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, (o) -> o.getFirstName());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, (o) -> o.getMidInitials());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_EMAIL, (o) -> o.getEmail());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_PHONE, (o) -> o.getPhone());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_FAX, (o) -> o.getFax());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ADDRESS, (o) -> o.getAddress());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, (o) -> o.getAffiliation());
-			contact_attributes.put(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, 
-					(o) -> o.getRoles().stream()
-						.map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString())));
-	
-			for(InvestigationAttribute lineName : contact_attributes.keySet()) {
-				writer.write(lineFromList(lineName, this.contacts, contact_attributes.get(lineName)));
-			}
-			
-			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
-					obj -> { return obj.getRoles().stream().map(
-								r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
-							).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
-			));
-			
-			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
-					obj -> {
-						return obj.getRoles().stream().map(
-								// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
-								// Otherwise return the Ontology's name
-								r -> r == null || r.getSourceREF() == null ? Symbol.EMPTY.toString() : r.getSourceREF().getName()
-							).collect(Collectors.joining(Symbol.SEMICOLON.toString())); 
-					}
-			));
+		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
+				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
+				obj -> { return obj.getRoles().stream().map(
+							r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
+						).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
+		));
 		
+		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
+				InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
+				obj -> {
+					return obj.getRoles().stream().map(
+							// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
+							// Otherwise return the Ontology's name
+							r -> r == null || r.getSourceREF() == null ? Symbol.EMPTY.toString() : r.getSourceREF().getName()
+						).collect(Collectors.joining(Symbol.SEMICOLON.toString())); 
+				}
+		));
+	
 		// Publication Person Comments
-		writer.write(formatComments(this.contacts.stream()
+		sb.append(formatComments(this.contacts.stream()
 				.map(o -> o.getComments())
 				.collect(Collectors.toList()))
 		);
 		
-		// STUDIES
+		return sb.toString();
+	}
+	
+	private String formatStudyHeaders(Study study) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(InvestigationAttribute.STUDY.toString());
+		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier()));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName()));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle()));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription()));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
+				study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString()));
+		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
+				study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString()));
+		
+		// Study Comments
+		sb.append(formatSimpleComments(study.getComments()));
+		
+		// STUDY DESIGN DESCRIPTORS
+		sb.append(InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString());
+		
+		sb.append(lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getTerm()));
+		
+		sb.append(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
+				study.getDesignDescriptors(),
+				descriptor -> {
+					if(descriptor.getTermAccession() == null)
+						return Symbol.EMPTY.toString();
+					else
+						return descriptor.getTermAccession();
+				}
+				));
+		
+		sb.append(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
+				study.getDesignDescriptors(),
+				descriptor -> {
+					if(descriptor.getSourceREF() == null)
+						return Symbol.EMPTY.toString();
+					else
+						return descriptor.getSourceREF().getName();
+				}
+				));
+		
+		// Study Design Comments
+		sb.append(formatComments(study.getDesignDescriptors().stream()
+				.map(o -> o.getComments())
+				.collect(Collectors.toList()))
+		);
+		
+		return sb.toString();
+	}
+	
+	private String formatStudyPublications(Study study) {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(InvestigationAttribute.STUDY_PUBLICATIONS.toString());
+		
+		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID()));
+		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI()));
+		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
+				(o) -> {
+					return o.getAuthorList().stream()
+							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
+							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
+				}));
+		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle()));
+		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), 
+				(o) -> {
+					return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
+				}));
+		
+		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
+				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getPublications(),
+				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
+		));
+		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
+				InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getPublications(),
+				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
+		));
+		
+		// TODO Comments
+		
+		return sb.toString();
+	}
+	
+	public boolean writeToFile(String filepath) throws IOException {
+		OutputStream os = new FileOutputStream(filepath);
+		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
+		
+		writer.write(formatOntologies());
+		writer.write(formatInvestigationHeaders());
+		writer.write(formatInvestigationPublications());
+		writer.write(formatInvestigationContacts());
+			
 		for(Study study: this.studies) {
-			writer.write(InvestigationAttribute.STUDY.toString());
-			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier()));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName()));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle()));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription()));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
-					study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString()));
-			writer.write(formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
-					study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString()));
-			
-			// Study Comments
-			writer.write(formatSimpleComments(study.getComments()));
-			
-			// STUDY DESIGN DESCRIPTORS
-			writer.write(InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString());
-			
-			writer.write(lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getTerm()));
-			
-			writer.write(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
-					study.getDesignDescriptors(),
-					descriptor -> {
-						if(descriptor.getTermAccession() == null)
-							return Symbol.EMPTY.toString();
-						else
-							return descriptor.getTermAccession();
-					}
-					));
-			
-			writer.write(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
-					study.getDesignDescriptors(),
-					descriptor -> {
-						if(descriptor.getSourceREF() == null)
-							return Symbol.EMPTY.toString();
-						else
-							return descriptor.getSourceREF().getName();
-					}
-					));
-			
-			// Study Design Comemnts
-			writer.write(formatComments(study.getDesignDescriptors().stream()
-					.map(o -> o.getComments())
-					.collect(Collectors.toList()))
-			);
-			
-			// STUDY PUBLICATIONS
-			writer.write(InvestigationAttribute.STUDY_PUBLICATIONS.toString());
-			
-			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID()));
-			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI()));
-			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
-					(o) -> {
-						return o.getAuthorList().stream()
-								.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
-								.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-					}));
-			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle()));
-			writer.write(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), 
-					(o) -> {
-						return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
-					}));
-			
-			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getPublications(),
-					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
-			));
-			writer.write(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getPublications(),
-					obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
-			));
-
+			writer.write(formatStudyHeaders(study));
+			writer.write(formatStudyPublications(study));
 		}
 		
 			
