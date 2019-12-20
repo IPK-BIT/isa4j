@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.ipk_gatersleben.bit.bi.isa.constants.InvestigationAttribute;
-import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
@@ -86,7 +86,7 @@ public class Investigation extends Commentable {
 	private List<Study> studies = new ArrayList<>();
 
 	/**
-	 * Constructor, every Investigation should have a identifier.
+	 * Constructor, every Investigation should have an identifier.
 	 *
 	 * @param identifier identifier of investigation
 	 */
@@ -101,8 +101,6 @@ public class Investigation extends Commentable {
 	 * @param ontology the {@link Ontology} source reference, which you want to add
 	 */
 	public void addOntology(Ontology ontology) {
-		if (ontologies == null)
-			ontologies = new ArrayList<>();
 		this.ontologies.add(ontology);
 	}
 
@@ -132,6 +130,7 @@ public class Investigation extends Commentable {
 	 * @param study the study of investigation, which will be add
 	 */
 	public boolean addStudy(Study study) {
+		// TODO Throw an error instead of just logging; we want to force the user to take notice
 		for (Study studyInInvestigation : studies) {
 			if (study.getIdentifier().equals(studyInInvestigation.getIdentifier())) {
 //				LoggerUtil.logger.error("The investigation " + identifier + " can't add the study. "
@@ -407,6 +406,7 @@ public class Investigation extends Commentable {
 //	public static final Map<String, OntologyAnnotation> unitMap = new ConcurrentHashMap<>();
 	
 	public boolean writeToFile(String filepath) throws IOException {
+		// TODO SPlit this up into many little functions like formatInvestigationHead, formatStudyFactors ...
 		OutputStream os = new FileOutputStream(filepath);
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 

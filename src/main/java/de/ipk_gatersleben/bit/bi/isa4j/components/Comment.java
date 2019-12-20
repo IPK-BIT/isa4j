@@ -53,10 +53,6 @@ public class Comment {
 	 * @param name name of the {@link Comment}
 	 */
 	public void setName(String name) {
-		if (name == null) {
-//			LoggerUtil.logger.error("The name of comment can't be null!");
-			return;
-		}
 		this.name = name;
 	}
 

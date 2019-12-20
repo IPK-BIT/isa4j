@@ -8,7 +8,7 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.util;
 
-import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 
 /**
  * Utility class with functions to handle several {@link String} tasks

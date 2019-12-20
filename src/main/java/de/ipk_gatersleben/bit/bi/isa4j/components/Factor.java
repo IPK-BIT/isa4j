@@ -11,7 +11,7 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 import de.ipk_gatersleben.bit.bi.isa.Investigation;
 import de.ipk_gatersleben.bit.bi.isa.components.NonNumericFactor;
 import de.ipk_gatersleben.bit.bi.isa.components.NumericFactor;
-import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
 import de.ipk_gatersleben.bit.bi.isa4j.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;

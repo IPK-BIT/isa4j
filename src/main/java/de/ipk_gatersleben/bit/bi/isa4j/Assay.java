@@ -9,9 +9,8 @@
 package de.ipk_gatersleben.bit.bi.isa4j;
 
 import de.ipk_gatersleben.bit.bi.isa.components.*;
-import de.ipk_gatersleben.bit.bi.isa.constants.PartOfEntity;
-import de.ipk_gatersleben.bit.bi.isa.constants.Props;
-import de.ipk_gatersleben.bit.bi.isa.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa.io.ThreadPool;
 import de.ipk_gatersleben.bit.bi.isa.io.Writer;
 import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
@@ -72,10 +71,6 @@ public class Assay {
 	 */
 	private String technologyPlatform;
 
-	/**
-	 * which part is the assay : head, mid or end
-	 */
-	private transient PartOfEntity location = PartOfEntity.HEAD;
 
 	/**
 	 * rows of assay file
@@ -138,15 +133,6 @@ public class Assay {
 	}
 
 	/**
-	 * get the location of the assay
-	 *
-	 * @return
-	 */
-	public PartOfEntity getLocation() {
-		return location;
-	}
-
-	/**
 	 * get type of measurement
 	 *
 	 * @return type of measurement
@@ -198,15 +184,6 @@ public class Assay {
 	 */
 	public void setIdentifier(String iD) {
 		identifier = iD;
-	}
-
-	/**
-	 * set the location of the assay
-	 *
-	 * @param location location, constans of PartOfEntity
-	 */
-	public void setLocation(PartOfEntity location) {
-		this.location = location;
 	}
 
 	/**
