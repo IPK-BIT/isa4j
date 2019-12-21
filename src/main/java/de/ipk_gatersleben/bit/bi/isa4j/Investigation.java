@@ -538,6 +538,55 @@ public class Investigation extends Commentable {
 			+ formatSimpleComments(study.getComments());
 	}
 	
+	private String formatStudyFactors(Study study) {
+		return InvestigationAttribute.STUDY_FACTORS.toString()
+			+ lineFromList(InvestigationAttribute.STUDY_FACTOR_NAME, study.getFactors(), o -> o.getName())
+			+ lineFromList(InvestigationAttribute.STUDY_FACTOR_TYPE, study.getFactors(),
+					o -> o.getType() == null ? Symbol.EMPTY.toString() : o.getType().getTerm())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_FACTOR_TYPE.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getFactors(),
+					o -> o.getType() == null ? Symbol.EMPTY.toString() : o.getType().getTermAccession())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_FACTOR_TYPE.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getFactors(),
+					o -> o.getType() == null ? Symbol.EMPTY.toString() : o.getType().getSourceREF().getName())
+			+ formatComments(study.getFactors());
+	}
+	
+	private String formatStudyAssays(Study study) {
+		return InvestigationAttribute.STUDY_ASSAYS.toString()
+			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_FILE_NAME, study.getAssays(), a -> a.getFileName())
+			
+			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE, study.getAssays(),
+					a ->a.getMeasurementType() == null ? Symbol.EMPTY.toString() : a.getMeasurementType().getTerm())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getAssays(),
+					a ->a.getMeasurementType() == null ? Symbol.EMPTY.toString() : a.getMeasurementType().getTermAccession())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getAssays(),
+					a ->a.getMeasurementType() == null ? Symbol.EMPTY.toString() : a.getMeasurementType().getSourceREF().getName())
+			
+			// TODO maybe make a method ontologyLinesFromList or something, this is kind of annoying repetition...
+			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE, study.getAssays(),
+					a ->a.getTechnologyType() == null ? Symbol.EMPTY.toString() : a.getTechnologyType().getTerm())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE.toString(),
+					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getAssays(),
+					a ->a.getTechnologyType() == null ? Symbol.EMPTY.toString() : a.getTechnologyType().getTermAccession())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE.toString(),
+					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getAssays(),
+					a ->a.getTechnologyType() == null ? Symbol.EMPTY.toString() : a.getTechnologyType().getSourceREF().getName())
+			
+			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_PLATFORM, study.getAssays(), a -> a.getTechnologyPlatform())
+			+ formatComments(study.getAssays());
+	}
+	
+	private String formatStudyProtocols(Study study) {
+		return "";
+	}
+	
+	private String formatStudyContacts(Study study) {
+		return "";
+	}
+	
 	public boolean writeToFile(String filepath) throws IOException {
 		OutputStream os = new FileOutputStream(filepath);
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
@@ -550,6 +599,10 @@ public class Investigation extends Commentable {
 		for(Study study: this.studies) {
 			writer.write(formatStudyHeaders(study));
 			writer.write(formatStudyPublications(study));
+			writer.write(formatStudyFactors(study));
+			writer.write(formatStudyAssays(study));
+			writer.write(formatStudyProtocols(study));
+			writer.write(formatStudyContacts(study));
 		}
 			
 		writer.close();

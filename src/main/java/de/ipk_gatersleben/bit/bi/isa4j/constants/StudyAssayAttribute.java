@@ -32,7 +32,6 @@ public enum StudyAssayAttribute {
     PROTOCOL("Protocol REF" + Symbol.TAB),
     FACTOR_VALUE("Factor Value[?]" + Symbol.TAB);
 
-	// @TODO Do we need this?
 	private String value;
 
 	private StudyAssayAttribute(String val) {

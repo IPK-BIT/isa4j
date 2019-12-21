@@ -88,11 +88,6 @@ public class Study extends Commentable {
 	 */
 	private ArrayList<Person> contacts = new ArrayList<>(2);
 
-	/**
-	 * Data in study file
-	 */
-	private List<RowOfStudy> rowsOfStudy = new Vector<>(1000, 1000);
-
 
 	/**
 	 * The investigation, that has this study
@@ -123,12 +118,30 @@ public class Study extends Commentable {
 	/**
 	 * The list of {@link Factor} columns
 	 */
-	private List<Factor> listOfFactors = new ArrayList<>();
+	private List<Factor> factors = new ArrayList<>();
 
 	/**
 	 * The list of {@link Characteristic} columns for a sample
 	 */
 	private List<Characteristic> listCharacteristicsForSample = new ArrayList<>();
+
+	/**
+	 * @return the factors
+	 */
+	public List<Factor> getFactors() {
+		return factors;
+	}
+
+	/**
+	 * @param factors the factors to set
+	 */
+	public void setFactors(List<Factor> factors) {
+		this.factors = factors;
+	}
+	
+	public void addFactor(Factor factor) {
+		this.factors.add(factor);
+	}
 
 	/**
 	 * Constructor, give the identifier of study, filename is same with identifier
@@ -220,15 +233,6 @@ public class Study extends Commentable {
 	}
 
 	/**
-	 * Add new row to this {@link Study}
-	 *
-	 * @param rowOfStudy new row to add
-	 */
-	public void addRowOfStudy(RowOfStudy rowOfStudy) {
-		this.rowsOfStudy.add(rowOfStudy);
-	}
-
-	/**
 	 * Get associated assays of this study
 	 *
 	 * @return assays of this study
@@ -307,15 +311,6 @@ public class Study extends Commentable {
 	 */
 	public Date getPublicReleaseDate() {
 		return publicReleaseDate;
-	}
-
-	/**
-	 * Get data of study
-	 *
-	 * @return data of study
-	 */
-	public List<RowOfStudy> getRowsOfStudy() {
-		return rowsOfStudy;
 	}
 
 	/**
@@ -402,15 +397,6 @@ public class Study extends Commentable {
 	 */
 	public void setPublicReleaseDate(Date publicReleaseDate) {
 		this.publicReleaseDate = publicReleaseDate;
-	}
-
-	/**
-	 * Set data of study
-	 *
-	 * @param data data of study
-	 */
-	public void setRowsOfStudy(List<RowOfStudy> data) {
-		this.rowsOfStudy = data;
 	}
 
 	/**

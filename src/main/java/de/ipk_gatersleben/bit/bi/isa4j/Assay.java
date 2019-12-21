@@ -15,6 +15,7 @@ import de.ipk_gatersleben.bit.bi.isa.io.ThreadPool;
 import de.ipk_gatersleben.bit.bi.isa.io.Writer;
 import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
@@ -34,17 +35,7 @@ import java.util.concurrent.CountDownLatch;
  *
  * @author liufe, arendd
  */
-public class Assay {
-
-	/**
-	 * members for Class Assay, Constants, every item is a member of Assay
-	 */
-	public enum Attribute {
-
-		FILE_NAME, MEASUREMENT_TYPE, MEASUREMENT_TYPE_TERM_ACCESSION_NUMBER, MEASUREMENT_TYPE_TERM_SOURCE_REF,
-		TECHNOLOGY_TYPEM, TECHNOLOGY_TYPE_TERM_ACCESSION_NUMBER, TECHNOLOGY_TYPE_TERM_SOURCE_REF, TECHNOLOGY_PLATFORM
-
-	}
+public class Assay extends Commentable {
 
 	/**
 	 * id of assay
@@ -59,12 +50,19 @@ public class Assay {
 	/**
 	 * The measurement being observed in this assay
 	 */
-	private OntologyAnnotation measurementOntology;
+	private OntologyAnnotation measurementType;
+
+	/**
+	 * @return the measurementType
+	 */
+	public OntologyAnnotation getMeasurementType() {
+		return measurementType;
+	}
 
 	/**
 	 * The technology being employed to observe this measurement
 	 */
-	private OntologyAnnotation technologyOntology;
+	private OntologyAnnotation technologyType;
 
 	/**
 	 * The technology platform used
@@ -98,6 +96,7 @@ public class Assay {
 	 * @param fileName file name of assay
 	 */
 	public Assay(String fileName) {
+		// TODO BAD!
 		if (!fileName.endsWith(".txt")) {
 			fileName += ".txt";
 		}
@@ -137,8 +136,8 @@ public class Assay {
 	 *
 	 * @return type of measurement
 	 */
-	public OntologyAnnotation getMeasurementOntology() {
-		return measurementOntology;
+	public OntologyAnnotation measurementType() {
+		return measurementType;
 	}
 
 	/**
@@ -164,8 +163,8 @@ public class Assay {
 	 *
 	 * @return type of technology
 	 */
-	public OntologyAnnotation getTechnologyOntology() {
-		return technologyOntology;
+	public OntologyAnnotation getTechnologyType() {
+		return technologyType;
 	}
 
 	/**
@@ -191,8 +190,8 @@ public class Assay {
 	 *
 	 * @param measurementOntology type of measurement
 	 */
-	public void setMeasurementOntology(OntologyAnnotation measurementOntology) {
-		this.measurementOntology = measurementOntology;
+	public void setMeasurementType(OntologyAnnotation measurementOntology) {
+		this.measurementType = measurementOntology;
 	}
 
 	/**
@@ -211,10 +210,10 @@ public class Assay {
 	/**
 	 * set type of technology
 	 *
-	 * @param technologyOntology type of technology
+	 * @param technologyType type of technology
 	 */
-	public void setTechnologyOntology(OntologyAnnotation technologyOntology) {
-		this.technologyOntology = technologyOntology;
+	public void setTechnologyType(OntologyAnnotation technologyOntology) {
+		this.technologyType = technologyOntology;
 	}
 
 	/**
