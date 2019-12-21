@@ -399,6 +399,17 @@ public class Investigation extends Commentable {
 		return sb.toString();
 	}
 
+	private static <C, T> String ontologyLinesFromList(C lineName, List<T> list, Function<T, OntologyAnnotation> lambda) {
+		return lineFromList(lineName, list,
+				a ->lambda.apply(a) == null ? Symbol.EMPTY.toString() : lambda.apply(a).getTerm())
+		+ lineFromList(mergeAttributes(lineName.toString(),
+				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), list,
+				a ->lambda.apply(a) == null ? Symbol.EMPTY.toString() : lambda.apply(a).getTermAccession())
+		+ lineFromList(mergeAttributes(lineName.toString(),
+				InvestigationAttribute.TERM_SOURCE_REF.toString()), list,
+				a ->lambda.apply(a) == null || lambda.apply(a).getSourceREF() == null ? Symbol.EMPTY.toString() : lambda.apply(a).getSourceREF().getName());
+	}
+	
 	/**
 	 * Collection of units, those by this investigation are used
 	 * @throws IOException 
@@ -441,16 +452,7 @@ public class Investigation extends Commentable {
 							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
 				})
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, this.publications, (o) -> o.getTitle())
-			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications,
-				(o) -> o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm())
-		
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
-				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.publications,
-				obj -> obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession())
-		
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
-				InvestigationAttribute.TERM_SOURCE_REF.toString()), this.publications,
-				obj -> obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName())
+			+ ontologyLinesFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications, p -> p.getStatusOntology())
 		
 			+ formatComments(this.publications);
 		
@@ -494,20 +496,12 @@ public class Investigation extends Commentable {
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
 				study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString())
-			+ (formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
 				study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString())
 			+ formatSimpleComments(study.getComments())
 		// STUDY DESIGN DESCRIPTORS
 			+ InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString()
-			+ lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getTerm())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
-				study.getDesignDescriptors(),
-				descriptor -> descriptor.getTermAccession() == null ? Symbol.EMPTY.toString() : descriptor.getTermAccession()
-				)
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
-				study.getDesignDescriptors(),
-				descriptor -> descriptor.getSourceREF() == null ? Symbol.EMPTY.toString() : descriptor.getSourceREF().getName()
-				))
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o)
 			+ formatComments(study.getDesignDescriptors());
 		
 	}
@@ -523,58 +517,22 @@ public class Investigation extends Commentable {
 							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
 				})
 			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle())
-			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), 
-				(o) -> {
-					return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
-				})
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
-				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getPublications(),
-				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
-				)
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
-				InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getPublications(),
-				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
-				)
-			+ formatSimpleComments(study.getComments());
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), p -> p.getStatusOntology())
+			+ formatComments(study.getPublications());
 	}
 	
 	private String formatStudyFactors(Study study) {
 		return InvestigationAttribute.STUDY_FACTORS.toString()
 			+ lineFromList(InvestigationAttribute.STUDY_FACTOR_NAME, study.getFactors(), o -> o.getName())
-			+ lineFromList(InvestigationAttribute.STUDY_FACTOR_TYPE, study.getFactors(),
-					o -> o.getType() == null ? Symbol.EMPTY.toString() : o.getType().getTerm())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_FACTOR_TYPE.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getFactors(),
-					o -> o.getType() == null ? Symbol.EMPTY.toString() : o.getType().getTermAccession())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_FACTOR_TYPE.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getFactors(),
-					o -> o.getType() == null ? Symbol.EMPTY.toString() : o.getType().getSourceREF().getName())
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_FACTOR_TYPE, study.getFactors(), f -> f.getType())
 			+ formatComments(study.getFactors());
 	}
 	
 	private String formatStudyAssays(Study study) {
 		return InvestigationAttribute.STUDY_ASSAYS.toString()
 			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_FILE_NAME, study.getAssays(), a -> a.getFileName())
-			
-			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE, study.getAssays(),
-					a ->a.getMeasurementType() == null ? Symbol.EMPTY.toString() : a.getMeasurementType().getTerm())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getAssays(),
-					a ->a.getMeasurementType() == null ? Symbol.EMPTY.toString() : a.getMeasurementType().getTermAccession())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getAssays(),
-					a ->a.getMeasurementType() == null ? Symbol.EMPTY.toString() : a.getMeasurementType().getSourceREF().getName())
-			
-			// TODO maybe make a method ontologyLinesFromList or something, this is kind of annoying repetition...
-			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE, study.getAssays(),
-					a ->a.getTechnologyType() == null ? Symbol.EMPTY.toString() : a.getTechnologyType().getTerm())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE.toString(),
-					InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getAssays(),
-					a ->a.getTechnologyType() == null ? Symbol.EMPTY.toString() : a.getTechnologyType().getTermAccession())
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE.toString(),
-					InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getAssays(),
-					a ->a.getTechnologyType() == null ? Symbol.EMPTY.toString() : a.getTechnologyType().getSourceREF().getName())
-			
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE, study.getAssays(), a -> a.getMeasurementType())
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE, study.getAssays(), a -> a.getTechnologyType())
 			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_PLATFORM, study.getAssays(), a -> a.getTechnologyPlatform())
 			+ formatComments(study.getAssays());
 	}
