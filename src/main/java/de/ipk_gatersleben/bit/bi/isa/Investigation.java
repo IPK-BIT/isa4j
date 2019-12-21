@@ -831,7 +831,7 @@ public class Investigation {
 		if (list != null)
 			for (Comment c : list) {
 				sb.append(InvestigationAttribute.COMMENT);
-				sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
+				sb = StringUtil.putNameInAttribute(sb, c.getName());
 				sb.append(c.getValue()).append(Symbol.ENTER);
 			}
 		return sb;
@@ -1114,7 +1114,7 @@ public class Investigation {
 
 				for (String type : template) {
 					StringBuilder content = new StringBuilder(InvestigationAttribute.COMMENT.toString());
-					content = StringUtil.putParameterInStringBuilder(content, type);
+					content = StringUtil.putNameInAttribute(content, type);
 					for (Person contact : contacts) {
 						if (contact.getComments() != null) {
 							for (Comment comment : contact.getComments()) {
@@ -1150,7 +1150,7 @@ public class Investigation {
 
 				for (String type : template) {
 					StringBuilder content = new StringBuilder(InvestigationAttribute.COMMENT.toString());
-					content = StringUtil.putParameterInStringBuilder(content, type);
+					content = StringUtil.putNameInAttribute(content, type);
 					for (DesignDescriptor designDescriptor : designDescriptors) {
 						if (designDescriptor.getComments() != null) {
 							for (Comment comment : designDescriptor.getComments()) {
@@ -1186,7 +1186,7 @@ public class Investigation {
 
 				for (String type : template) {
 					StringBuilder content = new StringBuilder(InvestigationAttribute.COMMENT.toString());
-					content = StringUtil.putParameterInStringBuilder(content, type);
+					content = StringUtil.putNameInAttribute(content, type);
 					for (Factor factor : factors) {
 						if (factor.getComments() != null) {
 							for (Comment comment : factor.getComments()) {

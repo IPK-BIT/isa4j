@@ -26,9 +26,8 @@ public class StringUtil {
 	 * @param parameter     to put in the {@link StringBuilder}
 	 * @return the {@link StringBuilder}
 	 */
-	public static StringBuilder putParameterInStringBuilder(StringBuilder stringBuilder, String parameter) {
-		int index = stringBuilder.indexOf(Symbol.ATTRIBUTE_REPLACE.toString());
-		return stringBuilder.replace(index, index + 1, parameter);
+	public static <T> String putNameInAttribute(T attribute, String parameter) {
+		return attribute.toString().replace(Symbol.ATTRIBUTE_REPLACE.toString(), parameter);
 	}
 
 	/**

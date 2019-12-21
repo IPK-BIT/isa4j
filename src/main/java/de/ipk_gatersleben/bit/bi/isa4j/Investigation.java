@@ -318,40 +318,42 @@ public class Investigation extends Commentable {
 	
 	// Meant for simple, one-value attributes like Investigation Title
 	private static String formatSimpleAttribute(InvestigationAttribute lineName, String value) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(lineName.toString());
-		sb.append(value == null ? Symbol.EMPTY.toString() : value);
-		sb.append(Symbol.ENTER.toString());
-		return sb.toString();		
+		return lineName.toString()
+			+ (value == null ? Symbol.EMPTY.toString() : value)
+			+ Symbol.ENTER.toString();
 	}
 	
 	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
 	private static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
 		for (Comment c : comments) {
-			sb.append(InvestigationAttribute.COMMENT);
-      // TODO This is not nice, because what if a comment contains a ? ? Or does it only replace the last occurence?
-			sb = StringUtil.putParameterInStringBuilder(sb, c.getName());
+			sb.append(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, c.getName()));
 			sb.append(c.getValue()).append(Symbol.ENTER);
 		}
 		return sb.toString();
 	}
 	
-	// @ TODO actually make this function accept a list of commentables and extract comments myself
-	private static String formatComments(List<List<Comment>> commentables) {
-		StringBuilder sb = new StringBuilder();
-		// Get a List of all Comment types present in any of the Commentables (Person, Study..., anything with comments)
-		List<String> commentLevels = commentables.stream()
+	private static <T extends Commentable> String formatComments(List<T> commentables) {
+		
+		// Turn the commentables into a list of lists of comments
+		List<List<Comment>> commentBuckets = commentables.stream()
+				.map(c -> c.getComments())
+				.collect(Collectors.toList());
+		
+		// Get a List of all Comment types present in any of the buckets
+		List<String> commentLevels = commentBuckets.stream()
 				.flatMap(bucket -> bucket.stream()) // flatten
 				.map(comment -> comment.getName())
 				.distinct() // remove duplicates
 				.collect(Collectors.toList());
+		
 		// Now loop through all comment types and create a line for each
+		StringBuilder sb = new StringBuilder();
 		for(String commentType : commentLevels) {
 			// @ TODO Use the Investigation Attribute Comment thingy instead of the plain string
 			sb.append("Comment[" + commentType + "]" + Symbol.TAB.toString());
 			// Now loop through all the buckets and see if that comment type is present
-			String commentLine = commentables.stream()
+			String commentLine = commentBuckets.stream()
 				// For each bucket -> go through each comment
 				.map(bucket -> bucket.stream()
 					// Filter out only comments of the current type
@@ -405,196 +407,135 @@ public class Investigation extends Commentable {
 	 */
 //	public static final Map<String, OntologyAnnotation> unitMap = new ConcurrentHashMap<>();
 	
-	private String formatOntologies() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString());
-		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_NAME, this.ontologies, o -> o.getName()));
-		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_FILE, this.ontologies, o -> o.getURL().toString()));
-		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_VERSION, this.ontologies, o -> o.getVersion()));
-		sb.append(lineFromList(InvestigationAttribute.TERM_SOURCE_DESCRIPTION, this.ontologies, o -> o.getDescription()));
-		
-		return sb.toString();
+	private String formatOntologies() {	
+		return InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString()
+			+  lineFromList(InvestigationAttribute.TERM_SOURCE_NAME, this.ontologies, o -> o.getName())
+			+  lineFromList(InvestigationAttribute.TERM_SOURCE_FILE, this.ontologies, o -> o.getURL().toString())
+			+  lineFromList(InvestigationAttribute.TERM_SOURCE_VERSION, this.ontologies, o -> o.getVersion())
+			+  lineFromList(InvestigationAttribute.TERM_SOURCE_DESCRIPTION, this.ontologies, o -> o.getDescription());
 	}
 	
-	private String formatInvestigationHeaders() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(InvestigationAttribute.INVESTIGATION.toString());
-		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_IDENTIFIER, this.identifier));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_TITLE, this.title));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_DESCRIPTION, this.description));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE, 
-				this.submissionDate == null ? null : this.submissionDate.toString()));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE, 
-				this.publicReleaseDate == null ? null : this.publicReleaseDate.toString()));
-		
-		// Investigation Comments
-		sb.append(formatSimpleComments(this.getComments()));
-		
-		return sb.toString();
+	private String formatInvestigationHeaders() {		
+		return InvestigationAttribute.INVESTIGATION.toString()
+			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_IDENTIFIER, this.identifier)
+			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_TITLE, this.title)
+			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_DESCRIPTION, this.description)
+			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_SUBMISSION_DATE, 
+				this.submissionDate == null ? null : this.submissionDate.toString())
+			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE, 
+				this.publicReleaseDate == null ? null : this.publicReleaseDate.toString())
+				
+			+  formatSimpleComments(this.getComments());	
 	}
-	
-	private String formatInvestigationPublications() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString());
-		
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBMED_ID, this.publications, (o) -> o.getPubmedID()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, this.publications, (o) -> o.getDOI()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, this.publications, 
+	// TODO why do we need two methods, investigationPublications and studyPublications?
+	private String formatInvestigationPublications() {	
+		return InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString()
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBMED_ID, this.publications, (o) -> o.getPubmedID())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, this.publications, (o) -> o.getDOI())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, this.publications, 
 				// This method is a bit more complicated than the previous ones because we have to combine
 				// multiple fields in a certain way, but in principle it still works like before.
 				(o) -> {
 					return o.getAuthorList().stream()
 							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
 							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-				}));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, this.publications, (o) -> o.getTitle()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications,
-				(o) -> {
-					return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
-				}));
+				})
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, this.publications, (o) -> o.getTitle())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications,
+				(o) -> o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm())
 		
-		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
 				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.publications,
-				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
-		));
+				obj -> obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession())
 		
-		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS.toString(),
 				InvestigationAttribute.TERM_SOURCE_REF.toString()), this.publications,
-				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
-		));
+				obj -> obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName())
 		
-		// TODO Comments
+			+ formatComments(this.publications);
 		
-		return sb.toString();
 	}
 
 	private String formatInvestigationContacts() {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(InvestigationAttribute.INVESTIGATION_CONTACTS.toString());
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, this.contacts, (o) -> o.getLastName()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, this.contacts,(o) -> o.getFirstName()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, this.contacts,(o) -> o.getMidInitials()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_EMAIL, this.contacts,(o) -> o.getEmail()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_PHONE, this.contacts,(o) -> o.getPhone()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FAX, this.contacts,(o) -> o.getFax()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ADDRESS, this.contacts,(o) -> o.getAddress()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, this.contacts,(o) -> o.getAffiliation()));
-		sb.append(lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, this.contacts,
-				(o) -> o.getRoles().stream()
-					.map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString()))));
-		
-		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
+		return InvestigationAttribute.INVESTIGATION_CONTACTS.toString()
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, this.contacts, (o) -> o.getLastName())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, this.contacts,(o) -> o.getFirstName())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, this.contacts,(o) -> o.getMidInitials())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_EMAIL, this.contacts,(o) -> o.getEmail())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_PHONE, this.contacts,(o) -> o.getPhone())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FAX, this.contacts,(o) -> o.getFax())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ADDRESS, this.contacts,(o) -> o.getAddress())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, this.contacts,(o) -> o.getAffiliation())
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, this.contacts,
+				(o) -> o.getRoles().stream().map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
 				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
 				obj -> { return obj.getRoles().stream().map(
 							r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
 						).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
-		));
-		
-		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
+				)
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
 				InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
 				obj -> {
 					return obj.getRoles().stream().map(
 							// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
 							// Otherwise return the Ontology's name
 							r -> r == null || r.getSourceREF() == null ? Symbol.EMPTY.toString() : r.getSourceREF().getName()
-						).collect(Collectors.joining(Symbol.SEMICOLON.toString())); 
-				}
-		));
-	
-		// Publication Person Comments
-		sb.append(formatComments(this.contacts.stream()
-				.map(o -> o.getComments())
-				.collect(Collectors.toList()))
-		);
-		
-		return sb.toString();
+						).collect(Collectors.joining(Symbol.SEMICOLON.toString())); }
+				)
+			+ formatComments(this.contacts);
 	}
 	
 	private String formatStudyHeaders(Study study) {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(InvestigationAttribute.STUDY.toString());
-		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier()));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName()));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle()));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription()));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
-				study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString()));
-		sb.append(formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
-				study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString()));
-		
-		// Study Comments
-		sb.append(formatSimpleComments(study.getComments()));
-		
+		return InvestigationAttribute.STUDY.toString()
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier())
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName())
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle())
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription())
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
+				study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString())
+			+ (formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
+				study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString())
+			+ formatSimpleComments(study.getComments())
 		// STUDY DESIGN DESCRIPTORS
-		sb.append(InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString());
-		
-		sb.append(lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getTerm()));
-		
-		sb.append(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
+			+ InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString()
+			+ lineFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o.getTerm())
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()),
 				study.getDesignDescriptors(),
-				descriptor -> {
-					if(descriptor.getTermAccession() == null)
-						return Symbol.EMPTY.toString();
-					else
-						return descriptor.getTermAccession();
-				}
-				));
-		
-		sb.append(lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
+				descriptor -> descriptor.getTermAccession() == null ? Symbol.EMPTY.toString() : descriptor.getTermAccession()
+				)
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_DESIGN_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()),
 				study.getDesignDescriptors(),
-				descriptor -> {
-					if(descriptor.getSourceREF() == null)
-						return Symbol.EMPTY.toString();
-					else
-						return descriptor.getSourceREF().getName();
-				}
-				));
+				descriptor -> descriptor.getSourceREF() == null ? Symbol.EMPTY.toString() : descriptor.getSourceREF().getName()
+				))
+			+ formatComments(study.getDesignDescriptors());
 		
-		// Study Design Comments
-		sb.append(formatComments(study.getDesignDescriptors().stream()
-				.map(o -> o.getComments())
-				.collect(Collectors.toList()))
-		);
-		
-		return sb.toString();
 	}
 	
 	private String formatStudyPublications(Study study) {
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(InvestigationAttribute.STUDY_PUBLICATIONS.toString());
-		
-		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID()));
-		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI()));
-		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
+		return InvestigationAttribute.STUDY_PUBLICATIONS.toString()		
+			+ lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID())
+			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI())
+			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
 				(o) -> {
 					return o.getAuthorList().stream()
 							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
 							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-				}));
-		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle()));
-		sb.append(lineFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), 
+				})
+			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle())
+			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), 
 				(o) -> {
 					return o.getStatusOntology() == null ? Symbol.EMPTY.toString() : o.getStatusOntology().getTerm();
-				}));
-		
-		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
+				})
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
 				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getPublications(),
 				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getTermAccession(); }
-		));
-		sb.append(lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
+				)
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PUBLICATION_STATUS.toString(),
 				InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getPublications(),
 				obj -> { return obj.getStatusOntology() == null ? Symbol.EMPTY.toString() : obj.getStatusOntology().getSourceREF().getName(); }
-		));
-		
-		// TODO Comments
-		
-		return sb.toString();
+				)
+			+ formatSimpleComments(study.getComments());
 	}
 	
 	public boolean writeToFile(String filepath) throws IOException {
@@ -610,7 +551,6 @@ public class Investigation extends Commentable {
 			writer.write(formatStudyHeaders(study));
 			writer.write(formatStudyPublications(study));
 		}
-		
 			
 		writer.close();
 		return true;
