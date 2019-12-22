@@ -94,36 +94,34 @@ public class Study extends Commentable {
 	 */
 	private Investigation investigation;
 
-	/**
-	 * The list of {@link Characteristic} columns
-	 */
-	private List<Characteristic> listOfCharacteristics = new ArrayList<>();
-
 
 	/**
 	 * The list of {@link Protocol} columns
 	 */
-	private List<Protocol> listOfProtocols = new ArrayList<>();
+	private List<Protocol> protocols = new ArrayList<>();
 
 	/**
-	 * The map of {@link Parameter} within {@link Protocol} columns
+	 * @return the protocols
 	 */
-	private Map<String, List<Parameter>> mapOfParametersWithinProtocols = new HashMap<>();
+	public List<Protocol> getProtocols() {
+		return protocols;
+	}
 
 	/**
-	 * The map of characteristic within protocol columns
+	 * @param protocols the protocols to set
 	 */
-	private Map<String, List<Characteristic>> mapOfCharacteristicsWithinProtocols = new HashMap<>();
+	public void setProtocols(List<Protocol> protocols) {
+		this.protocols = protocols;
+	}
+	
+	public void addProtocol(Protocol protocol) {
+		this.protocols.add(protocol);
+	}
 
 	/**
 	 * The list of {@link Factor} columns
 	 */
 	private List<Factor> factors = new ArrayList<>();
-
-	/**
-	 * The list of {@link Characteristic} columns for a sample
-	 */
-	private List<Characteristic> listCharacteristicsForSample = new ArrayList<>();
 
 	/**
 	 * @return the factors

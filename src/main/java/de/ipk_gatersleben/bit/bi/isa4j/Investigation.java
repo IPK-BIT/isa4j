@@ -367,7 +367,6 @@ public class Investigation extends Commentable {
 			sb.append(commentLine);
 			sb.append(Symbol.ENTER.toString());
 		}
-		System.out.println(commentLevels);
 		return sb.toString();
 	}
 	
@@ -538,14 +537,54 @@ public class Investigation extends Commentable {
 	}
 	
 	private String formatStudyProtocols(Study study) {
-		return "";
+		return InvestigationAttribute.STUDY_PROTOCOLS.toString()
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_NAME, study.getProtocols(), p -> p.getName())
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_PROTOCOL_TYPE, study.getProtocols(), p -> p.getType())
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_DESCRIPTION, study.getProtocols(), p -> p.getDescription())
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_URI, study.getProtocols(), p -> p.getURI())
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_VERSION, study.getProtocols(), p -> p.getVersion())
+			
+			// Protocol Parameters
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME, study.getProtocols(),
+					p -> p.getParameters().stream()
+					.map(param -> param.getName().getTerm())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getProtocols(),
+					p -> p.getParameters().stream()
+					.map(param -> param.getName() == null || param.getName().getTermAccession() == null ? Symbol.EMPTY.toString() : param.getName().getTermAccession())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getProtocols(),
+					p -> p.getParameters().stream()
+					.map(param -> param.getName() == null || param.getName().getSourceREF() == null ? Symbol.EMPTY.toString() : param.getName().getSourceREF().getName())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			
+			// Protocol Components
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_NAME, study.getProtocols(),
+					p -> p.getComponents().stream()
+					.map(component -> component.getName())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE, study.getProtocols(),
+					p -> p.getComponents().stream()
+					.map(component -> component.getType() == null ? Symbol.EMPTY.toString() : component.getType().getTerm())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getProtocols(),
+					p -> p.getComponents().stream()
+					.map(component -> component.getType() == null || component.getType().getTermAccession() == null ? Symbol.EMPTY.toString() : component.getType().getTermAccession())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getProtocols(),
+					p -> p.getComponents().stream()
+					.map(component -> component.getType() == null || component.getType().getSourceREF() == null ? Symbol.EMPTY.toString() : component.getType().getSourceREF().getName())
+					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			
+			+ formatComments(study.getProtocols());
 	}
 	
 	private String formatStudyContacts(Study study) {
+		// TODO
 		return "";
 	}
 	
-	public boolean writeToFile(String filepath) throws IOException {
+	public void writeToFile(String filepath) throws IOException {
 		OutputStream os = new FileOutputStream(filepath);
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 		
@@ -564,7 +603,6 @@ public class Investigation extends Commentable {
 		}
 			
 		writer.close();
-		return true;
 	}
 
 }

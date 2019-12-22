@@ -7,6 +7,8 @@ import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
+import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
@@ -75,6 +77,18 @@ public class Playground {
 		
 		study2.addDesignDescriptor(new OntologyAnnotation("Simple"));
 		study2.addDesignDescriptor(paper1Status);
+		
+		Protocol prot1 = new Protocol("Protocol1");
+		prot1.setDescription("hi");
+		prot1.setType(new OntologyAnnotation("Term 1", "Lululala", ontology2));
+		
+		ProtocolParameter param1 = new ProtocolParameter(new OntologyAnnotation("Param1", "ACESSS", ontology1));
+		ProtocolParameter param2 = new ProtocolParameter(new OntologyAnnotation("Param2"));
+		
+		prot1.addParameter(param1);
+		prot1.addParameter(param2);
+		
+		study1.addProtocol(prot1);
 		
 		investigation.addStudy(study1);
 		investigation.addStudy(study2);
