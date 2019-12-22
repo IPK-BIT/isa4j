@@ -90,6 +90,8 @@ public class Playground {
 		
 		study1.addProtocol(prot1);
 		
+		study1.addContact(karlheinz);
+		
 		investigation.addStudy(study1);
 		investigation.addStudy(study2);
 		

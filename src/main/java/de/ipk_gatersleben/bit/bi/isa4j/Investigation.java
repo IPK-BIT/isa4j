@@ -580,8 +580,33 @@ public class Investigation extends Commentable {
 	}
 	
 	private String formatStudyContacts(Study study) {
-		// TODO
-		return "";
+		return InvestigationAttribute.STUDY_CONTACTS.toString()
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_LAST_NAME, study.getContacts(), (o) -> o.getLastName())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_FIRST_NAME, study.getContacts(),(o) -> o.getFirstName())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_MID_INITIALS, study.getContacts(),(o) -> o.getMidInitials())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_EMAIL, study.getContacts(),(o) -> o.getEmail())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_PHONE, study.getContacts(),(o) -> o.getPhone())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_FAX, study.getContacts(),(o) -> o.getFax())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_ADDRESS, study.getContacts(),(o) -> o.getAddress())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_AFFILIATION, study.getContacts(),(o) -> o.getAffiliation())
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_ROLES, study.getContacts(),
+				(o) -> o.getRoles().stream().map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString())))
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PERSON_ROLES.toString(),
+				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getContacts(),
+				obj -> { return obj.getRoles().stream().map(
+							r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
+						).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
+				)
+			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PERSON_ROLES.toString(),
+				InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getContacts(),
+				obj -> {
+					return obj.getRoles().stream().map(
+							// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
+							// Otherwise return the Ontology's name
+							r -> r == null || r.getSourceREF() == null ? Symbol.EMPTY.toString() : r.getSourceREF().getName()
+						).collect(Collectors.joining(Symbol.SEMICOLON.toString())); }
+				)
+			+ formatComments(study.getContacts());
 	}
 	
 	public void writeToFile(String filepath) throws IOException {
