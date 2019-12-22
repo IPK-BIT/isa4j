@@ -8,26 +8,8 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j;
 
-import de.ipk_gatersleben.bit.bi.isa.components.*;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
-import de.ipk_gatersleben.bit.bi.isa.io.ThreadPool;
-import de.ipk_gatersleben.bit.bi.isa.io.Writer;
-import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
-
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Class to represent a assay in context of the ISA hierarchy. It is used to
@@ -71,24 +53,9 @@ public class Assay extends Commentable {
 
 
 	/**
-	 * rows of assay file
-	 */
-	private List<RowOfAssay> rowsOfAssay = new Vector<>(1000, 1000);
-
-	/**
 	 * the study, who has this assay
 	 */
 	private Study study;
-
-	private List<Characteristic> templateOfCharacteristic = new ArrayList<>();
-	private List<Comment> templateOfComment = new ArrayList<>();
-	private List<Protocol> templateOfProtocol = new ArrayList<>();
-	private Map<String, List<Parameter>> templateOfParameter = new HashMap<>();
-	private Map<String, List<Characteristic>> templateOfCharacteristicInProtocol = new HashMap<>();
-	private List<Factor> templateOfFactor = new ArrayList<>();
-	private List<Characteristic> templateOfSampleCharacteristic = new ArrayList<>();
-
-	private boolean imageFileFlag, rawDataFileFlag, derivedDataFileFlag;
 
 	/**
 	 * Constructor, give file name
@@ -101,15 +68,6 @@ public class Assay extends Commentable {
 			fileName += ".txt";
 		}
 		this.fileName = fileName;
-	}
-
-	/**
-	 * add a new row to row list
-	 *
-	 * @param r the new row
-	 */
-	public void addRowOfAssay(RowOfAssay r) {
-		this.rowsOfAssay.add(r);
 	}
 
 
@@ -140,14 +98,6 @@ public class Assay extends Commentable {
 		return measurementType;
 	}
 
-	/**
-	 * get data of assay
-	 *
-	 * @return data of assay
-	 */
-	public List<RowOfAssay> getRowsOfAssay() {
-		return rowsOfAssay;
-	}
 
 	/**
 	 * get the study, that own this assay
@@ -192,15 +142,6 @@ public class Assay extends Commentable {
 	 */
 	public void setMeasurementType(OntologyAnnotation measurementOntology) {
 		this.measurementType = measurementOntology;
-	}
-
-	/**
-	 * set data of assay
-	 *
-	 * @param data data of assay
-	 */
-	public void setRowsOfAssay(List<RowOfAssay> data) {
-		this.rowsOfAssay = data;
 	}
 
 	protected void setStudy(Study study) {

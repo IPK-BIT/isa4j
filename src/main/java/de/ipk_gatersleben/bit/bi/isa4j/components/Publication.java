@@ -8,7 +8,7 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import de.ipk_gatersleben.bit.bi.isa.Investigation;
+import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
 import java.util.ArrayList;
@@ -21,14 +21,6 @@ import java.util.List;
  * @author liufe, arendd
  */
 public class Publication extends Commentable {
-
-    /**
-     * Mandatory attributes for the {@link Publication} entries in the
-     * {@link Investigation} file
-     */
-    public enum Attributes {
-        PUBMED_ID, DOI, AUTHOR_LIST, TITLE, STATUS, STATUS_TERM_ACCESSION_NUMBER, STATUS_TERM_SOURCE_REF;
-    }
 
     /**
      * The PubMed ID of this {@link Publication}

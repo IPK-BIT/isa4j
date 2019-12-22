@@ -2,6 +2,8 @@ package isa4J;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
@@ -42,7 +44,7 @@ public class Playground {
 		karlheinz.addRole(role2);
 		karlheinz.addRole(role1);
 		karlheinz.addComment(new Comment("Person REF", "karlheinzREf"));
-		karlheinz.addComment(new Comment("Karlheinz says", "Hello World!"));
+		karlheinz.addComment(new Comment("Karlheinz says", "Hello World!"));		
 		
 		Publication paper1 = new Publication();
 		paper1.addAuthor(karlheinz);
@@ -94,7 +96,6 @@ public class Playground {
 		
 		investigation.addStudy(study1);
 		investigation.addStudy(study2);
-		
 		
 		investigation.writeToFile("test.txt");
 	}

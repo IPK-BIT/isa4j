@@ -8,27 +8,16 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j;
 
-import de.ipk_gatersleben.bit.bi.isa.Investigation;
-import de.ipk_gatersleben.bit.bi.isa.components.*;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
-import de.ipk_gatersleben.bit.bi.isa.io.ThreadPool;
-import de.ipk_gatersleben.bit.bi.isa.io.Writer;
-import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
-
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Class to represent a study in context of the ISA hierarchy. It is used to

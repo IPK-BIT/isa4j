@@ -10,3 +10,5 @@ src/test/resources/
 /out/
 /target/
 /logs/
+
+test.txt

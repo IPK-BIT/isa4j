@@ -8,16 +8,10 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import de.ipk_gatersleben.bit.bi.isa.Investigation;
-import de.ipk_gatersleben.bit.bi.isa.components.Characteristic;
-import de.ipk_gatersleben.bit.bi.isa.components.Parameter;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
-import de.ipk_gatersleben.bit.bi.isa.util.LoggerUtil;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
+import java.util.ArrayList;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import de.ipk_gatersleben.bit.bi.isa.components.Parameter;
+import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
 /**
  * Class to represent a protocol/process for a {@link Study}, which contains
