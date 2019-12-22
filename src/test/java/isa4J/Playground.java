@@ -2,9 +2,12 @@ package isa4J;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
@@ -12,6 +15,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
 
 public class Playground {
 
@@ -96,6 +100,30 @@ public class Playground {
 		investigation.addStudy(study2);
 		
 		investigation.writeToFile("test.txt");
+		
+		// Study and Assay Files
+		Characteristic char1 = new Characteristic("Organism", new OntologyAnnotation("Arabidopsis thaliana"));
+		Characteristic char2 = new Characteristic("Plant Role", new OntologyAnnotation("Contributor", "Acess.123", ontology1));
+		
+		Source source1 = new Source("Plant 1");
+		source1.addCharacteristic(char1);
+		source1.addCharacteristic(char2);
+		
+		String result = source1.getHeaders().entrySet()
+        .stream()
+        .map(e -> e.getKey() + "=\"" + Arrays.deepToString(e.getValue()) + "\"")
+        .collect(Collectors.joining("\n"));
+		
+		System.out.println(result);
+		
+		System.out.println("----");
+		
+		String result2 = source1.getFields().entrySet()
+		        .stream()
+		        .map(e -> e.getKey() + "=\"" + Arrays.deepToString(e.getValue()) + "\"")
+		        .collect(Collectors.joining("\n"));
+				
+		System.out.println(result2);
 	}
 
 }

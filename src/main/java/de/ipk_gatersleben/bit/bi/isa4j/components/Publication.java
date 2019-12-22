@@ -8,11 +8,12 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
+import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
 /**
  * Class representing a {@link Publication} connected to a {@link Investigation}
@@ -35,7 +36,7 @@ public class Publication extends Commentable {
     /**
      * The list of authors who contributed to this {@link Publication}
      */
-    private List<Person> authors;
+    private List<Person> authors = new ArrayList<Person>();
 
     /**
      * The title of the {@link Publication}

@@ -14,12 +14,12 @@ package de.ipk_gatersleben.bit.bi.isa4j.constants;
  * @author liufe, arendd
  */
 public enum StudyAssayAttribute {
-    SOURCE_NAME("Source Name" + Symbol.TAB),
+    SOURCE_NAME("Source Name"),
 
-    SAMPLE_NAME("Sample Name" + Symbol.TAB),
-    CHARACTERISTICS("Characteristics[?]" + Symbol.TAB),
-    TERM_SOURCE_REF("Term Source REF" + Symbol.TAB),
-    TERM_ACCESSION_NUMBER("Term Accession Number" + Symbol.TAB),
+    SAMPLE_NAME("Sample Name"),
+    CHARACTERISTICS("Characteristics[?]"),
+    TERM_SOURCE_REF("Term Source REF"),
+    TERM_ACCESSION_NUMBER("Term Accession Number"),
     ASSAY_NAME("Assay Name" + Symbol.TAB),
     RAW_DATA_FILE("Raw Data File" + Symbol.TAB),
     IMAGE_FILE("Image File" + Symbol.TAB),
