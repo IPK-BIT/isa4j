@@ -13,6 +13,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class to represent a person as {@link Person} for the described
@@ -68,15 +69,6 @@ public class Person extends Commentable {
 	 */
 	private List<OntologyAnnotation> roles = new ArrayList<OntologyAnnotation>();
 
-
-	/**
-	 * Mandatory attributes of a {@link Person} for the {@link Investigation} file.
-	 */
-	public enum Attributes {
-		LAST_NAME, FIRST_NAME, MID_INITIALS, EMAIL, PHONE, FAX, ADDRESS, AFFILIATION, ROLES,
-		ROLES_TERM_ACCESSION_NUMBER, ROLES_TERM_SOURCE_REF;
-	}
-
 	public Person(String lastName, String firstName, String email, String affiliation, String address) {
 		this.lastName = lastName;
 		this.firstName = firstName;
@@ -86,119 +78,9 @@ public class Person extends Commentable {
 	}
 
 
-	/**
-	 * Get last name of the {@link Person}
-	 *
-	 * @return last name of the {@link Person}
-	 */
-	public String getLastName() {
-		return this.lastName;
-	}
-
-	/**
-	 * Set last name of the {@link Person}
-	 *
-	 * @param lastName last name of the {@link Person}
-	 */
-	public void setLastName(String lastName) {
-		if (lastName == null) {
-//			LoggerUtil.logger.error("The lastName of contact can't be null!");
-			return;
-		}
-		this.lastName = lastName;
-	}
-
-	/**
-	 * Get first name of the {@link Person}
-	 *
-	 * @return first name of the {@link Person}
-	 */
-	public String getFirstName() {
-		return this.firstName;
-	}
-
-	/**
-	 * Set first name of the {@link Person}
-	 *
-	 * @param firstName first name of the {@link Person}
-	 */
-	public void setFirstName(String firstName) {
-		if (firstName == null) {
-//			LoggerUtil.logger.error("The first name of contact can't be null!");
-		}
-		this.firstName = firstName;
-	}
-
-	/**
-	 * Get mid initials of the {@link Person}
-	 *
-	 * @return mid initials of the {@link Person}
-	 */
-	public String getMidInitials() {
-		return this.midInitials;
-	}
-
-	/**
-	 * Set mid initials of the {@link Person}
-	 *
-	 * @param midInitials mid initials of the {@link Person}
-	 */
-	public void setMidInitials(String midInitials) {
-		this.midInitials = midInitials;
-	}
-
-	/**
-	 * Get email of the {@link Person}
-	 *
-	 * @return email of the {@link Person}
-	 */
-	public String getEmail() {
-		return this.email;
-	}
-
-	/**
-	 * Set email of the {@link Person}
-	 *
-	 * @param email email of the {@link Person}
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * Get phone number of the {@link Person}
-	 *
-	 * @return phone number of the {@link Person}
-	 */
-	public String getPhone() {
-		return this.phone;
-	}
-
-	/**
-	 * Set phone number of the {@link Person}
-	 *
-	 * @param phone phone number of the {@link Person}
-	 */
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
-	/**
-	 * Get fax number of the {@link Person}
-	 *
-	 * @return fax number of the {@link Person}
-	 */
-	public String getFax() {
-		return this.fax;
-	}
-
-	/**
-	 * Set fax number of the {@link Person}
-	 *
-	 * @param fax fax number of the {@link Person}
-	 */
-	public void setFax(String fax) {
-		this.fax = fax;
+	public boolean addRole(OntologyAnnotation role) {
+		Objects.requireNonNull(role);
+		return this.roles.add(role);
 	}
 
 	/**
@@ -211,21 +93,84 @@ public class Person extends Commentable {
 	}
 
 	/**
-	 * Set address of the {@link Person}
-	 *
-	 * @param address address of the {@link Person}
-	 */
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	/**
 	 * Get affiliation of the {@link Person}
 	 *
 	 * @return affiliation of the {@link Person}
 	 */
 	public String getAffiliation() {
 		return this.affiliation;
+	}
+
+	/**
+	 * Get email of the {@link Person}
+	 *
+	 * @return email of the {@link Person}
+	 */
+	public String getEmail() {
+		return this.email;
+	}
+
+	/**
+	 * Get fax number of the {@link Person}
+	 *
+	 * @return fax number of the {@link Person}
+	 */
+	public String getFax() {
+		return this.fax;
+	}
+
+	/**
+	 * Get first name of the {@link Person}
+	 *
+	 * @return first name of the {@link Person}
+	 */
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	/**
+	 * Get last name of the {@link Person}
+	 *
+	 * @return last name of the {@link Person}
+	 */
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	/**
+	 * Get mid initials of the {@link Person}
+	 *
+	 * @return mid initials of the {@link Person}
+	 */
+	public String getMidInitials() {
+		return this.midInitials;
+	}
+
+	/**
+	 * Get phone number of the {@link Person}
+	 *
+	 * @return phone number of the {@link Person}
+	 */
+	public String getPhone() {
+		return this.phone;
+	}
+
+	/**
+	 * Get role of the {@link Person}
+	 *
+	 * @return role of the {@link Person}
+	 */
+	public List<OntologyAnnotation> getRoles() {
+		return this.roles;
+	}
+
+	/**
+	 * Set address of the {@link Person}
+	 *
+	 * @param address address of the {@link Person}
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	/**
@@ -238,29 +183,67 @@ public class Person extends Commentable {
 	}
 
 	/**
-	 * Get role of the {@link Person}
+	 * Set email of the {@link Person}
 	 *
-	 * @return role of the {@link Person}
+	 * @param email email of the {@link Person}
 	 */
-	public List<OntologyAnnotation> getRoles() {
-		return this.roles;
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * Set fax number of the {@link Person}
+	 *
+	 * @param fax fax number of the {@link Person}
+	 */
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	/**
+	 * Set first name of the {@link Person}
+	 *
+	 * @param firstName first name of the {@link Person}
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * Set last name of the {@link Person}
+	 *
+	 * @param lastName last name of the {@link Person}
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * Set mid initials of the {@link Person}
+	 *
+	 * @param midInitials mid initials of the {@link Person}
+	 */
+	public void setMidInitials(String midInitials) {
+		this.midInitials = midInitials;
 	}
 	
-	public boolean addRole(OntologyAnnotation role) {
-		if(role == null) {
-			// TODO ERROR
-			return false;
-		}
-		return this.roles.add(role);
+	/**
+	 * Set phone number of the {@link Person}
+	 *
+	 * @param phone phone number of the {@link Person}
+	 */
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	/**
 	 * Set role of the {@link Person}
 	 *
-	 * @param rolesOntology role of the {@link Person}
+	 * @param roles role of the {@link Person}
 	 */
-	public void setRoles(List<OntologyAnnotation> rolesOntology) {
-		this.roles = rolesOntology;
+	public void setRoles(List<OntologyAnnotation> roles) {
+		roles.stream().forEach(Objects::requireNonNull);
+		this.roles = roles;
 	}
 
 }

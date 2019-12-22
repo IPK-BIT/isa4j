@@ -11,6 +11,7 @@ package de.ipk_gatersleben.bit.bi.isa4j;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
@@ -18,6 +19,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
+import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 
 /**
  * Class to represent a study in context of the ISA hierarchy. It is used to
@@ -35,7 +37,7 @@ public class Study extends Commentable {
 	/**
 	 * The name of the study sample file linked to this Study.
 	 */
-	private String fileName = "s_study.txt";
+	private String fileName;
 
 	/**
 	 * The title for the Study.
@@ -60,12 +62,12 @@ public class Study extends Commentable {
 	/**
 	 * List of {@link DesignDescriptor}s to describe the {@link Study}
 	 */
-	private ArrayList<OntologyAnnotation> designDescriptors = new ArrayList<OntologyAnnotation>();
+	private List<OntologyAnnotation> designDescriptors = new ArrayList<OntologyAnnotation>();
 
 	/**
 	 * {@link Publication} of study
 	 */
-	private ArrayList<Publication> publications = new ArrayList<>(2);
+	private List<Publication> publications = new ArrayList<>(2);
 
 	/**
 	 * {@link Assay} of Study
@@ -75,7 +77,7 @@ public class Study extends Commentable {
 	/**
 	 * People, who take part to the Investigation {@link Person}
 	 */
-	private ArrayList<Person> contacts = new ArrayList<>(2);
+	private List<Person> contacts = new ArrayList<>(2);
 
 
 	/**
@@ -90,45 +92,9 @@ public class Study extends Commentable {
 	private List<Protocol> protocols = new ArrayList<>();
 
 	/**
-	 * @return the protocols
-	 */
-	public List<Protocol> getProtocols() {
-		return protocols;
-	}
-
-	/**
-	 * @param protocols the protocols to set
-	 */
-	public void setProtocols(List<Protocol> protocols) {
-		this.protocols = protocols;
-	}
-	
-	public void addProtocol(Protocol protocol) {
-		this.protocols.add(protocol);
-	}
-
-	/**
 	 * The list of {@link Factor} columns
 	 */
 	private List<Factor> factors = new ArrayList<>();
-
-	/**
-	 * @return the factors
-	 */
-	public List<Factor> getFactors() {
-		return factors;
-	}
-
-	/**
-	 * @param factors the factors to set
-	 */
-	public void setFactors(List<Factor> factors) {
-		this.factors = factors;
-	}
-	
-	public void addFactor(Factor factor) {
-		this.factors.add(factor);
-	}
 
 	/**
 	 * Constructor, give the identifier of study, filename is same with identifier
@@ -139,7 +105,7 @@ public class Study extends Commentable {
 		this.identifier = identifier;
 		this.fileName = "s_" + identifier + ".txt";
 	}
-
+	
 	/**
 	 * Constructor, give the identifier and filename
 	 *
@@ -156,18 +122,15 @@ public class Study extends Commentable {
 	 *
 	 * @param assay assay, that you want to add
 	 */
-	public boolean addAssay(Assay assay) {
-		for (Assay assayInStudy : assays) {
-			if (assay.getFileName().equals(assayInStudy.getFileName())) {
-//				LoggerUtil.logger.error("The Study " + identifier + " can't add the assay. "
-//						+ "There is a assay in the study, that its fileName is " + assay.getFileName()
-//						+ ", please change that identifier!");
-				return false;
-			}
-		}
+	public void addAssay(Assay assay) {
+		Objects.requireNonNull(assay);
+		if(this.assays.stream().map(Assay::getIdentifier).anyMatch(assay.getIdentifier()::equals))
+			throw new RedundantItemException("Study ID not unique: " + assay.getIdentifier());
+		if(this.assays.stream().map(Assay::getFileName).anyMatch(assay.getFileName()::equals))
+			throw new RedundantItemException("Study Filename not unique: " + assay.getFileName());
+
 		assay.setStudy(this);
 		this.assays.add(assay);
-		return true;
 	}
 
 	/**
@@ -176,14 +139,7 @@ public class Study extends Commentable {
 	 * @param person new {@link Person} to add
 	 */
 	public void addContact(Person person) {
-
-		if (person == null) {
-//			LoggerUtil.logger.error("Can not add an empty Person");
-		}
-
-		if (contacts == null) {
-			contacts = new ArrayList<>(2);
-		}
+		Objects.requireNonNull(person);
 		this.contacts.add(person);
 	}
 
@@ -192,19 +148,19 @@ public class Study extends Commentable {
 	 *
 	 * @param designDescriptor new {@link DesignDescriptor} to add
 	 */
-	public boolean addDesignDescriptor(OntologyAnnotation designDescriptor) {
-		if (designDescriptor == null) {
-//			LoggerUtil.logger.error("Can not add an empty DesignDescriptor");
-			return false;
-		}
-		if (!designDescriptors.contains(designDescriptor)) {
-			this.designDescriptors.add(designDescriptor);
-			return true;
-		} else {
-//			LoggerUtil.logger
-//					.error("The Study contains already a DesignDescriptor '" + designDescriptor.getType() + "'");
-			return false;
-		}
+	public void addDesignDescriptor(OntologyAnnotation designDescriptor) {
+		Objects.requireNonNull(designDescriptor);
+		this.designDescriptors.add(designDescriptor);
+	}
+	
+	public void addFactor(Factor factor) {
+		Objects.requireNonNull(factor);
+		this.factors.add(factor);
+	}
+
+	public void addProtocol(Protocol protocol) {
+		Objects.requireNonNull(protocol);
+		this.protocols.add(protocol);
 	}
 
 	/**
@@ -213,9 +169,7 @@ public class Study extends Commentable {
 	 * @param publication the new publication to add
 	 */
 	public void addPublication(Publication publication) {
-		if (publications == null) {
-			publications = new ArrayList<>(2);
-		}
+		Objects.requireNonNull(publication);
 		this.publications.add(publication);
 	}
 
@@ -233,7 +187,7 @@ public class Study extends Commentable {
 	 *
 	 * @return contacts of study
 	 */
-	public ArrayList<Person> getContacts() {
+	public List<Person> getContacts() {
 		return contacts;
 	}
 
@@ -251,8 +205,15 @@ public class Study extends Commentable {
 	 *
 	 * @return descriptor of design for study
 	 */
-	public ArrayList<OntologyAnnotation> getDesignDescriptors() {
+	public List<OntologyAnnotation> getDesignDescriptors() {
 		return designDescriptors;
+	}
+
+	/**
+	 * @return the factors
+	 */
+	public List<Factor> getFactors() {
+		return factors;
 	}
 
 	/**
@@ -283,11 +244,18 @@ public class Study extends Commentable {
 	}
 
 	/**
+	 * @return the protocols
+	 */
+	public List<Protocol> getProtocols() {
+		return protocols;
+	}
+
+	/**
 	 * Get publications of study
 	 *
 	 * @return publications of study
 	 */
-	public ArrayList<Publication> getPublications() {
+	public List<Publication> getPublications() {
 		return publications;
 	}
 
@@ -323,7 +291,8 @@ public class Study extends Commentable {
 	 *
 	 * @param assays assays of study
 	 */
-	public void setAssays(ArrayList<Assay> assays) {
+	public void setAssays(List<Assay> assays) {
+		assays.stream().forEach(Objects::requireNonNull);
 		this.assays = assays;
 		for (Assay assay : assays) {
 			assay.setStudy(this);
@@ -335,7 +304,8 @@ public class Study extends Commentable {
 	 *
 	 * @param contacts contacts of study
 	 */
-	public void setContacts(ArrayList<Person> contacts) {
+	public void setContacts(List<Person> contacts) {
+		contacts.stream().forEach(Objects::requireNonNull);
 		this.contacts = contacts;
 	}
 
@@ -351,11 +321,18 @@ public class Study extends Commentable {
 	/**
 	 * Set descriptor of design for study
 	 *
-	 * @param desigenDescriptors descriptor of design for study
+	 * @param designDescriptors descriptor of design for study
 	 */
-	public void setDesignDescriptors(ArrayList<OntologyAnnotation> desigenDescriptors) {
-		// TODO don't allow null
-		this.designDescriptors = desigenDescriptors;
+	public void setDesignDescriptors(List<OntologyAnnotation> designDescriptors) {
+		designDescriptors.stream().forEach(Objects::requireNonNull);
+		this.designDescriptors = designDescriptors;
+	}
+
+	/**
+	 * @param factors the factors to set
+	 */
+	public void setFactors(List<Factor> factors) {
+		this.factors = factors;
 	}
 
 	/**
@@ -369,11 +346,20 @@ public class Study extends Commentable {
 	}
 
 	/**
+	 * @param protocols the protocols to set
+	 */
+	public void setProtocols(List<Protocol> protocols) {
+		protocols.stream().forEach(Objects::requireNonNull);
+		this.protocols = protocols;
+	}
+
+	/**
 	 * Set publications of study
 	 *
 	 * @param publications publications of study
 	 */
 	public void setPublications(ArrayList<Publication> publications) {
+		publications.stream().forEach(Objects::requireNonNull);
 		this.publications = publications;
 	}
 

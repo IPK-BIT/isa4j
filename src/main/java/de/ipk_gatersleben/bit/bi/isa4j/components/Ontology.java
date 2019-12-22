@@ -68,10 +68,6 @@ public class Ontology {
      * @param name name of the {@link Ontology}
      */
     public void setName(String name) {
-        if (name == null) {
-            // LoggerUtil.logger.error("The name of ontology can't be null!");
-            return;
-        }
         this.name = name;
     }
 

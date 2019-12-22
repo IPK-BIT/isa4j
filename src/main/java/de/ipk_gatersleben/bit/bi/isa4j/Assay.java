@@ -35,13 +35,6 @@ public class Assay extends Commentable {
 	private OntologyAnnotation measurementType;
 
 	/**
-	 * @return the measurementType
-	 */
-	public OntologyAnnotation getMeasurementType() {
-		return measurementType;
-	}
-
-	/**
 	 * The technology being employed to observe this measurement
 	 */
 	private OntologyAnnotation technologyType;
@@ -51,11 +44,11 @@ public class Assay extends Commentable {
 	 */
 	private String technologyPlatform;
 
-
 	/**
 	 * the study, who has this assay
 	 */
 	private Study study;
+
 
 	/**
 	 * Constructor, give file name
@@ -70,7 +63,6 @@ public class Assay extends Commentable {
 		this.fileName = fileName;
 	}
 
-
 	/**
 	 * get file name of assay
 	 *
@@ -79,6 +71,7 @@ public class Assay extends Commentable {
 	public String getFileName() {
 		return fileName;
 	}
+
 
 	/**
 	 * get id of assay
@@ -90,14 +83,11 @@ public class Assay extends Commentable {
 	}
 
 	/**
-	 * get type of measurement
-	 *
-	 * @return type of measurement
+	 * @return the measurementType
 	 */
-	public OntologyAnnotation measurementType() {
+	public OntologyAnnotation getMeasurementType() {
 		return measurementType;
 	}
-
 
 	/**
 	 * get the study, that own this assay
@@ -106,6 +96,16 @@ public class Assay extends Commentable {
 	 */
 	public Study getStudy() {
 		return study;
+	}
+
+
+	/**
+	 * get type of technology platform
+	 *
+	 * @return type of technology platform
+	 */
+	public String getTechnologyPlatform() {
+		return technologyPlatform;
 	}
 
 	/**
@@ -118,12 +118,12 @@ public class Assay extends Commentable {
 	}
 
 	/**
-	 * get type of technology platform
+	 * get type of measurement
 	 *
-	 * @return type of technology platform
+	 * @return type of measurement
 	 */
-	public String getTechnologyPlatform() {
-		return technologyPlatform;
+	public OntologyAnnotation measurementType() {
+		return measurementType;
 	}
 
 	/**
@@ -138,23 +138,14 @@ public class Assay extends Commentable {
 	/**
 	 * set type of measurement
 	 *
-	 * @param measurementOntology type of measurement
+	 * @param measurementType type of measurement
 	 */
-	public void setMeasurementType(OntologyAnnotation measurementOntology) {
-		this.measurementType = measurementOntology;
+	public void setMeasurementType(OntologyAnnotation measurementType) {
+		this.measurementType = measurementType;
 	}
 
 	protected void setStudy(Study study) {
 		this.study = study;
-	}
-
-	/**
-	 * set type of technology
-	 *
-	 * @param technologyType type of technology
-	 */
-	public void setTechnologyType(OntologyAnnotation technologyOntology) {
-		this.technologyType = technologyOntology;
 	}
 
 	/**
@@ -164,5 +155,14 @@ public class Assay extends Commentable {
 	 */
 	public void setTechnologyPlatform(String technologyPlatform) {
 		this.technologyPlatform = technologyPlatform;
+	}
+
+	/**
+	 * set type of technology
+	 *
+	 * @param technologyType type of technology
+	 */
+	public void setTechnologyType(OntologyAnnotation technologyType) {
+		this.technologyType = technologyType;
 	}
 }

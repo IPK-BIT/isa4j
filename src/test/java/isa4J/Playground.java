@@ -2,8 +2,6 @@ package isa4J;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
@@ -64,7 +62,7 @@ public class Playground {
 		paper1Status.setSourceREF(ontology1);
 		paper1Status.setTerm("Published");
 		paper1Status.setTermAccession("Term Accession alala");
-		paper1.setStatusOntology(paper1Status);
+		paper1.setStatus(paper1Status);
 		
 		investigation.addContact(ursel);
 		investigation.addContact(karlheinz);

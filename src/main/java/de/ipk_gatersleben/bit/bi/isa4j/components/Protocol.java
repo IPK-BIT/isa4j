@@ -9,9 +9,12 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa.components.Parameter;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
+import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 
 /**
  * Class to represent a protocol/process for a {@link Study}, which contains
@@ -49,29 +52,11 @@ public class Protocol extends Commentable {
     /**
      * The {@link Parameter} list of this {@link Protocol}
      */
-    private ArrayList<ProtocolParameter> parameters = new ArrayList<ProtocolParameter>(3);
+    private List<ProtocolParameter> parameters = new ArrayList<ProtocolParameter>(3);
     
-    private ArrayList<ProtocolComponent> components = new ArrayList<ProtocolComponent>();
+    private List<ProtocolComponent> components = new ArrayList<ProtocolComponent>();
 
     /**
-	 * @return the components
-	 */
-	public ArrayList<ProtocolComponent> getComponents() {
-		return components;
-	}
-
-	/**
-	 * @param components the components to set
-	 */
-	public void setComponents(ArrayList<ProtocolComponent> components) {
-		this.components = components;
-	}
-	
-	public void addComponent(ProtocolComponent component) {
-		this.components.add(component);
-	}
-
-	/**
      * Constructor the name of the {@link Protocol}
      *
      * @param name name of the {@link Protocol}
@@ -80,7 +65,7 @@ public class Protocol extends Commentable {
         this.name = name;
     }
 
-    /**
+	/**
      * @param name         name of the {@link Protocol}
      * @param type type of the {@link Protocol}
      */
@@ -88,24 +73,31 @@ public class Protocol extends Commentable {
         this.name = name;
         this.type = typeOntology;
     }
+	
+	public void addComponent(ProtocolComponent component) {
+		Objects.requireNonNull(component);
+		this.components.add(component);
+	}
 
-    /**
+	/**
      * Add a {@link Parameter} to {@link Protocol}
      *
      * @param parameter parameter, that you want to add
      */
-    public boolean addParameter(ProtocolParameter parameter) {
+    public void addParameter(ProtocolParameter parameter) {
+    	Objects.requireNonNull(parameter);
+    	if(this.parameters.stream().map(ProtocolParameter::getName).anyMatch(parameter.getName()::equals))
+    		throw new RedundantItemException("Parameter not unique: " + parameter.getName());
 
-        if (!this.parameters.contains(parameter)) {
-            this.parameters.add(parameter);
-            return true;
-        } else {
-//            LoggerUtil.logger.error("The list of parameter in protocol '" + this.name + "' contains paramter '" + parameter.getName() + "'. " +
-//                    "It can't add same characteristic again.");
-            return false;
-        }
+        this.parameters.add(parameter);
     }
 
+    /**
+	 * @return the components
+	 */
+	public List<ProtocolComponent> getComponents() {
+		return components;
+	}
 
     /**
      * Get the description of the {@link Protocol}
@@ -115,6 +107,7 @@ public class Protocol extends Commentable {
     public String getDescription() {
         return description;
     }
+
 
     /**
      * Get the name of the{@link Protocol}
@@ -130,7 +123,7 @@ public class Protocol extends Commentable {
      *
      * @return parameters of protocol
      */
-    public ArrayList<ProtocolParameter> getParameters() {
+    public List<ProtocolParameter> getParameters() {
         return parameters;
     }
 
@@ -162,6 +155,14 @@ public class Protocol extends Commentable {
     }
 
     /**
+	 * @param components the components to set
+	 */
+	public void setComponents(List<ProtocolComponent> components) {
+		components.stream().forEach(Objects::requireNonNull);
+		this.components = components;
+	}
+
+    /**
      * Set the description of the {@link Protocol}
      *
      * @param description description of protocol
@@ -176,10 +177,6 @@ public class Protocol extends Commentable {
      * @param name name of protocol
      */
     public void setName(String name) {
-        if (name == null) {
-//            LoggerUtil.logger.error("The name of protocol can't be null!");
-            return;
-        }
         this.name = name;
     }
 
@@ -188,7 +185,8 @@ public class Protocol extends Commentable {
      *
      * @param parameters parameters of protocol
      */
-    public void setParameters(ArrayList<ProtocolParameter> parameters) {
+    public void setParameters(List<ProtocolParameter> parameters) {
+    	parameters.stream().forEach(Objects::requireNonNull);
         this.parameters = parameters;
     }
 

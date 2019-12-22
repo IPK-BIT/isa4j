@@ -11,8 +11,8 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class representing a {@link Publication} connected to a {@link Investigation}
@@ -35,7 +35,7 @@ public class Publication extends Commentable {
     /**
      * The list of authors who contributed to this {@link Publication}
      */
-    private List<Person> authorList;
+    private List<Person> authors;
 
     /**
      * The title of the {@link Publication}
@@ -45,7 +45,7 @@ public class Publication extends Commentable {
     /**
      * The status of this {@link Publication}, e.g. Published, Submitted, etc.
      */
-    private OntologyAnnotation statusOntology;
+    private OntologyAnnotation status;
 
     /**
      * Add a {@link Person} to the list of authors of the {@link Publication}
@@ -53,10 +53,8 @@ public class Publication extends Commentable {
      * @param person the {@link Person} to add
      */
     public void addAuthor(Person person) {
-        if (authorList == null) {
-            authorList = new ArrayList<>();
-        }
-        this.authorList.add(person);
+        Objects.requireNonNull(person);
+        this.authors.add(person);
     }
 
     /**
@@ -65,7 +63,7 @@ public class Publication extends Commentable {
      * @return authors the {@link List} of the authors of this {@link Publication}
      */
     public List<Person> getAuthorList() {
-        return this.authorList;
+        return this.authors;
     }
 
     /**
@@ -91,8 +89,8 @@ public class Publication extends Commentable {
      *
      * @return status of the {@link Publication}
      */
-    public OntologyAnnotation getStatusOntology() {
-        return this.statusOntology;
+    public OntologyAnnotation getStatus() {
+        return this.status;
     }
 
     /**
@@ -107,10 +105,11 @@ public class Publication extends Commentable {
     /**
      * Set the list of authors of this {@link Publication}
      *
-     * @param authorList authors' name of publication
+     * @param authors authors' name of publication
      */
-    public void setAuthorList(List<Person> authorList) {
-        this.authorList = authorList;
+    public void setAuthors(List<Person> authorList) {
+    	authorList.stream().forEach(Objects::requireNonNull);
+        this.authors = authorList;
     }
 
     /**
@@ -134,10 +133,10 @@ public class Publication extends Commentable {
     /**
      * Set status of the {@link Publication}
      *
-     * @param statusOntology status of publication
+     * @param status status of publication
      */
-    public void setStatusOntology(OntologyAnnotation statusOntology) {
-        this.statusOntology = statusOntology;
+    public void setStatus(OntologyAnnotation statusOntology) {
+        this.status = statusOntology;
     }
 
     /**
@@ -146,10 +145,6 @@ public class Publication extends Commentable {
      * @param title title of {@link Publication}
      */
     public void setTitle(String title) {
-        if (title == null) {
-//            LoggerUtil.logger.error("The title of publication can't be null!");
-            return;
-        }
         this.title = title;
     }
 

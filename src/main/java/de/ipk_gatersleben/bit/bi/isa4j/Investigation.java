@@ -17,6 +17,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -194,7 +195,7 @@ public class Investigation extends Commentable {
 	/**
 	 * The list of the used ontologies for this investigation {@link Ontology}
 	 */
-	private ArrayList<Ontology> ontologies = new ArrayList<>();
+	private List<Ontology> ontologies = new ArrayList<>();
 
 	/**
 	 * The title of the {@link Investigation}.
@@ -219,12 +220,12 @@ public class Investigation extends Commentable {
 	/**
 	 * Connected {@link Publication}s of this {@link Investigation}
 	 */
-	private ArrayList<Publication> publications = new ArrayList<>();
+	private List<Publication> publications = new ArrayList<>();
 
 	/**
 	 * People, who are associated with the {@link Investigation}
 	 */
-	private ArrayList<Person> contacts = new ArrayList<>();
+	private List<Person> contacts = new ArrayList<>();
 
 	/**
 	 * Studies of investigations {@link Study}
@@ -246,6 +247,7 @@ public class Investigation extends Commentable {
 	 * @param person the contact of a people,which will be add
 	 */
 	public void addContact(Person person) {
+		Objects.requireNonNull(person);
 		contacts.add(person);
 
 	}
@@ -256,6 +258,7 @@ public class Investigation extends Commentable {
 	 * @param ontology the {@link Ontology} source reference, which you want to add
 	 */
 	public void addOntology(Ontology ontology) {
+		Objects.requireNonNull(ontology);
 		this.ontologies.add(ontology);
 	}
 
@@ -265,6 +268,7 @@ public class Investigation extends Commentable {
 	 * @param publication publication
 	 */
 	public void addPublication(Publication publication) {
+		Objects.requireNonNull(publication);
 		publications.add(publication);
 	}
 
@@ -339,7 +343,7 @@ public class Investigation extends Commentable {
 							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
 				})
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, this.publications, (o) -> o.getTitle())
-			+ ontologyLinesFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications, p -> p.getStatusOntology())
+			+ ontologyLinesFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications, p -> p.getStatus())
 		
 			+ formatComments(this.publications);
 		
@@ -471,7 +475,7 @@ public class Investigation extends Commentable {
 							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
 				})
 			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle())
-			+ ontologyLinesFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), p -> p.getStatusOntology())
+			+ ontologyLinesFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), p -> p.getStatus())
 			+ formatComments(study.getPublications());
 	}
 
@@ -480,7 +484,7 @@ public class Investigation extends Commentable {
 	 *
 	 * @return contact of investigation
 	 */
-	public ArrayList<Person> getContacts() {
+	public List<Person> getContacts() {
 		return contacts;
 	}
 
@@ -507,7 +511,7 @@ public class Investigation extends Commentable {
 	 *
 	 * @return ontologies
 	 */
-	public ArrayList<Ontology> getOntologies() {
+	public List<Ontology> getOntologies() {
 		return ontologies;
 	}
 	
@@ -516,7 +520,7 @@ public class Investigation extends Commentable {
 	 *
 	 * @return Publication of investigation
 	 */
-	public ArrayList<Publication> getPublications() {
+	public List<Publication> getPublications() {
 		return publications;
 	}
 	
@@ -562,8 +566,8 @@ public class Investigation extends Commentable {
 	 *
 	 * @param contacts contact of investigation
 	 */
-	public void setContacts(ArrayList<Person> contacts) {
-
+	public void setContacts(List<Person> contacts) {
+		contacts.stream().forEach(Objects::requireNonNull);
 		this.contacts = contacts;
 	}
 
@@ -590,7 +594,8 @@ public class Investigation extends Commentable {
 	 *
 	 * @param ontologies the library of {@link OntologyAnnotation}
 	 */
-	public void setOntologies(ArrayList<Ontology> ontologies) {
+	public void setOntologies(List<Ontology> ontologies) {
+		ontologies.stream().forEach(Objects::requireNonNull);
 		this.ontologies = ontologies;
 	}
 	
@@ -599,7 +604,8 @@ public class Investigation extends Commentable {
 	 *
 	 * @param publications Publication of investigation
 	 */
-	public void setPublications(ArrayList<Publication> publications) {
+	public void setPublications(List<Publication> publications) {
+		publications.stream().forEach(Objects::requireNonNull);
 		this.publications = publications;
 	}
 	
@@ -617,7 +623,8 @@ public class Investigation extends Commentable {
 	 *
 	 * @param studies studies of investigation
 	 */
-	public void setStudies(ArrayList<Study> studies) {
+	public void setStudies(List<Study> studies) {
+		studies.stream().forEach(Objects::requireNonNull);
 		this.studies = studies;
 		for (Study study : studies) {
 			study.setInvestigation(this);

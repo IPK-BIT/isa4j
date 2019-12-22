@@ -8,6 +8,8 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.util.Objects;
+
 /**
  * Class representing a {@link Ontology} based term. Every {@link OntologyAnnotation} has
  * three Attributes: Name, AccessionNumber and SourceREF
@@ -30,15 +32,9 @@ public class OntologyAnnotation extends Commentable {
      * sourceREF of ontology term
      */
     private Ontology sourceREF;
-
-    /**
-     * members for Class OntologyAnnotation,
-     * Constants, every item is a member of OntologyAnnotation
-     *
-     * @author liufe
-     */
-    public enum OntologyTermAttributes {
-        NAME, SOURCE_REF, TERM_ACCESSION_NUMBER;
+    
+    public OntologyAnnotation(String term) {
+    	this(term,  null, null);
     }
     
     public OntologyAnnotation(String term, String termAccessionNumber, Ontology sourceREF) {
@@ -46,11 +42,16 @@ public class OntologyAnnotation extends Commentable {
     	this.termAccession = termAccessionNumber;
     	this.sourceREF = sourceREF;
     }
-    
-    public OntologyAnnotation(String term) {
-    	this(term,  null, null);
-    }
    
+
+    /**
+     * get sourceREF
+     *
+     * @return sourceREF
+     */
+    public Ontology getSourceREF() {
+        return sourceREF;
+    }
 
     /**
      * get term of ontology term
@@ -59,19 +60,6 @@ public class OntologyAnnotation extends Commentable {
      */
     public String getTerm() {
         return term;
-    }
-
-    /**
-     * set term of ontology term
-     *
-     * @param term term of ontology term
-     */
-    public void setTerm(String term) {
-        if (term == null) {
-//            LoggerUtil.logger.error("The term of ontologyTern can't be null!");
-            return;
-        }
-        this.term = term;
     }
 
     /**
@@ -84,30 +72,31 @@ public class OntologyAnnotation extends Commentable {
     }
 
     /**
-     * set accession number of ontology term
-     *
-     * @param termAccession accession number of ontology term
-     */
-    public void setTermAccession(String termAccession) {
-        this.termAccession = termAccession;
-    }
-
-    /**
-     * get sourceREF
-     *
-     * @return sourceREF
-     */
-    public Ontology getSourceREF() {
-        return sourceREF;
-    }
-
-    /**
      * set source REF
      *
      * @param sourceREF source REF
      */
     public void setSourceREF(Ontology sourceREF) {
         this.sourceREF = sourceREF;
+    }
+
+    /**
+     * set term of ontology term
+     *
+     * @param term term of ontology term
+     */
+    public void setTerm(String term) {
+        Objects.requireNonNull(term);
+        this.term = term;
+    }
+
+    /**
+     * set accession number of ontology term
+     *
+     * @param termAccession accession number of ontology term
+     */
+    public void setTermAccession(String termAccession) {
+        this.termAccession = termAccession;
     }
 
 }
