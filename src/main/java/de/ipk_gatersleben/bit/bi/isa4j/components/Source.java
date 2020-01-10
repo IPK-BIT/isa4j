@@ -1,6 +1,7 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,41 +43,59 @@ public class Source implements StudyOrAssayTableObject {
 		return name;
 	}
 	
-	// TODO this method and the next one are horribly untidy 
-	public LinkedHashMap<String, String[]> getHeaders() {
-		LinkedHashMap<String, String[]> ret = new LinkedHashMap<String, String[]>();
+	private LinkedHashMap<String, String[]> getHeadersForCharacteristics() {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
-		ret.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{StudyAssayAttribute.SOURCE_NAME.toString()});
+		// TODO maybe use a TreeSet instead of sorting here?
+		Collections.sort(this.characteristics, (a,b) -> a.getCategory().compareToIgnoreCase(b.getCategory()));
 		for(Characteristic characteristic : this.characteristics) {
-			String key = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());
-			List<String> values = new ArrayList<String>(3);
-			values.add(key);
+			List<String> characteristicColumns = new ArrayList<String>(3);
+			String characteristicName = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());		
+			characteristicColumns.add(characteristicName);
 			if(characteristic.getValue().getSourceREF() != null)
-				values.add(StudyAssayAttribute.TERM_SOURCE_REF.toString());
+				characteristicColumns.add(StudyAssayAttribute.TERM_SOURCE_REF.toString());
 			if(characteristic.getValue().getTermAccession() != null)
-				values.add(StudyAssayAttribute.TERM_ACCESSION_NUMBER.toString());
-			ret.put(key, values.toArray(new String[0]));
+				characteristicColumns.add(StudyAssayAttribute.TERM_ACCESSION_NUMBER.toString());
+			
+			headers.put(characteristicName, characteristicColumns.toArray(new String[0]));
 		}
 		
-		return ret;
+		return headers;
+	}
+	
+	public LinkedHashMap<String, String[]> getHeaders() {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+		
+		headers.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{StudyAssayAttribute.SOURCE_NAME.toString()});
+		headers.putAll(this.getHeadersForCharacteristics());
+		
+		return headers;
+	}
+	
+	private Map<String, String[]> getFieldsForCharacteristics() {
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
+		
+		for(Characteristic characteristic : this.characteristics) {
+			String characteristicName = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());
+			List<String> characteristicFields = new ArrayList<String>(3);
+			characteristicFields.add(characteristic.getValue().getTerm());
+			if(characteristic.getValue().getSourceREF() != null)
+				characteristicFields.add(characteristic.getValue().getSourceREF().getName());
+			if(characteristic.getValue().getTermAccession() != null)
+				characteristicFields.add(characteristic.getValue().getTermAccession());
+			fields.put(characteristicName, characteristicFields.toArray(new String[0]));
+		}
+		
+		return fields;
 	}
 	
 	public Map<String, String[]> getFields() {
-		HashMap<String, String[]> ret = new HashMap<String, String[]>();
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
 		
-		ret.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{this.name});
-		for(Characteristic characteristic : this.characteristics) {
-			String key = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());
-			List<String> values = new ArrayList<String>(3);
-			values.add(characteristic.getValue().getTerm());
-			if(characteristic.getValue().getSourceREF() != null)
-				values.add(characteristic.getValue().getSourceREF().getName());
-			if(characteristic.getValue().getTermAccession() != null)
-				values.add(characteristic.getValue().getTermAccession());
-			ret.put(key, values.toArray(new String[0]));
-		}
-		
-		return ret;
+		fields.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{this.name});
+		fields.putAll(this.getFieldsForCharacteristics());
+
+		return fields;
 	}
 	
 	
