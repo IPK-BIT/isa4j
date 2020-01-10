@@ -43,7 +43,7 @@ public class Source implements StudyOrAssayTableObject {
 		return name;
 	}
 	
-	private LinkedHashMap<String, String[]> getHeadersForCharacteristics() {
+	protected LinkedHashMap<String, String[]> getHeadersForCharacteristics() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
 		// TODO maybe use a TreeSet instead of sorting here?
@@ -72,7 +72,7 @@ public class Source implements StudyOrAssayTableObject {
 		return headers;
 	}
 	
-	private Map<String, String[]> getFieldsForCharacteristics() {
+	protected Map<String, String[]> getFieldsForCharacteristics() {
 		HashMap<String, String[]> fields = new HashMap<String, String[]>();
 		
 		for(Characteristic characteristic : this.characteristics) {
