@@ -109,6 +109,10 @@ public class Playground {
 		source1.addCharacteristic(char1);
 		source1.addCharacteristic(char2);
 		
+		Source source2 = new Source("Plant 2");
+		source2.addCharacteristic(char1);
+		source1.setNextItem(source2);
+		
 		String result = source1.getHeaders().entrySet()
         .stream()
         .map(e -> e.getKey() + "=\"" + Arrays.deepToString(e.getValue()) + "\"")
@@ -117,6 +121,7 @@ public class Playground {
 		System.out.println(result);
 		
 		System.out.println("----");
+		study1.writeHeadersFromExample(source1);
 		
 		String result2 = source1.getFields().entrySet()
 		        .stream()

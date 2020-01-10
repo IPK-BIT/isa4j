@@ -94,4 +94,19 @@ public class Source implements StudyOrAssayTableObject {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+//	private StudyOrAssayTableObject nextItem;
+//	/**
+//	 * @return the nextItem
+//	 */
+//	public StudyOrAssayTableObject getNextStudyOrAssayTableObject() {
+//		return nextItem;
+//	}
+//	/**
+//	 * @param nextItem the nextItem to set
+//	 */
+//	public void setNextStudyOrAssayTableObject(StudyOrAssayTableObject nextItem) {
+//		this.nextItem = nextItem;
+//	}
+	
 }

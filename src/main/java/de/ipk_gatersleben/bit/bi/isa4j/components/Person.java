@@ -65,7 +65,6 @@ public class Person extends Commentable {
 
 	/**
 	 * The role of the person in this {@link Investigation}
-	 * @ TODO a person can have more than one role.
 	 */
 	private List<OntologyAnnotation> roles = new ArrayList<OntologyAnnotation>();
 

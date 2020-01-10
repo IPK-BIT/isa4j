@@ -29,5 +29,15 @@ public interface StudyOrAssayTableObject {
 	 * @return
 	 */
 	public LinkedHashMap<String, String[]> getHeaders();
+	
+//	/**
+//	 * @return the nextItem
+//	 */
+//	public StudyOrAssayTableObject getNextStudyOrAssayTableObject();
+	
+//	/**
+//	 * @param nextItem the nextItem to set
+//	 */
+//	public void setNextStudyOrAssayTableObject(StudyOrAssayTableObject nextItem);
 
 }
