@@ -12,7 +12,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
-public class Source implements StudyOrAssayTableObject {
+public class Source extends StudyOrAssayTableObject {
 	
 	private String name;
 	private List<Characteristic> characteristics = new ArrayList<Characteristic>();

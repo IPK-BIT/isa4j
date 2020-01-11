@@ -7,7 +7,7 @@ import java.util.Map;
 
 import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
 
-public class Sample extends Source implements StudyOrAssayTableObject {
+public class Sample extends Source {
 	
 	public Sample(String name) {
 		super(name);

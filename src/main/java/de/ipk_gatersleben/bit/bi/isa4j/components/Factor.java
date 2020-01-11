@@ -18,7 +18,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.Study;
  * @author liufe, arendd
  */
 
-public abstract class Factor implements Commentable {
+public class Factor implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
 	/**
 	 * {@link OntologyAnnotation} description of {@link Factor}

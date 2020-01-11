@@ -3,7 +3,7 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public interface StudyOrAssayTableObject {
+public abstract class StudyOrAssayTableObject {
 	
 	/**
 	 * Return a map of field headers -> field values for this object, as it would be printed in a
@@ -22,13 +22,13 @@ public interface StudyOrAssayTableObject {
 	 * }
 	 * @return
 	 */
-	public Map<String, String[]> getFields();
+	public abstract Map<String, String[]> getFields();
 	
 	/**
 	 * Like above, but here the order of items matters.
 	 * @return
 	 */
-	public LinkedHashMap<String, String[]> getHeaders();
+	public abstract LinkedHashMap<String, String[]> getHeaders();
 	
 //	/**
 //	 * @return the nextItem
