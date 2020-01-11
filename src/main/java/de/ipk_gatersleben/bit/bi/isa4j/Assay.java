@@ -8,6 +8,7 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j;
 
+import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 
@@ -17,7 +18,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
  *
  * @author liufe, arendd
  */
-public class Assay extends Commentable {
+public class Assay implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
 	/**
 	 * id of assay

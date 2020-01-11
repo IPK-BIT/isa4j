@@ -27,8 +27,8 @@ public class Playground {
 		investigation.addOntology(ontology1);
 		investigation.addOntology(ontology2);
 		
-		investigation.addComment(new Comment("Investigation Type", "Value"));
-		investigation.addComment(new Comment("Another Comment", "Hello"));
+		investigation.comments().add(new Comment("Investigation Type", "Value"));
+		investigation.comments().add(new Comment("Another Comment", "Hello"));
 		
 		Person karlheinz = new Person("Schmidt", "Karl-Heinz", "khschmitt@wunderland.de", "Schmidt GmbH", "Schmidtstraße 1, 543423 Schmidttown");
 		karlheinz.setFax("FAxi1223");
@@ -38,15 +38,15 @@ public class Playground {
 		role1.setSourceREF(ontology2);
 		role1.setTermAccession("ACredIT#1321");
 		ursel.addRole(role1);
-		ursel.addComment(new Comment("Person REF", "urselRef"));
-		ursel.addComment(new Comment("Ursel says", "Bye bye World"));
+		ursel.comments().add(new Comment("Person REF", "urselRef"));
+		ursel.comments().add(new Comment("Ursel says", "Bye bye World"));
 		
 		OntologyAnnotation role2 = new OntologyAnnotation("Hs");
 		role2.setTerm("Secret Role");
 		karlheinz.addRole(role2);
 		karlheinz.addRole(role1);
-		karlheinz.addComment(new Comment("Person REF", "karlheinzREf"));
-		karlheinz.addComment(new Comment("Karlheinz says", "Hello World!"));		
+		karlheinz.comments().add(new Comment("Person REF", "karlheinzREf"));
+		karlheinz.comments().add(new Comment("Karlheinz says", "Hello World!"));		
 		
 		Publication paper1 = new Publication();
 		paper1.addAuthor(karlheinz);
@@ -76,8 +76,8 @@ public class Playground {
 		
 		study1.setTitle("A super great Study");
 		study2.setDescription("This one is even greater");
-		study1.addComment(new Comment("Comment1", "Value"));
-		study1.addComment(new Comment("Comment 2", "value"));
+		study1.comments().add(new Comment("Comment1", "Value"));
+		study1.comments().add(new Comment("Comment 2", "value"));
 		
 		study2.addDesignDescriptor(new OntologyAnnotation("Simple"));
 		study2.addDesignDescriptor(paper1Status);

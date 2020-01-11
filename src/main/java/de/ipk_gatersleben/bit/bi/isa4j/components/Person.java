@@ -21,7 +21,13 @@ import java.util.Objects;
  *
  * @author liufe, arendd
  */
-public class Person extends Commentable {
+public class Person implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
 	/**
 	 * The last name/surname of the {@link Person}

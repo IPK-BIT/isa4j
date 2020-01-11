@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
+import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
@@ -36,7 +37,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
  *
  * @author liufe, arendd
  */
-public class Study extends Commentable {
+public class Study implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
 	/**
 	 * A user defined identifier for the study.

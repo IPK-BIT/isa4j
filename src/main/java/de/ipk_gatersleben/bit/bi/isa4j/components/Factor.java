@@ -18,7 +18,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.Study;
  * @author liufe, arendd
  */
 
-public abstract class Factor extends Commentable {
+public abstract class Factor implements Commentable {
 
 	/**
 	 * {@link OntologyAnnotation} description of {@link Factor}

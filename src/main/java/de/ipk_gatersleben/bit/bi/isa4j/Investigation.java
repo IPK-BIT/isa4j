@@ -25,6 +25,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
@@ -39,7 +40,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
  *
  * @author liufe, arendd
  */
-public class Investigation extends Commentable {
+public class Investigation implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
 	/**
 	 * Pass a list of Commentables (Person, Publication...) and get back a String containing all comment lines
@@ -69,7 +76,7 @@ public class Investigation extends Commentable {
 		
 		// Turn the commentables into a list of lists of comments
 		List<List<Comment>> commentBuckets = commentables.stream()
-				.map(c -> c.getComments())
+				.map(c -> c.comments().getAll())
 				.collect(Collectors.toList());
 		
 		// Get a List of all Comment types present in any of the buckets
@@ -327,7 +334,7 @@ public class Investigation extends Commentable {
 			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_PUBLIC_RELEASE_DATE, 
 				this.publicReleaseDate == null ? null : this.publicReleaseDate.toString())
 				
-			+  formatSimpleComments(this.getComments());	
+			+  formatSimpleComments(this.comments().getAll());	
 	}
 
 	private String formatInvestigationPublications() {	
@@ -413,7 +420,7 @@ public class Investigation extends Commentable {
 				study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
 				study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString())
-			+ formatSimpleComments(study.getComments())
+			+ formatSimpleComments(study.comments().getAll())
 		// STUDY DESIGN DESCRIPTORS
 			+ InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString()
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o)

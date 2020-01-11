@@ -1,6 +1,12 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-public class Process extends Commentable {
+public class Process implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 	
 //	private StudyOrAssayTableObject nextItem;
 //	/**

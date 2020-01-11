@@ -22,7 +22,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
  *
  * @author liufe, arendd
  */
-public class Protocol extends Commentable {
+public class Protocol implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
     /**
      * The name of the {@link Protocol}

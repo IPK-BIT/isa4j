@@ -16,7 +16,13 @@ import java.util.Objects;
  *
  * @author liufe, arendd
  */
-public class OntologyAnnotation extends Commentable {
+public class OntologyAnnotation implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
     /**
      * term of Ontology term

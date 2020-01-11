@@ -21,7 +21,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.Study;
  *
  * @author liufe, arendd
  */
-public class Publication extends Commentable {
+public class Publication implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
     /**
      * The PubMed ID of this {@link Publication}
