@@ -1,7 +1,6 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,10 +25,11 @@ public class Source extends StudyOrAssayTableObject {
 	}
 	public void addCharacteristic(Characteristic characteristic) {
 		if(this.characteristics.stream().map(Characteristic::getCategory).anyMatch(characteristic.getCategory()::equals))
-			throw new RedundantItemException("Characteristic category not unique: " + characteristic.getCategory());
+			throw new RedundantItemException("Multiple entries for Characteristic: " + characteristic.getCategory());
 		
 		this.characteristics.add(characteristic);
 	}
+	
 	/**
 	 * @return the characteristics
 	 */
@@ -46,21 +46,15 @@ public class Source extends StudyOrAssayTableObject {
 	protected LinkedHashMap<String, String[]> getHeadersForCharacteristics() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
-		// TODO maybe use a TreeSet instead of sorting here?
-		Collections.sort(this.characteristics, (a,b) -> a.getCategory().compareToIgnoreCase(b.getCategory()));
 		for(Characteristic characteristic : this.characteristics) {
 			List<String> characteristicColumns = new ArrayList<String>(3);
 			String characteristicName = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());		
 			characteristicColumns.add(characteristicName);
-			if(characteristic.getValue().getSourceREF() != null)
-				characteristicColumns.add(StudyAssayAttribute.TERM_SOURCE_REF.toString());
-			if(characteristic.getValue().getTermAccession() != null)
-				characteristicColumns.add(StudyAssayAttribute.TERM_ACCESSION_NUMBER.toString());
-			
+			characteristicColumns.addAll(this.getOntologyAnnotationExtensionHeaders(characteristic, c -> c.getValue()));
 			headers.put(characteristicName, characteristicColumns.toArray(new String[0]));
 		}
 		
-		return headers;
+		return headers;	
 	}
 	
 	public LinkedHashMap<String, String[]> getHeaders() {
@@ -79,10 +73,7 @@ public class Source extends StudyOrAssayTableObject {
 			String characteristicName = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());
 			List<String> characteristicFields = new ArrayList<String>(3);
 			characteristicFields.add(characteristic.getValue().getTerm());
-			if(characteristic.getValue().getSourceREF() != null)
-				characteristicFields.add(characteristic.getValue().getSourceREF().getName());
-			if(characteristic.getValue().getTermAccession() != null)
-				characteristicFields.add(characteristic.getValue().getTermAccession());
+			characteristicFields.addAll(this.getOntologyAnnotationExtensionFields(characteristic, c -> c.getValue()));
 			fields.put(characteristicName, characteristicFields.toArray(new String[0]));
 		}
 		
@@ -113,19 +104,5 @@ public class Source extends StudyOrAssayTableObject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-//	private StudyOrAssayTableObject nextItem;
-//	/**
-//	 * @return the nextItem
-//	 */
-//	public StudyOrAssayTableObject getNextStudyOrAssayTableObject() {
-//		return nextItem;
-//	}
-//	/**
-//	 * @param nextItem the nextItem to set
-//	 */
-//	public void setNextStudyOrAssayTableObject(StudyOrAssayTableObject nextItem) {
-//		this.nextItem = nextItem;
-//	}
 	
 }

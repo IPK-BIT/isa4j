@@ -8,7 +8,7 @@ public class FactorValue {
 	private OntologyAnnotation value;
 	private OntologyAnnotation unit;
 	
-	public FactorValue(Factor category, OntologyAnnotation value, OntologyAnnotation unit) {
+	private FactorValue(Factor category, OntologyAnnotation value, OntologyAnnotation unit) {
 		Objects.requireNonNull(category);
 		Objects.requireNonNull(value);
 		
@@ -25,11 +25,11 @@ public class FactorValue {
 		this(category, new OntologyAnnotation(value, null, null));
 	}
 	
-	public FactorValue(Factor category, int value, OntologyAnnotation unit) {
+	public FactorValue(Factor category, double value, OntologyAnnotation unit) {
 		this(category, new OntologyAnnotation(String.valueOf(value), null, null), unit);
 	}
 	
-	public FactorValue(Factor category, int value) {
+	public FactorValue(Factor category, double value) {
 		this(category, value, null);
 	}
 

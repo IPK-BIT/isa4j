@@ -8,6 +8,8 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.util.Objects;
+
 import de.ipk_gatersleben.bit.bi.isa4j.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
@@ -32,6 +34,15 @@ public class Factor implements Commentable {
 	private OntologyAnnotation type;
 	
 	private String name;
+	
+	public Factor(String name, OntologyAnnotation type) {
+		this.name = Objects.requireNonNull(name, "Factor name cannot be null");
+		this.type = type;
+	}
+	
+	public Factor(String name) {
+		this(name, null);
+	}
 
 	/**
 	 * @return the name

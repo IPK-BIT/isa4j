@@ -9,12 +9,15 @@ import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
+import de.ipk_gatersleben.bit.bi.isa4j.components.FactorValue;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
 
 public class Playground {
@@ -46,7 +49,7 @@ public class Playground {
 		karlheinz.addRole(role2);
 		karlheinz.addRole(role1);
 		karlheinz.comments().add(new Comment("Person REF", "karlheinzREf"));
-		karlheinz.comments().add(new Comment("Karlheinz says", "Hello World!"));		
+		karlheinz.comments().add(new Comment("Karlheinz says", "Hello World!"));
 		
 		Publication paper1 = new Publication();
 		paper1.addAuthor(karlheinz);
@@ -105,30 +108,25 @@ public class Playground {
 		Characteristic char1 = new Characteristic("Organism", new OntologyAnnotation("Arabidopsis thaliana"));
 		Characteristic char2 = new Characteristic("Plant Role", new OntologyAnnotation("Contributor", "Acess.123", ontology1));
 		
-		Source source1 = new Source("Plant 1");
-		source1.addCharacteristic(char2);
-		source1.addCharacteristic(char1);
+		Sample sample1 = new Sample("Plant 1");
+		sample1.addCharacteristic(char2);
+		sample1.addCharacteristic(char1);
 		
-		Source source2 = new Source("Plant 2");
-		source2.addCharacteristic(char1);
-//		source1.setNextItem(source2);
+		Factor f1 = new Factor("FactorName");
+		Factor f2 = new Factor("Another Factor");
+		Factor f3 = new Factor("A simple Factor");
+		sample1.addFactorValue(new FactorValue(f1, 43.75, new OntologyAnnotation("hi", "access", ontology1)));
+		sample1.addFactorValue(new FactorValue(f2, new OntologyAnnotation("value", "valueAccess", ontology1)));
+		sample1.addFactorValue(new FactorValue(f3, 43.3));
 		
-		String result = source1.getHeaders().entrySet()
+		
+		String result = sample1.getHeaders().entrySet()
         .stream()
         .map(e -> e.getKey() + "=\"" + Arrays.deepToString(e.getValue()) + "\"")
         .collect(Collectors.joining("\n"));
 		
 		System.out.println(result);
 		
-		System.out.println("----");
-//		study1.writeHeadersFromExample(source1);
-		
-		String result2 = source1.getFields().entrySet()
-		        .stream()
-		        .map(e -> e.getKey() + "=\"" + Arrays.deepToString(e.getValue()) + "\"")
-		        .collect(Collectors.joining("\n"));
-				
-		System.out.println(result2);
 	}
 
 }
