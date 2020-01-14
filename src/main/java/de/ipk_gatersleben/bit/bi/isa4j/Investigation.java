@@ -651,8 +651,7 @@ public class Investigation implements Commentable {
 		this.title = title;
 	}
 	
-	public void writeToFile(String filepath) throws IOException {
-		OutputStream os = new FileOutputStream(filepath);
+	public void writeToStream(OutputStream os) throws IOException {
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 		
 		writer.write(formatOntologies());
@@ -670,6 +669,11 @@ public class Investigation implements Commentable {
 		}
 			
 		writer.close();
+	}
+	
+	public void writeToFile(String filepath) throws IOException {
+		OutputStream os = new FileOutputStream(filepath);
+		this.writeToStream(os);
 	}
 
 }
