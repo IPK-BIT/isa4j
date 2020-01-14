@@ -8,27 +8,18 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
-import de.ipk_gatersleben.bit.bi.isa4j.components.StudyOrAssayTableObject;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 
 /**

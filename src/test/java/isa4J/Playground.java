@@ -18,7 +18,6 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
 
 public class Playground {
 

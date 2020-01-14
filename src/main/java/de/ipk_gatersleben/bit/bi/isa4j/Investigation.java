@@ -151,7 +151,7 @@ public class Investigation implements Commentable {
 	 * @param lambda Function to execute on each object in the list
 	 * @return The complete line
 	 */
-	private static <C, T> String lineFromList(C lineName, List<T> list, Function<T, String> lambda) {
+	static <C, T> String lineFromList(C lineName, List<T> list, Function<T, String> lambda) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(lineName.toString()); // Append the Line name
 		sb.append(list.stream()
@@ -183,7 +183,7 @@ public class Investigation implements Commentable {
 	 * @param lambda
 	 * @return 3 lines describing an ontology objects term, accession, and source reference
 	 */
-	private static <C, T> String ontologyLinesFromList(C lineName, List<T> list, Function<T, OntologyAnnotation> lambda) {
+	static <C, T> String ontologyLinesFromList(C lineName, List<T> list, Function<T, OntologyAnnotation> lambda) {
 		return lineFromList(lineName, list,
 				a ->lambda.apply(a) == null ? Symbol.EMPTY.toString() : lambda.apply(a).getTerm())
 		+ lineFromList(mergeAttributes(lineName.toString(),
@@ -254,9 +254,7 @@ public class Investigation implements Commentable {
 	 * @param person the contact of a people,which will be add
 	 */
 	public void addContact(Person person) {
-		Objects.requireNonNull(person);
-		contacts.add(person);
-
+		this.contacts.add(Objects.requireNonNull(person, "Person cannot be null"));
 	}
 
 	/**
@@ -265,8 +263,7 @@ public class Investigation implements Commentable {
 	 * @param ontology the {@link Ontology} source reference, which you want to add
 	 */
 	public void addOntology(Ontology ontology) {
-		Objects.requireNonNull(ontology);
-		this.ontologies.add(ontology);
+		this.ontologies.add(Objects.requireNonNull(ontology, "Ontology cannot be null"));
 	}
 
 	/**
@@ -275,8 +272,7 @@ public class Investigation implements Commentable {
 	 * @param publication publication
 	 */
 	public void addPublication(Publication publication) {
-		Objects.requireNonNull(publication);
-		publications.add(publication);
+		this.publications.add(Objects.requireNonNull(publication, "Publication cannot be null"));
 	}
 
 	/**
@@ -631,10 +627,9 @@ public class Investigation implements Commentable {
 	 * @param studies studies of investigation
 	 */
 	public void setStudies(List<Study> studies) {
-		studies.stream().forEach(Objects::requireNonNull);
-		this.studies = studies;
+		this.studies.clear();
 		for (Study study : studies) {
-			study.setInvestigation(this);
+			this.addStudy(study);
 		}
 	}
 	
