@@ -1,9 +1,12 @@
 plugins {
     id 'java-library'
+    id "com.github.hierynomus.license" version "0.15.0"
 }
 project.ext {
     jUnitVersion = '5.5.0'
 }
+
+apply plugin:'com.github.hierynomus.license'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -33,3 +36,11 @@ test {
 	minHeapSize = "4g"
 	maxHeapSize = "8g"
 }
+
+license {
+    header rootProject.file('src/main/resources/license.txt')
+    strictCheck false
+ 	ext.year = Calendar.getInstance().get(Calendar.YEAR)
+	include "**/*.java"
+	exclude "**/*package-info.java"
+	}
