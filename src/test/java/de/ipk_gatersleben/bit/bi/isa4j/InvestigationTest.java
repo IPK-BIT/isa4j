@@ -113,6 +113,8 @@ public class InvestigationTest {
     	ontologies.add(ontology3);
     	assertEquals("LineName" + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Version 2" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER, Investigation.lineFromList("LineName", ontologies, o -> o.getVersion()));
 
+    	// Should only return linename and enter for an empty list, no TABs
+    	assertEquals("LineName" + Symbol.ENTER, Investigation.lineFromList("LineName", new ArrayList<Ontology>(), o -> o.getName()));
     }
 
     @Test
@@ -139,8 +141,8 @@ public class InvestigationTest {
     	assertEquals(12, result.split(Symbol.TAB.toString()).length - 1);
     	// Result should be containing the correct information
     	String lineName1 = "PubStatus" + Symbol.TAB;
-    	String lineName2 = "PubStatus" + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER.toString();
-    	String lineName3 = "PubStatus" + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF.toString();
+    	String lineName2 = "PubStatus" + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER + Symbol.TAB;
+    	String lineName3 = "PubStatus" + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF+ Symbol.TAB;
     	assertEquals(
     			lineName1 + "Status1" + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Status3" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
     		+	lineName2 + Symbol.EMPTY + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Accession 3" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
@@ -202,8 +204,7 @@ public class InvestigationTest {
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("python_originals/i_investigation.txt")));
     	PipedOutputStream os       = new PipedOutputStream();
     	BufferedReader ourFile	   = new BufferedReader(new InputStreamReader(new PipedInputStream(os)));
-    	this.investigation.writeToStream(os);
-    	
+    	this.investigation.writeToStream(os); 	
     	
     	String correctLine = null;
     	String ourLine	   = null;

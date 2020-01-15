@@ -150,6 +150,9 @@ public class Investigation implements Commentable {
 	 * @return The complete line
 	 */
 	static <C, T> String lineFromList(C lineName, List<T> list, Function<T, String> lambda) {
+		if(list.size() == 0)
+			return lineName.toString() + Symbol.ENTER;
+	
 		StringBuilder sb = new StringBuilder();
 		sb.append(lineName.toString() + Symbol.TAB); // Append the Line name
 		sb.append(list.stream()

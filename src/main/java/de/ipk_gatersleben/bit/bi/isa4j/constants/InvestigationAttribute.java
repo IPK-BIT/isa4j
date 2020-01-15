@@ -28,12 +28,12 @@ public enum InvestigationAttribute {
 	COMMENT("Comment[?]" + Symbol.TAB),
 
 	INVESTIGATION_PUBLICATIONS("INVESTIGATION PUBLICATIONS" + Symbol.ENTER),
-	INVESTIGATION_PUBMED_ID("Investigation PubMed ID" + Symbol.TAB),
-	INVESTIGATION_PUBLICATION_DOI("Investigation Publication DOI" + Symbol.TAB),
-	INVESTIGATION_PUBLICATION_AUTHOR_LIST("Investigation Publication Author List" + Symbol.TAB),
-	INVESTIGATION_PUBLICATION_TITLE("Investigation Publication Title" + Symbol.TAB),
-	INVESTIGATION_PUBLICATION_STATUS("Investigation Publication Status" + Symbol.TAB),
-	TERM_SOURCE_REF("Term Source REF" + Symbol.TAB), TERM_ACCESSION_NUMBER("Term Accession Number" + Symbol.TAB),
+	INVESTIGATION_PUBMED_ID("Investigation PubMed ID"),
+	INVESTIGATION_PUBLICATION_DOI("Investigation Publication DOI"),
+	INVESTIGATION_PUBLICATION_AUTHOR_LIST("Investigation Publication Author List"),
+	INVESTIGATION_PUBLICATION_TITLE("Investigation Publication Title"),
+	INVESTIGATION_PUBLICATION_STATUS("Investigation Publication Status"),
+	TERM_SOURCE_REF("Term Source REF"), TERM_ACCESSION_NUMBER("Term Accession Number"),
 
 	INVESTIGATION_CONTACTS("INVESTIGATION CONTACTS" + Symbol.ENTER),
 	INVESTIGATION_PERSON_LAST_NAME("Investigation Person Last Name" + Symbol.TAB),
