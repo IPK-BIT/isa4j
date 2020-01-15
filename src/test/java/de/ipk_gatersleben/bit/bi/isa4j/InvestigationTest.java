@@ -1,6 +1,5 @@
 package de.ipk_gatersleben.bit.bi.isa4j;
 
-import static de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil.mergeAttributes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -106,14 +104,14 @@ public class InvestigationTest {
     	
     	// Should return correctly formatted line
     	ontologies.add(ontology1);
-    	assertEquals("LineName" + Symbol.TAB + "Ontology1" + Symbol.ENTER, Investigation.lineFromList("LineName" + Symbol.TAB, ontologies, o -> o.getName())); // The Line Names already contain tabs.
+    	assertEquals("LineName" + Symbol.TAB + "Ontology1" + Symbol.ENTER, Investigation.lineFromList("LineName", ontologies, o -> o.getName()));
     	
     	ontologies.add(ontology2);
-    	assertEquals("LineName" + Symbol.TAB + "Ontology1" + Symbol.TAB + "Ontology2" + Symbol.ENTER, Investigation.lineFromList("LineName\t", ontologies, o -> o.getName()));
+    	assertEquals("LineName" + Symbol.TAB + "Ontology1" + Symbol.TAB + "Ontology2" + Symbol.ENTER, Investigation.lineFromList("LineName", ontologies, o -> o.getName()));
     	
     	// Should replace nulls by empty strings
     	ontologies.add(ontology3);
-    	assertEquals("LineName" + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Version 2" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER, Investigation.lineFromList("LineName\t", ontologies, o -> o.getVersion()));
+    	assertEquals("LineName" + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Version 2" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER, Investigation.lineFromList("LineName", ontologies, o -> o.getVersion()));
 
     }
 
@@ -133,7 +131,7 @@ public class InvestigationTest {
     	publications.add(publication3);
     	publications.add(publication4);
     	
-    	String result = Investigation.ontologyLinesFromList("PubStatus" + Symbol.TAB, publications, p -> p.getStatus());
+    	String result = Investigation.ontologyLinesFromList("PubStatus", publications, p -> p.getStatus());
     	
     	// Result should (always) have 3 lines
     	assertEquals(3, result.split(Symbol.ENTER.toString()).length);
@@ -141,8 +139,8 @@ public class InvestigationTest {
     	assertEquals(12, result.split(Symbol.TAB.toString()).length - 1);
     	// Result should be containing the correct information
     	String lineName1 = "PubStatus" + Symbol.TAB;
-    	String lineName2 = mergeAttributes("PubStatus"+Symbol.TAB,InvestigationAttribute.TERM_ACCESSION_NUMBER.toString());
-    	String lineName3 = mergeAttributes("PubStatus"+Symbol.TAB,InvestigationAttribute.TERM_SOURCE_REF.toString());
+    	String lineName2 = "PubStatus" + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER.toString();
+    	String lineName3 = "PubStatus" + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF.toString();
     	assertEquals(
     			lineName1 + "Status1" + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Status3" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
     		+	lineName2 + Symbol.EMPTY + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Accession 3" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
@@ -214,6 +212,9 @@ public class InvestigationTest {
     	}
     	// Assert that our file is finished here as well
     	assertNull(ourFile.readLine());
+    	
+    	correctFile.close();
+    	ourFile.close();
     	
     }
 }

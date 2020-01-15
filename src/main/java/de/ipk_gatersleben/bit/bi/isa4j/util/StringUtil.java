@@ -29,18 +29,4 @@ public class StringUtil {
 	public static <T> String putNameInAttribute(T attribute, String parameter) {
 		return attribute.toString().replace(Symbol.ATTRIBUTE_REPLACE.toString(), parameter);
 	}
-
-	/**
-	 * Merge two attribute ending with \t.
-	 *
-	 * @param firstAttribute  first attribute to merge
-	 * @param secondAttribute second attribute to merge
-	 * @return the merged attribute
-	 */
-	public static String mergeAttributes(String firstAttribute, String secondAttribute) {
-		StringBuilder stringBuilder = new StringBuilder(firstAttribute);
-		stringBuilder.deleteCharAt(stringBuilder.length() - 1).append(Symbol.SPACE).append(secondAttribute);
-		return stringBuilder.toString();
-	}
-
 }

@@ -15,10 +15,10 @@ package de.ipk_gatersleben.bit.bi.isa4j.constants;
  */
 public enum InvestigationAttribute {
 
-	ONTOLOGY_SOURCE_REFERENCE("ONTOLOGY SOURCE REFERENCE" + Symbol.ENTER),
-	TERM_SOURCE_NAME("Term Source Name" + Symbol.TAB), TERM_SOURCE_FILE("Term Source File" + Symbol.TAB),
-	TERM_SOURCE_VERSION("Term Source Version" + Symbol.TAB),
-	TERM_SOURCE_DESCRIPTION("Term Source Description" + Symbol.TAB),
+	ONTOLOGY_SOURCE_REFERENCE("ONTOLOGY SOURCE REFERENCE"),
+	TERM_SOURCE_NAME("Term Source Name"), TERM_SOURCE_FILE("Term Source File"),
+	TERM_SOURCE_VERSION("Term Source Version"),
+	TERM_SOURCE_DESCRIPTION("Term Source Description"),
 
 	INVESTIGATION("INVESTIGATION" + Symbol.ENTER), INVESTIGATION_IDENTIFIER("Investigation Identifier" + Symbol.TAB),
 	INVESTIGATION_TITLE("Investigation Title" + Symbol.TAB),

@@ -8,8 +8,6 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j;
 
-import static de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil.mergeAttributes;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -153,7 +151,7 @@ public class Investigation implements Commentable {
 	 */
 	static <C, T> String lineFromList(C lineName, List<T> list, Function<T, String> lambda) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(lineName.toString()); // Append the Line name
+		sb.append(lineName.toString() + Symbol.TAB); // Append the Line name
 		sb.append(list.stream()
 				.map(obj -> { // on each object in the list:
 					String result = lambda.apply(obj); // execute the function that was passed
@@ -186,11 +184,9 @@ public class Investigation implements Commentable {
 	static <C, T> String ontologyLinesFromList(C lineName, List<T> list, Function<T, OntologyAnnotation> lambda) {
 		return lineFromList(lineName, list,
 				a ->lambda.apply(a) == null ? Symbol.EMPTY.toString() : lambda.apply(a).getTerm())
-		+ lineFromList(mergeAttributes(lineName.toString(),
-				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), list,
+		+ lineFromList(lineName.toString() + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER, list,
 				a ->lambda.apply(a) == null ? Symbol.EMPTY.toString() : lambda.apply(a).getTermAccession())
-		+ lineFromList(mergeAttributes(lineName.toString(),
-				InvestigationAttribute.TERM_SOURCE_REF.toString()), list,
+		+ lineFromList(lineName.toString() + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF, list,
 				a ->lambda.apply(a) == null || lambda.apply(a).getSourceREF() == null ? Symbol.EMPTY.toString() : lambda.apply(a).getSourceREF().getName());
 	}
 
@@ -302,14 +298,14 @@ public class Investigation implements Commentable {
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_AFFILIATION, this.contacts,(o) -> o.getAffiliation())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ROLES, this.contacts,
 				(o) -> o.getRoles().stream().map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString())))
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
-				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), this.contacts,
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString() + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER,
+				this.contacts,
 				obj -> { return obj.getRoles().stream().map(
 							r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
 						).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
 				)
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString(),
-				InvestigationAttribute.TERM_SOURCE_REF.toString()), this.contacts,
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_ROLES.toString() + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF,
+				this.contacts,
 				obj -> {
 					return obj.getRoles().stream().map(
 							// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
@@ -353,7 +349,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatOntologies() {	
-		return InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString()
+		return InvestigationAttribute.ONTOLOGY_SOURCE_REFERENCE.toString() + Symbol.ENTER
 			+  lineFromList(InvestigationAttribute.TERM_SOURCE_NAME, this.ontologies, o -> o.getName())
 			+  lineFromList(InvestigationAttribute.TERM_SOURCE_FILE, this.ontologies, o -> o.getURL().toString())
 			+  lineFromList(InvestigationAttribute.TERM_SOURCE_VERSION, this.ontologies, o -> o.getVersion())
@@ -381,14 +377,14 @@ public class Investigation implements Commentable {
 			+ lineFromList(InvestigationAttribute.STUDY_PERSON_AFFILIATION, study.getContacts(),(o) -> o.getAffiliation())
 			+ lineFromList(InvestigationAttribute.STUDY_PERSON_ROLES, study.getContacts(),
 				(o) -> o.getRoles().stream().map(c -> c.getTerm()).collect(Collectors.joining(Symbol.SEMICOLON.toString())))
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PERSON_ROLES.toString(),
-				InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getContacts(),
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_ROLES.toString() + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER,
+				study.getContacts(),
 				obj -> { return obj.getRoles().stream().map(
 							r -> r.getTermAccession() == null ? Symbol.EMPTY.toString() : r.getTermAccession()
 						).collect(Collectors.joining(Symbol.SEMICOLON.toString())) ; }
 				)
-			+ lineFromList(StringUtil.mergeAttributes(InvestigationAttribute.STUDY_PERSON_ROLES.toString(),
-				InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getContacts(),
+			+ lineFromList(InvestigationAttribute.STUDY_PERSON_ROLES.toString() + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF,
+				study.getContacts(),
 				obj -> {
 					return obj.getRoles().stream().map(
 							// If there is no role or if there is but it doesn't have an Ontology connected: return empty string
@@ -437,11 +433,11 @@ public class Investigation implements Commentable {
 					p -> p.getParameters().stream()
 					.map(param -> param.getName().getTerm())
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getProtocols(),
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME.toString() + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER, study.getProtocols(),
 					p -> p.getParameters().stream()
 					.map(param -> param.getName() == null || param.getName().getTermAccession() == null ? Symbol.EMPTY.toString() : param.getName().getTermAccession())
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getProtocols(),
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_PARAMETERS_NAME.toString() + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF, study.getProtocols(),
 					p -> p.getParameters().stream()
 					.map(param -> param.getName() == null || param.getName().getSourceREF() == null ? Symbol.EMPTY.toString() : param.getName().getSourceREF().getName())
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
@@ -455,11 +451,11 @@ public class Investigation implements Commentable {
 					p -> p.getComponents().stream()
 					.map(component -> component.getType() == null ? Symbol.EMPTY.toString() : component.getType().getTerm())
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE.toString(), InvestigationAttribute.TERM_ACCESSION_NUMBER.toString()), study.getProtocols(),
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE.toString() + Symbol.SPACE + InvestigationAttribute.TERM_ACCESSION_NUMBER, study.getProtocols(),
 					p -> p.getComponents().stream()
 					.map(component -> component.getType() == null || component.getType().getTermAccession() == null ? Symbol.EMPTY.toString() : component.getType().getTermAccession())
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
-			+ lineFromList(mergeAttributes(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE.toString(), InvestigationAttribute.TERM_SOURCE_REF.toString()), study.getProtocols(),
+			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_COMPONENTS_TYPE.toString() + Symbol.SPACE + InvestigationAttribute.TERM_SOURCE_REF, study.getProtocols(),
 					p -> p.getComponents().stream()
 					.map(component -> component.getType() == null || component.getType().getSourceREF() == null ? Symbol.EMPTY.toString() : component.getType().getSourceREF().getName())
 					.collect(Collectors.joining(Symbol.SEMICOLON.toString())))
