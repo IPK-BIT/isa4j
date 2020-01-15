@@ -6,7 +6,6 @@ doc/
 /bin/
 /build/
 /.idea
-src/test/resources/
 /out/
 /target/
 /logs/

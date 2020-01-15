@@ -3,9 +3,16 @@ package de.ipk_gatersleben.bit.bi.isa4j;
 import static de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil.mergeAttributes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -183,7 +190,30 @@ public class InvestigationTest {
 	   		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Shared Comment") + "value1" + Symbol.TAB + "value2" + Symbol.ENTER
 	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Unique Comment") + "hello!" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
 	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Another Comment") + Symbol.EMPTY + Symbol.TAB + "bye bye!" + Symbol.ENTER,
-	   	  Investigation.formatComments(people));
+	   	  Investigation.formatComments(people));   	
+    }
+    
+    @Test
+    void testWriteToFile() throws IOException {
+    	// We have created an Investigation File with the python API (python code is in the resources folder) and we'll try to create
+    	// the same file with isa4J. We're going to loop through each of the lines of the python original and compare each line with our own result.
+    	// This will yield a more helpful assertionException if something doesn't match than if we just compare the whole file at once.
+    	
+    	
+    	
+    	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("python_originals/i_investigation.txt")));
+    	PipedOutputStream os       = new PipedOutputStream();
+    	BufferedReader ourFile	   = new BufferedReader(new InputStreamReader(new PipedInputStream(os)));
+    	this.investigation.writeToStream(os);
+    	
+    	
+    	String correctLine = null;
+    	String ourLine	   = null;
+    	while((correctLine = correctFile.readLine()) != null && (ourLine = ourFile.readLine()) != null) {
+    		assertEquals(correctLine, ourLine);
+    	}
+    	// Assert that our file is finished here as well
+    	assertNull(ourFile.readLine());
     	
     }
 }
