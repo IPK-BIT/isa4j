@@ -14,12 +14,15 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public class InvestigationTest {
 	
@@ -138,5 +141,49 @@ public class InvestigationTest {
     		+	lineName2 + Symbol.EMPTY + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Accession 3" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
     		+	lineName3 + Symbol.EMPTY + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "Ontology1" + Symbol.ENTER,
     			result);
+    }
+    
+    @Test
+    void testFormatSimpleComments() {
+    	List<Comment> comments = new ArrayList<Comment>();
+    	
+    	// Return an empty String for an empty list
+    	assertEquals("", Investigation.formatSimpleComments(comments));
+    	
+    	// Work with just one comment
+    	comments.add(new Comment("Comment Type 1", "Comment Value 1"));
+    	assertEquals(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 1") + "Comment Value 1" + Symbol.ENTER, Investigation.formatSimpleComments(comments));
+    	
+    	// Work with multiple comments and print them in the order they are given (not sorted etc)
+    	comments.add(new Comment("Comment Type 3", "Comment Value 3"));
+    	comments.add(new Comment("Comment Type 2", "Comment Value 2"));
+    	assertEquals(
+    		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 1") + "Comment Value 1" + Symbol.ENTER
+    	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 3") + "Comment Value 3" + Symbol.ENTER
+    	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 2") + "Comment Value 2" + Symbol.ENTER, 
+    	  Investigation.formatSimpleComments(comments));
+
+    }
+
+    @Test
+    void testFormatComments() {
+    	Person person1 = new Person("LN", "FN", null, null, null);
+	   	person1.comments().add(new Comment("Shared Comment", "value1"));
+	   	person1.comments().add(new Comment("Unique Comment", "hello!"));
+	   	
+	   	Person person2 = new Person("LN2", "FN2", null, null, null);
+	   	person2.comments().add(new Comment("Another Comment", "bye bye!"));
+	   	person2.comments().add(new Comment("Shared Comment", "value2"));
+	   	
+	   	List<Person> people = new ArrayList<>(List.of(person1, person2));
+	   	
+	   	// Shared comments should be printed on the same line while unique comments should each have their own line,
+	   	// independently of the order they are added to the person
+	   	assertEquals(
+	   		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Shared Comment") + "value1" + Symbol.TAB + "value2" + Symbol.ENTER
+	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Unique Comment") + "hello!" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
+	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Another Comment") + Symbol.EMPTY + Symbol.TAB + "bye bye!" + Symbol.ENTER,
+	   	  Investigation.formatComments(people));
+    	
     }
 }

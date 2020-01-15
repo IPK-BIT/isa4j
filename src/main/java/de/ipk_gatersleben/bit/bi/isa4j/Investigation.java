@@ -53,12 +53,12 @@ public class Investigation implements Commentable {
 	 * formatted in ISATab format.
 	 * 
 	 * Person person1 = new Person(...);
-	 * person1.addComment(new Comment("Shared Comment", "value1"));
-	 * person1.addComment(new Comment("Unique Comment", "hello!"));
+	 * person1.comments().add(new Comment("Shared Comment", "value1"));
+	 * person1.comments().add(new Comment("Unique Comment", "hello!"));
 	 * 
 	 * Person person2 = new Person(...);
-	 * person2.addComment(new Comment("Shared Comment", "value2"));
-	 * person2.addComment(new Comment("Another Comment", "bye bye!"));
+	 * person2.comments().add(new Comment("Shared Comment", "value2"));
+	 * person2.comments().add(new Comment("Another Comment", "bye bye!"));
 	 *
 	 * List<Person> people = new ArrayList<>(List.of(person1, person2));
 	 * Investigation.formatComments(people);
@@ -72,7 +72,7 @@ public class Investigation implements Commentable {
 	 * @param commentables 
 	 * @return Formatted lines containing the comments
 	 */
-	private static <T extends Commentable> String formatComments(List<T> commentables) {
+	static <T extends Commentable> String formatComments(List<T> commentables) {
 		
 		// Turn the commentables into a list of lists of comments
 		List<List<Comment>> commentBuckets = commentables.stream()
@@ -127,7 +127,7 @@ public class Investigation implements Commentable {
 	}
 
 	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
-	private static String formatSimpleComments(List<Comment> comments) {
+	static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
 		for (Comment c : comments) {
 			sb.append(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, c.getName()));
