@@ -1,8 +1,8 @@
 ONTOLOGY SOURCE REFERENCE
-Term Source Name
-Term Source File
-Term Source Version
-Term Source Description
+Term Source Name	CRediT	AGRO	UO
+Term Source File	http://purl.org/credit/ontology#	http://purl.obolibrary.org/obo/agro/releases/2018-05-14/agro.owl	http://data.bioontology.org/ontologies/UO
+Term Source Version		2018-05-14	38802
+Term Source Description	CASRAI Contributor Roles Taxonomy (CRediT)	Agronomy Ontology	Units of Measurement Ontology
 INVESTIGATION
 Investigation Identifier	Investigation ID
 Investigation Title	Drought Stress Response in Arabidopsis thaliana
@@ -14,22 +14,92 @@ Comment[License]	CC BY 4.0 (Creative Commons Attribution) - https://creativecomm
 Comment[MIAPPE version]	1.1
 Comment[Owning Organisation URI]	http://www.ipk-gatersleben.de/
 INVESTIGATION PUBLICATIONS
-Investigation PubMed ID
-Investigation Publication DOI
-Investigation Publication Author List
-Investigation Publication Title
-Investigation Publication Status
-Investigation Publication Status Term Accession Number
-Investigation Publication Status Term Source REF
+Investigation PubMed ID	
+Investigation Publication DOI	PUB DOI
+Investigation Publication Author List	Psaroudakis, D
+Investigation Publication Title	A title
+Investigation Publication Status	fictional
+Investigation Publication Status Term Accession Number	access123
+Investigation Publication Status Term Source REF	CRediT
 INVESTIGATION CONTACTS
-Investigation Person Last Name
-Investigation Person First Name
-Investigation Person Mid Initials
-Investigation Person Email
-Investigation Person Phone
-Investigation Person Fax
-Investigation Person Address
-Investigation Person Affiliation
-Investigation Person Roles
-Investigation Person Roles Term Accession Number
-Investigation Person Roles Term Source REF
+Investigation Person Last Name	Junker	Psaroudakis
+Investigation Person First Name	Astrid	Dennis
+Investigation Person Mid Initials		
+Investigation Person Email	junkera@ipk-gatersleben.de	psaroudakis@ipk-gatersleben.de
+Investigation Person Phone		
+Investigation Person Fax		
+Investigation Person Address	Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany	Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany
+Investigation Person Affiliation	Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben	Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben
+Investigation Person Roles	project administration role	data curation role
+Investigation Person Roles Term Accession Number	http://purl.org/credit/ontology#CREDIT_00000007	http://purl.org/credit/ontology#CREDIT_00000002
+Investigation Person Roles Term Source REF	CRediT	CRediT
+Comment[Person ID]	https://orcid.org/0000-0002-4656-0308	https://orcid.org/0000-0002-7521-798X
+STUDY
+Study Identifier	1745AJ
+Study Title	Drought Stress Response in Arabidopsis thaliana
+Study Description	
+Study Submission Date	
+Study Public Release Date	
+Study File Name	s_study.txt
+Comment[Study Country]	Germany
+Comment[Study Experimental Site]	LemnaTec Facility
+Comment[Study Longitude]	11.27778
+Comment[Study Start Date]	
+STUDY DESIGN DESCRIPTORS
+Study Design Type	Study Design
+Study Design Type Term Accession Number	
+Study Design Type Term Source REF	
+Comment[Observation Unit Level Hierarchy]	side>lane>block>pot
+Comment[Experimental Unit Level Hierarchy]	plant
+STUDY PUBLICATIONS
+Study PubMed ID
+Study Publication DOI
+Study Publication Author List
+Study Publication Title
+Study Publication Status
+Study Publication Status Term Accession Number
+Study Publication Status Term Source REF
+STUDY FACTORS
+Study Factor Name	drought stress
+Study Factor Type	
+Study Factor Type Term Accession Number	
+Study Factor Type Term Source REF	
+Comment[Study Factor Description]	Which plants were subjected to drought stress and which ones were not?
+Comment[Study Factor Values]	drought;well watered
+STUDY ASSAYS
+Study Assay File Name
+Study Assay Measurement Type
+Study Assay Measurement Type Term Accession Number
+Study Assay Measurement Type Term Source REF
+Study Assay Technology Type
+Study Assay Technology Type Term Accession Number
+Study Assay Technology Type Term Source REF
+Study Assay Technology Platform
+STUDY PROTOCOLS
+Study Protocol Name	Phenotyping	Watering
+Study Protocol Type		
+Study Protocol Type Term Accession Number		
+Study Protocol Type Term Source REF		
+Study Protocol Description		
+Study Protocol URI		
+Study Protocol Version		
+Study Protocol Parameters Name		Irrigation Type;Volume;Watering Time
+Study Protocol Parameters Name Term Accession Number		;;
+Study Protocol Parameters Name Term Source REF		;;
+Study Protocol Components Name		
+Study Protocol Components Type		
+Study Protocol Components Type Term Accession Number		
+Study Protocol Components Type Term Source REF		
+STUDY CONTACTS
+Study Person Last Name	Junker	Psaroudakis
+Study Person First Name	Astrid	Dennis
+Study Person Mid Initials		
+Study Person Email	junkera@ipk-gatersleben.de	psaroudakis@ipk-gatersleben.de
+Study Person Phone		
+Study Person Fax		
+Study Person Address	Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany	Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany
+Study Person Affiliation	Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben	Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben
+Study Person Roles	project administration role	data curation role
+Study Person Roles Term Accession Number	http://purl.org/credit/ontology#CREDIT_00000007	http://purl.org/credit/ontology#CREDIT_00000002
+Study Person Roles Term Source REF	CRediT	CRediT
+Comment[Person ID]	https://orcid.org/0000-0002-4656-0308	https://orcid.org/0000-0002-7521-798X

@@ -10,8 +10,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,9 +22,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
+import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
@@ -191,9 +192,9 @@ public class InvestigationTest {
 	   	// Shared comments should be printed on the same line while unique comments should each have their own line,
 	   	// independently of the order they are added to the person
 	   	assertEquals(
-	   		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Shared Comment") + "value1" + Symbol.TAB + "value2" + Symbol.ENTER
-	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Unique Comment") + "hello!" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
-	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Another Comment") + Symbol.EMPTY + Symbol.TAB + "bye bye!" + Symbol.ENTER,
+	   		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Shared Comment") + Symbol.TAB + "value1" + Symbol.TAB + "value2" + Symbol.ENTER
+	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Unique Comment") + Symbol.TAB + "hello!" + Symbol.TAB + Symbol.EMPTY + Symbol.ENTER
+	   	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Another Comment") + Symbol.TAB + Symbol.EMPTY + Symbol.TAB + "bye bye!" + Symbol.ENTER,
 	   	  Investigation.formatComments(people));   	
     }
     
@@ -207,10 +208,71 @@ public class InvestigationTest {
     	this.investigation.setDescription("An experiment about drought stress in Arabidopsis thaliana");
     	this.investigation.setSubmissionDate(LocalDate.of(2019, Month.JANUARY, 16));
     	
+    	// Comments
     	this.investigation.comments().add(new Comment("Owning Organisation URI", "http://www.ipk-gatersleben.de/"));
     	this.investigation.comments().add(new Comment("Investigation Keywords", "plant phenotyping, image analysis, arabidopsis thaliana, lemnatec"));
     	this.investigation.comments().add(new Comment("License", "CC BY 4.0 (Creative Commons Attribution) - https://creativecommons.org/licenses/by/4.0/legalcode"));
     	this.investigation.comments().add(new Comment("MIAPPE version", "1.1"));
+    	
+    	// Ontologies
+    	Ontology creditOntology = new Ontology("CRediT",new URL("http://purl.org/credit/ontology#"),null,"CASRAI Contributor Roles Taxonomy (CRediT)");
+    	Ontology agroOntology   = new Ontology("AGRO",new URL("http://purl.obolibrary.org/obo/agro/releases/2018-05-14/agro.owl"),"2018-05-14","Agronomy Ontology");
+    	Ontology uoOntology     = new Ontology("UO",new URL("http://data.bioontology.org/ontologies/UO"),"38802","Units of Measurement Ontology");
+    	this.investigation.addOntology(creditOntology);
+    	this.investigation.addOntology(agroOntology);
+    	this.investigation.addOntology(uoOntology);
+    	
+    	// Study
+    	Study study = new Study("1745AJ", "s_study.txt");
+    	study.setTitle("Drought Stress Response in Arabidopsis thaliana");
+    	this.investigation.addStudy(study);
+    	
+    	// Factors
+    	Factor factor = new Factor("drought stress");
+    	factor.comments().add(new Comment("Study Factor Description", "Which plants were subjected to drought stress and which ones were not?"));
+    	factor.comments().add(new Comment("Study Factor Values", "drought;well watered"));
+    	study.addFactor(factor);
+    	
+    	// Comments
+    	study.comments().add(new Comment("Study Start Date", ""));
+    	study.comments().add(new Comment("Study Country", "Germany"));
+    	study.comments().add(new Comment("Study Experimental Site", "LemnaTec Facility"));
+    	study.comments().add(new Comment("Study Longitude", "11.27778"));
+    	
+    	// Design
+    	OntologyAnnotation studyDesign = new OntologyAnnotation("Study Design");
+    	studyDesign.comments().add(new Comment("Observation Unit Level Hierarchy", "side>lane>block>pot"));
+    	studyDesign.comments().add(new Comment("Experimental Unit Level Hierarchy", "plant"));
+    	study.addDesignDescriptor(studyDesign);
+    	
+    	// Contacts (Study and Investigation)
+    	Person astrid = new Person("Junker", "Astrid", "junkera@ipk-gatersleben.de","Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben","Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany");
+    	astrid.addRole(new OntologyAnnotation("project administration role","http://purl.org/credit/ontology#CREDIT_00000007",creditOntology));
+    	astrid.comments().add(new Comment("Person ID", "https://orcid.org/0000-0002-4656-0308"));
+    	Person dennis = new Person("Psaroudakis", "Dennis", "psaroudakis@ipk-gatersleben.de","Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben","Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany");
+    	dennis.addRole(new OntologyAnnotation("data curation role","http://purl.org/credit/ontology#CREDIT_00000002",creditOntology));
+    	dennis.comments().add(new Comment("Person ID", "https://orcid.org/0000-0002-7521-798X"));
+    	investigation.addContact(astrid);
+    	investigation.addContact(dennis);
+    	study.addContact(astrid);
+    	study.addContact(dennis);
+    	
+    	// Protocols
+    	Protocol prot_phenotyping = new Protocol("Phenotyping");
+    	Protocol prot_watering    = new Protocol("Watering");
+    	study.addProtocol(prot_phenotyping);
+    	study.addProtocol(prot_watering);
+    	prot_watering.addParameter(new ProtocolParameter(new OntologyAnnotation("Irrigation Type")));
+    	prot_watering.addParameter(new ProtocolParameter(new OntologyAnnotation("Volume")));
+    	prot_watering.addParameter(new ProtocolParameter(new OntologyAnnotation("Watering Time")));
+    	
+    	// Publication
+    	Publication pub = new Publication();
+    	pub.setDOI("PUB DOI");
+    	pub.setTitle("A title");
+    	pub.setStatus(new OntologyAnnotation("fictional","access123",creditOntology));
+    	pub.addAuthor(dennis);
+    	this.investigation.addPublication(pub);
     		
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("python_originals/i_investigation.txt")));
     	ByteArrayOutputStream os   = new ByteArrayOutputStream();
@@ -223,8 +285,9 @@ public class InvestigationTest {
     	while((correctLine = correctFile.readLine()) != null && (ourLine = ourFile.readLine()) != null) {
     		assertEquals(correctLine, ourLine);
     	}
-    	// Assert that our file is finished here as well
+    	// Assert that both files are finished here as well
     	assertNull(ourFile.readLine());
+    	assertNull(correctFile.readLine());
     	
     	correctFile.close();
     	ourFile.close();

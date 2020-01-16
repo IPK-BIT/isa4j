@@ -88,7 +88,7 @@ public class Investigation implements Commentable {
 		// Now loop through all comment types and create a line for each
 		StringBuilder sb = new StringBuilder();
 		for(String commentType : commentLevels) {
-			sb.append(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, commentType));
+			sb.append(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, commentType) + Symbol.TAB);
 			// Now loop through all the buckets and see if that comment type is present
 			String commentLine = commentBuckets.stream()
 				// For each bucket -> go through each comment
@@ -410,16 +410,16 @@ public class Investigation implements Commentable {
 	private String formatStudyHeaders(Study study) {
 		return InvestigationAttribute.STUDY.toString() + Symbol.ENTER
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier())
-			+ formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_DESCRIPTION, study.getDescription())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_SUBMISSION_DATE, 
 				study.getSubmissionDate() == null ? null : study.getSubmissionDate().toString())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_PUBLIC_RELEASE_DATE, 
 				study.getPublicReleaseDate() == null ? null : study.getPublicReleaseDate().toString())
+			+ formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName())
 			+ formatSimpleComments(study.comments().getAll())
 		// STUDY DESIGN DESCRIPTORS
-			+ InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString()
+			+ InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS.toString() + Symbol.ENTER
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_DESIGN_TYPE, study.getDesignDescriptors(), o -> o)
 			+ formatComments(study.getDesignDescriptors());
 		
