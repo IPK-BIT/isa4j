@@ -7,10 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -161,15 +163,15 @@ public class InvestigationTest {
     	
     	// Work with just one comment
     	comments.add(new Comment("Comment Type 1", "Comment Value 1"));
-    	assertEquals(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 1") + "Comment Value 1" + Symbol.ENTER, Investigation.formatSimpleComments(comments));
+    	assertEquals(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 1") + Symbol.TAB + "Comment Value 1" + Symbol.ENTER, Investigation.formatSimpleComments(comments));
     	
-    	// Work with multiple comments and print them in the order they are given (not sorted etc)
+    	// Work with multiple comments and print them in sorted order)
     	comments.add(new Comment("Comment Type 3", "Comment Value 3"));
     	comments.add(new Comment("Comment Type 2", "Comment Value 2"));
     	assertEquals(
-    		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 1") + "Comment Value 1" + Symbol.ENTER
-    	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 3") + "Comment Value 3" + Symbol.ENTER
-    	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 2") + "Comment Value 2" + Symbol.ENTER, 
+    		StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 1") + Symbol.TAB + "Comment Value 1" + Symbol.ENTER
+    	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 2") + Symbol.TAB + "Comment Value 2" + Symbol.ENTER
+    	  + StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, "Comment Type 3") + Symbol.TAB + "Comment Value 3" + Symbol.ENTER, 
     	  Investigation.formatSimpleComments(comments));
 
     }
@@ -202,20 +204,19 @@ public class InvestigationTest {
     	// This will yield a more helpful assertionException if something doesn't match than if we just compare the whole file at once.
     	
     	this.investigation.setTitle("Drought Stress Response in Arabidopsis thaliana");
-    	// TODO deactivated because of weird unending gradle unit test
-    	//this.investigation.setDescription("An experiment about drought stress in Arabidopsis thaliana");
+    	this.investigation.setDescription("An experiment about drought stress in Arabidopsis thaliana");
     	this.investigation.setSubmissionDate(LocalDate.of(2019, Month.JANUARY, 16));
     	
-    	// TODO these also cause it to hang
     	this.investigation.comments().add(new Comment("Owning Organisation URI", "http://www.ipk-gatersleben.de/"));
     	this.investigation.comments().add(new Comment("Investigation Keywords", "plant phenotyping, image analysis, arabidopsis thaliana, lemnatec"));
     	this.investigation.comments().add(new Comment("License", "CC BY 4.0 (Creative Commons Attribution) - https://creativecommons.org/licenses/by/4.0/legalcode"));
     	this.investigation.comments().add(new Comment("MIAPPE version", "1.1"));
     		
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("python_originals/i_investigation.txt")));
-    	PipedOutputStream os       = new PipedOutputStream();
-    	BufferedReader ourFile	   = new BufferedReader(new InputStreamReader(new PipedInputStream(os)));
+    	ByteArrayOutputStream os   = new ByteArrayOutputStream();
     	this.investigation.writeToStream(os);
+    	BufferedReader ourFile	   = new BufferedReader(new StringReader(os.toString()));
+    	
     	
     	String correctLine = null;
     	String ourLine	   = null;

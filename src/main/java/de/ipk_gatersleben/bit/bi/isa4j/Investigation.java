@@ -14,6 +14,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -127,8 +128,9 @@ public class Investigation implements Commentable {
 	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
 	static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
+		Collections.sort(comments, (c1, c2) -> c1.getName().compareTo(c2.getName()));
 		for (Comment c : comments) {
-			sb.append(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, c.getName()));
+			sb.append(StringUtil.putNameInAttribute(InvestigationAttribute.COMMENT, c.getName()) + Symbol.TAB);
 			sb.append(c.getValue()).append(Symbol.ENTER);
 		}
 		return sb.toString();
@@ -667,7 +669,7 @@ public class Investigation implements Commentable {
 			writer.write(formatStudyContacts(study));
 		}
 			
-		writer.close();
+		writer.flush();
 	}
 	
 	public void writeToFile(String filepath) throws IOException {
