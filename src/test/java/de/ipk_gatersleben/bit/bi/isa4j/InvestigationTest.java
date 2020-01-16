@@ -204,7 +204,7 @@ public class InvestigationTest {
     	this.investigation.setDescription("An experiment about drought stress in Arabidopsis thaliana");
     	this.investigation.setSubmissionDate(LocalDate.of(2019, Month.JANUARY, 16));
     		
-    	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("python_originals/i_investigation.txt")));
+    	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("python_originals/i_investigation.txt")));
     	PipedOutputStream os       = new PipedOutputStream();
     	BufferedReader ourFile	   = new BufferedReader(new InputStreamReader(new PipedInputStream(os)));
     	this.investigation.writeToStream(os); 	

@@ -1,0 +1,31 @@
+ONTOLOGY SOURCE REFERENCE
+Term Source Name
+Term Source File
+Term Source Version
+Term Source Description
+INVESTIGATION
+Investigation Identifier	Investigation ID
+Investigation Title	Drought Stress Response in Arabidopsis thaliana
+Investigation Description	An experiment about drought stress in Arabidopsis thaliana
+Investigation Submission Date	2019-01-16
+Investigation Public Release Date	
+INVESTIGATION PUBLICATIONS
+Investigation PubMed ID
+Investigation Publication DOI
+Investigation Publication Author List
+Investigation Publication Title
+Investigation Publication Status
+Investigation Publication Status Term Accession Number
+Investigation Publication Status Term Source REF
+INVESTIGATION CONTACTS
+Investigation Person Last Name
+Investigation Person First Name
+Investigation Person Mid Initials
+Investigation Person Email
+Investigation Person Phone
+Investigation Person Fax
+Investigation Person Address
+Investigation Person Affiliation
+Investigation Person Roles
+Investigation Person Roles Term Accession Number
+Investigation Person Roles Term Source REF

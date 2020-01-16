@@ -44,3 +44,14 @@ license {
 	include "**/*.java"
 	exclude "**/*package-info.java"
 }
+
+sourceSets {
+        main {
+            java {srcDirs=["src/main/java"]}
+            resources {srcDirs=["src/main/resources"]}
+        }
+        test {
+            java {srcDirs=["src/test/java"]}
+            resources {srcDirs=["src/test/resources"]}
+        }
+	}
