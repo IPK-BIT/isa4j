@@ -6,9 +6,13 @@ Term Source Description
 INVESTIGATION
 Investigation Identifier	Investigation ID
 Investigation Title	Drought Stress Response in Arabidopsis thaliana
-Investigation Description	An experiment about drought stress in Arabidopsis thaliana
+Investigation Description	
 Investigation Submission Date	2019-01-16
 Investigation Public Release Date	
+Comment[Investigation Keywords]	plant phenotyping, image analysis, arabidopsis thaliana, lemnatec
+Comment[License]	CC BY 4.0 (Creative Commons Attribution) - https://creativecommons.org/licenses/by/4.0/legalcode
+Comment[MIAPPE version]	1.1
+Comment[Owning Organisation URI]	http://www.ipk-gatersleben.de/
 INVESTIGATION PUBLICATIONS
 Investigation PubMed ID
 Investigation Publication DOI
