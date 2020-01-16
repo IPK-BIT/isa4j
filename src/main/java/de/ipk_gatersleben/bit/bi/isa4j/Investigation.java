@@ -12,24 +12,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
-import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
-import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
+import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
@@ -216,12 +216,12 @@ public class Investigation implements Commentable {
 	/**
 	 * The date the {@link Investigation} was submitted
 	 */
-	private Date submissionDate;
+	private LocalDate submissionDate;
 
 	/**
 	 * The date the {@link Investigation} was released.
 	 */
-	private Date publicReleaseDate;
+	private LocalDate publicReleaseDate;
 
 	/**
 	 * Connected {@link Publication}s of this {@link Investigation}
@@ -244,7 +244,7 @@ public class Investigation implements Commentable {
 	 * @param identifier identifier of investigation
 	 */
 	public Investigation(String identifier) {
-		this.identifier = identifier;
+		this.setIdentifier(identifier);
 	}
 
 	/**
@@ -531,7 +531,7 @@ public class Investigation implements Commentable {
 	 *
 	 * @return PublicReleaseDate
 	 */
-	public Date getPublicReleaseDate() {
+	public LocalDate getPublicReleaseDate() {
 		return publicReleaseDate;
 	}
 	
@@ -549,7 +549,7 @@ public class Investigation implements Commentable {
 	 *
 	 * @return SubmissionDate
 	 */
-	public Date getSubmissionDate() {
+	public LocalDate getSubmissionDate() {
 		return submissionDate;
 	}
 	
@@ -579,7 +579,7 @@ public class Investigation implements Commentable {
 	 * @param description Description
 	 */
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = StringUtil.sanitize(description);
 	}
 
 	/**
@@ -588,7 +588,7 @@ public class Investigation implements Commentable {
 	 * @param iD id of invesigation
 	 */
 	public void setIdentifier(String iD) {
-		identifier = iD;
+		identifier = StringUtil.sanitize(iD);
 	}
 	
 	/**
@@ -616,7 +616,7 @@ public class Investigation implements Commentable {
 	 *
 	 * @param publicReleaseDate PublicReleaseDate
 	 */
-	public void setPublicReleaseDate(Date publicReleaseDate) {
+	public void setPublicReleaseDate(LocalDate publicReleaseDate) {
 		this.publicReleaseDate = publicReleaseDate;
 	}
 	
@@ -637,7 +637,7 @@ public class Investigation implements Commentable {
 	 *
 	 * @param submissionDate SubmissionDate
 	 */
-	public void setSubmissionDate(Date submissionDate) {
+	public void setSubmissionDate(LocalDate submissionDate) {
 		this.submissionDate = submissionDate;
 	}
 	
@@ -647,7 +647,7 @@ public class Investigation implements Commentable {
 	 * @param title title
 	 */
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = StringUtil.sanitize(title);
 	}
 	
 	public void writeToStream(OutputStream os) throws IOException {

@@ -13,6 +13,8 @@ import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -194,13 +196,14 @@ public class InvestigationTest {
     }
     
     @Test
-    void testWriteToFile() throws IOException {
+    void testWriteToStream() throws IOException {
     	// We have created an Investigation File with the python API (python code is in the resources folder) and we'll try to create
     	// the same file with isa4J. We're going to loop through each of the lines of the python original and compare each line with our own result.
     	// This will yield a more helpful assertionException if something doesn't match than if we just compare the whole file at once.
-    	
-    	
-    	
+    	this.investigation.setTitle("Drought Stress Response in Arabidopsis thaliana");
+    	this.investigation.setDescription("An experiment about drought stress in Arabidopsis thaliana");
+    	this.investigation.setSubmissionDate(LocalDate.of(2019, Month.JANUARY, 16));
+    		
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("python_originals/i_investigation.txt")));
     	PipedOutputStream os       = new PipedOutputStream();
     	BufferedReader ourFile	   = new BufferedReader(new InputStreamReader(new PipedInputStream(os)));

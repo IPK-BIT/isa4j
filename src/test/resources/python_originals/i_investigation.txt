@@ -5,9 +5,9 @@ Term Source Version
 Term Source Description
 INVESTIGATION
 Investigation Identifier	Investigation ID
-Investigation Title	
-Investigation Description	
-Investigation Submission Date	
+Investigation Title	Drought Stress Response in Arabidopsis thaliana
+Investigation Description	An experiment about drought stress in Arabidopsis thaliana
+Investigation Submission Date	2019-01-16
 Investigation Public Release Date	
 INVESTIGATION PUBLICATIONS
 Investigation PubMed ID

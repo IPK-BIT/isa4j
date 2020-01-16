@@ -29,4 +29,14 @@ public class StringUtil {
 	public static <T> String putNameInAttribute(T attribute, String parameter) {
 		return attribute.toString().replace(Symbol.ATTRIBUTE_REPLACE.toString(), parameter);
 	}
+	
+	/**
+	 * Removes Symbol.TABs and Symbol.ENTERs from an input String and replaces them with
+	 * Symbol.EMPTY. To be used on any String input by the user that ends up in the ISATab files.
+	 * @param input
+	 * @return
+	 */
+	public static String sanitize(String input) {
+		return input.replaceAll(Symbol.TAB.toString(), Symbol.SPACE.toString()).replaceAll(Symbol.ENTER.toString(),  Symbol.SPACE.toString());
+	}
 }
