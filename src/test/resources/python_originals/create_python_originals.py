@@ -2,7 +2,7 @@ from isatools.model import *
 from isatools import isatab
 import shutil
 
-investigation = Investigation()
+investigation = Investigation(identifier="Investigation ID")
 
 
 isatab.dump(investigation, ".")

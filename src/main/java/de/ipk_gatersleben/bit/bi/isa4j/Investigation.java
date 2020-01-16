@@ -119,7 +119,7 @@ public class Investigation implements Commentable {
 	 * @return Line formatted in ISATab
 	 */
 	private static String formatSimpleAttribute(InvestigationAttribute lineName, String value) {
-		return lineName.toString()
+		return lineName.toString() + Symbol.TAB
 			+ (value == null ? Symbol.EMPTY.toString() : value)
 			+ Symbol.ENTER.toString();
 	}
@@ -290,7 +290,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatInvestigationContacts() {
-		return InvestigationAttribute.INVESTIGATION_CONTACTS.toString()
+		return InvestigationAttribute.INVESTIGATION_CONTACTS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_LAST_NAME, this.contacts, (o) -> o.getLastName())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_FIRST_NAME, this.contacts,(o) -> o.getFirstName())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PERSON_MID_INITIALS, this.contacts,(o) -> o.getMidInitials())
@@ -320,7 +320,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatInvestigationHeaders() {		
-		return InvestigationAttribute.INVESTIGATION.toString()
+		return InvestigationAttribute.INVESTIGATION.toString() + Symbol.ENTER
 			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_IDENTIFIER, this.identifier)
 			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_TITLE, this.title)
 			+  formatSimpleAttribute(InvestigationAttribute.INVESTIGATION_DESCRIPTION, this.description)
@@ -333,7 +333,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatInvestigationPublications() {	
-		return InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString()
+		return InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBMED_ID, this.publications, (o) -> o.getPubmedID())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, this.publications, (o) -> o.getDOI())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, this.publications, 
@@ -360,7 +360,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatStudyAssays(Study study) {
-		return InvestigationAttribute.STUDY_ASSAYS.toString()
+		return InvestigationAttribute.STUDY_ASSAYS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.STUDY_ASSAY_FILE_NAME, study.getAssays(), a -> a.getFileName())
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_ASSAY_MEASUREMENT_TYPE, study.getAssays(), a -> a.getMeasurementType())
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_ASSAY_TECHNOLOGY_TYPE, study.getAssays(), a -> a.getTechnologyType())
@@ -369,7 +369,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatStudyContacts(Study study) {
-		return InvestigationAttribute.STUDY_CONTACTS.toString()
+		return InvestigationAttribute.STUDY_CONTACTS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.STUDY_PERSON_LAST_NAME, study.getContacts(), (o) -> o.getLastName())
 			+ lineFromList(InvestigationAttribute.STUDY_PERSON_FIRST_NAME, study.getContacts(),(o) -> o.getFirstName())
 			+ lineFromList(InvestigationAttribute.STUDY_PERSON_MID_INITIALS, study.getContacts(),(o) -> o.getMidInitials())
@@ -399,14 +399,14 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatStudyFactors(Study study) {
-		return InvestigationAttribute.STUDY_FACTORS.toString()
+		return InvestigationAttribute.STUDY_FACTORS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.STUDY_FACTOR_NAME, study.getFactors(), o -> o.getName())
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_FACTOR_TYPE, study.getFactors(), f -> f.getType())
 			+ formatComments(study.getFactors());
 	}
 
 	private String formatStudyHeaders(Study study) {
-		return InvestigationAttribute.STUDY.toString()
+		return InvestigationAttribute.STUDY.toString() + Symbol.ENTER
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_IDENTIFIER, study.getIdentifier())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_FILE_NAME, study.getFileName())
 			+ formatSimpleAttribute(InvestigationAttribute.STUDY_TITLE, study.getTitle())
@@ -424,7 +424,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatStudyProtocols(Study study) {
-		return InvestigationAttribute.STUDY_PROTOCOLS.toString()
+		return InvestigationAttribute.STUDY_PROTOCOLS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_NAME, study.getProtocols(), p -> p.getName())
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_PROTOCOL_TYPE, study.getProtocols(), p -> p.getType())
 			+ lineFromList(InvestigationAttribute.STUDY_PROTOCOL_DESCRIPTION, study.getProtocols(), p -> p.getDescription())
@@ -467,7 +467,7 @@ public class Investigation implements Commentable {
 	}
 
 	private String formatStudyPublications(Study study) {
-		return InvestigationAttribute.STUDY_PUBLICATIONS.toString()		
+		return InvestigationAttribute.STUDY_PUBLICATIONS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID())
 			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI())
 			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
