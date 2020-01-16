@@ -1,11 +1,17 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.util.Objects;
+
 public class ProtocolParameter {
 	
 	private OntologyAnnotation name;
 
 	public ProtocolParameter(OntologyAnnotation name) {
-		this.name = name;
+		this.setName(name);
+	}
+	
+	public ProtocolParameter(String name) {
+		this(new OntologyAnnotation(name, null, null));
 	}
 
 	/**
@@ -19,7 +25,7 @@ public class ProtocolParameter {
 	 * @param name the name to set
 	 */
 	public void setName(OntologyAnnotation name) {
-		this.name = name;
+		this.name = Objects.requireNonNull(name, "ProtocolParameter name OntologyAnnotation cannot be null");
 	}
 
 }

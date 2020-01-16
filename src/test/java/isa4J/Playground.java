@@ -11,11 +11,11 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.FactorValue;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
+import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
-import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
 

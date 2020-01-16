@@ -215,7 +215,7 @@ public class InvestigationTest {
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("python_originals/i_investigation.txt")));
     	PipedOutputStream os       = new PipedOutputStream();
     	BufferedReader ourFile	   = new BufferedReader(new InputStreamReader(new PipedInputStream(os)));
-    	this.investigation.writeToStream(os); 	
+    	this.investigation.writeToStream(os);
     	
     	String correctLine = null;
     	String ourLine	   = null;
