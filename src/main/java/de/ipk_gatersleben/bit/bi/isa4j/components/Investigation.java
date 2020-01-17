@@ -6,7 +6,7 @@
  * Contributors:
  *      Leibniz Institute of Plant Genetics and Crop Plant Research (IPK), Gatersleben, Germany
  */
-package de.ipk_gatersleben.bit.bi.isa4j;
+package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,13 +20,6 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
-import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
-import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;

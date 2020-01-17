@@ -6,11 +6,7 @@
  * Contributors:
  *      Leibniz Institute of Plant Genetics and Crop Plant Research (IPK), Gatersleben, Germany
  */
-package de.ipk_gatersleben.bit.bi.isa4j;
-
-import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
-import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
+package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 /**
  * Class to represent a assay in context of the ISA hierarchy. It is used to

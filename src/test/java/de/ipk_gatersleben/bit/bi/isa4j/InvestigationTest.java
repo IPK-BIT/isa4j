@@ -23,12 +23,14 @@ import org.junit.jupiter.api.Test;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;

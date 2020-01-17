@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 
 /**

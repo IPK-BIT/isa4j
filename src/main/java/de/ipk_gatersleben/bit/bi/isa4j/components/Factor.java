@@ -10,9 +10,6 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Assay;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
-
 /**
  * Class representing a factor value to describe an observed in the
  * {@link Study} or {@link Assay}, independent from a {@link Protocol}

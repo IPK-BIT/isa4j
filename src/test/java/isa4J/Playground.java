@@ -5,19 +5,21 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
 import de.ipk_gatersleben.bit.bi.isa4j.components.FactorValue;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Person;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Process;
 import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 
 public class Playground {
 
@@ -104,6 +106,11 @@ public class Playground {
 		Characteristic char1 = new Characteristic("Organism", new OntologyAnnotation("Arabidopsis thaliana"));
 		Characteristic char2 = new Characteristic("Plant Role", new OntologyAnnotation("Contributor", "Acess.123", ontology1));
 		
+		Source source1 = new Source("Source 1");
+		
+		Process process = new Process(prot1);
+		process.setInput(source1);
+		
 		Sample sample1 = new Sample("Plant 1");
 		sample1.addCharacteristic(char2);
 		sample1.addCharacteristic(char1);
@@ -115,13 +122,13 @@ public class Playground {
 		sample1.addFactorValue(new FactorValue(f2, new OntologyAnnotation("value", "valueAccess", ontology1)));
 		sample1.addFactorValue(new FactorValue(f3, 43.3));
 		
+		process.setOutput(sample1);
 		
-		String result = sample1.getHeaders().entrySet()
-        .stream()
-        .map(e -> e.getKey() + "=\"" + Arrays.deepToString(e.getValue()) + "\"")
-        .collect(Collectors.joining("\n"));
 		
-		System.out.println(result);
+		study1.openFile();
+		study1.writeHeadersFromExample(source1);
+		study1.writeLine(source1);
+		study1.closeFile();
 		
 	}
 

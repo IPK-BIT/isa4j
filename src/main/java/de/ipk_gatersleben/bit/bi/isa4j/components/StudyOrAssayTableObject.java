@@ -60,7 +60,24 @@ public abstract class StudyOrAssayTableObject {
 		if(ontologyAnnotation.getTermAccession() != null)
 			extensionFields.add(ontologyAnnotation.getTermAccession());
 		return extensionFields;
-	}	
+	}
+	
+	private StudyOrAssayTableObject nextStudyOrAssayTableObject;
+
+	/**
+	 * @return the nextStudyOrAssayTableObject
+	 */
+	StudyOrAssayTableObject getNextStudyOrAssayTableObject() {
+		return nextStudyOrAssayTableObject;
+	}
+
+	/**
+	 * @param nextStudyOrAssayTableObject the nextStudyOrAssayTableObject to set
+	 */
+	protected void setNextStudyOrAssayTableObject(StudyOrAssayTableObject nextStudyOrAssayTableObject) {
+		this.nextStudyOrAssayTableObject = nextStudyOrAssayTableObject;
+	}
+	
 	
 //	/**
 //	 * @return the nextItem

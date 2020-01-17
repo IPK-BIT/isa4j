@@ -8,9 +8,6 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
-
 /**
  * Class representing a {@link Publication} connected to a {@link Investigation}
  * or {@link Study}

@@ -8,9 +8,6 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

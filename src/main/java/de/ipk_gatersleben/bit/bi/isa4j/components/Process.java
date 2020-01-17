@@ -150,5 +150,27 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		this.date = date;
 		this.dateTime = null;
 	}
+	
+    
+	private StudyOrAssayTableObject input;
+    public void setInput(StudyOrAssayTableObject input) {
+    	// Remove myself from previously defined input
+    	if(this.input != null)
+    		this.input.setNextStudyOrAssayTableObject(null);
+    	input.setNextStudyOrAssayTableObject(this);
+    	this.input = input;
+    }
+    
+    public void setOutput(StudyOrAssayTableObject output) {
+    	this.setNextStudyOrAssayTableObject(output);
+    }
+    
+    public StudyOrAssayTableObject getInput() {
+    	return this.input;
+    }
+    
+    public StudyOrAssayTableObject getOutput() {
+    	return this.getNextStudyOrAssayTableObject();
+    }
 
 }

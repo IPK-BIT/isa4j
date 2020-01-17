@@ -8,10 +8,6 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
-import de.ipk_gatersleben.bit.bi.isa4j.Assay;
-import de.ipk_gatersleben.bit.bi.isa4j.Study;
-
 /**
  * Class representing a {@link Comment} that can be assigned to an
  * {@link Investigation}, {@link Study} or {@link Assay}.
