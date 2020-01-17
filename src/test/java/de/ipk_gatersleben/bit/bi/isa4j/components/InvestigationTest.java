@@ -1,4 +1,4 @@
-package de.ipk_gatersleben.bit.bi.isa4j;
+package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,7 +38,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public class InvestigationTest {
 	
-	Investigation investigation = new Investigation("Investigation ID");
+	Investigation investigation;
 	
 	@BeforeEach
 	void resetInvestigation() {

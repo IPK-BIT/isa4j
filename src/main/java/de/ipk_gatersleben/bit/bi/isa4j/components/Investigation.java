@@ -118,7 +118,7 @@ public class Investigation implements Commentable {
 			+ Symbol.ENTER.toString();
 	}
 
-	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
+	// This is meant for unique comments (e.g. study-wide or study-wide) that don't have multiple columns.
 	static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
 		Collections.sort(comments, (c1, c2) -> c1.getName().compareTo(c2.getName()));
@@ -130,7 +130,7 @@ public class Investigation implements Commentable {
 	}
 
 	/**
-	 * This handy function creates a line of the investigation file from a list of Objects (Ontologies, Publications,
+	 * This handy function creates a line of the study file from a list of Objects (Ontologies, Publications,
 	 * Contacts etc.) and a function to execute on each element of that list (each Ontology, Publication etc.) in order
 	 * to extract the content from that object that should go into the line. So, for example, if you want to create a line
 	 * containing all the names of the ontologies, your ontologies would be the list that's passed, and the function to get the
@@ -194,7 +194,7 @@ public class Investigation implements Commentable {
 	private String identifier;
 
 	/**
-	 * The list of the used ontologies for this investigation {@link Ontology}
+	 * The list of the used ontologies for this study {@link Ontology}
 	 */
 	private List<Ontology> ontologies = new ArrayList<>();
 
@@ -236,7 +236,7 @@ public class Investigation implements Commentable {
 	/**
 	 * Constructor, every Investigation should have an identifier.
 	 *
-	 * @param identifier identifier of investigation
+	 * @param identifier identifier of study
 	 */
 	public Investigation(String identifier) {
 		this.setIdentifier(identifier);
@@ -270,9 +270,9 @@ public class Investigation implements Commentable {
 	}
 
 	/**
-	 * Add a study to this investigation. Identifier and Filename must be unique.
+	 * Add a study to this study. Identifier and Filename must be unique.
 	 *
-	 * @param study the study of investigation, which will be add
+	 * @param study the study of study, which will be add
 	 */
 	public void addStudy(Study study) {
 		if(this.studies.stream().map(Study::getIdentifier).anyMatch(study.getIdentifier()::equals))
@@ -465,9 +465,9 @@ public class Investigation implements Commentable {
 	}
 
 	/**
-	 * Get contact of investigation
+	 * Get contact of study
 	 *
-	 * @return contact of investigation
+	 * @return contact of study
 	 */
 	public List<Person> getContacts() {
 		return contacts;
@@ -501,9 +501,9 @@ public class Investigation implements Commentable {
 	}
 	
 	/**
-	 * Get Publication of investigation
+	 * Get Publication of study
 	 *
-	 * @return Publication of investigation
+	 * @return Publication of study
 	 */
 	public List<Publication> getPublications() {
 		return publications;
@@ -519,9 +519,9 @@ public class Investigation implements Commentable {
 	}
 	
 	/**
-	 * Get studies of investigation
+	 * Get studies of study
 	 *
-	 * @return studies of investigation
+	 * @return studies of study
 	 */
 	public List<Study> getStudies() {
 		return studies;
@@ -547,9 +547,9 @@ public class Investigation implements Commentable {
 	}
 	
 	/**
-	 * Set contact of investigation
+	 * Set contact of study
 	 *
-	 * @param contacts contact of investigation
+	 * @param contacts contact of study
 	 */
 	public void setContacts(List<Person> contacts) {
 		contacts.stream().forEach(Objects::requireNonNull);
@@ -585,9 +585,9 @@ public class Investigation implements Commentable {
 	}
 	
 	/**
-	 * Set Publication of investigation
+	 * Set Publication of study
 	 *
-	 * @param publications Publication of investigation
+	 * @param publications Publication of study
 	 */
 	public void setPublications(List<Publication> publications) {
 		publications.stream().forEach(Objects::requireNonNull);
@@ -604,9 +604,9 @@ public class Investigation implements Commentable {
 	}
 	
 	/**
-	 * Set studies of investigation
+	 * Set studies of study
 	 *
-	 * @param studies studies of investigation
+	 * @param studies studies of study
 	 */
 	public void setStudies(List<Study> studies) {
 		this.studies.clear();

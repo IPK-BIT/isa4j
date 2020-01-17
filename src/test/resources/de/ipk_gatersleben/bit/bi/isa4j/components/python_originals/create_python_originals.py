@@ -116,6 +116,25 @@ prot_watering.parameters.extend([
 pub = Publication(doi="PUB DOI",title="A title",author_list="Psaroudakis, D",status=OntologyAnnotation(term="fictional",term_accession="access123",term_source=ontologies["CRediT"]))
 investigation.publications.append(pub)
 
+## ------- Study File -----------
+source1 = Source("Source Name");
+source2 = Source("Another Source");
+
+sample1 = Sample("Sample Name")
+sample2 = Sample("Another Sample")
+
+process1 = Process(executes_protocol=prot_watering)
+process2 = Process(executes_protocol=prot_watering)
+
+process1.inputs.append(source1)
+process2.inputs.append(source2)
+process1.outputs.append(sample1)
+process2.outputs.append(sample2)
+
+study.sources.extend([source1, source2])
+study.samples.extend([sample1, sample2])
+study.process_sequence.extend([process1, process2])
 
 isatab.dump(investigation, ".")
-shutil.copyfile("i_investigation.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/python_originals/i_investigation.txt")
+shutil.copyfile("i_investigation.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/i_investigation.txt")
+shutil.copyfile("s_study.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/s_study.txt")

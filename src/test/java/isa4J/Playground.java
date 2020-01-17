@@ -2,8 +2,6 @@ package isa4J;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;

@@ -91,7 +91,7 @@ public class Study implements Commentable {
 
 
 	/**
-	 * The investigation, that has this study
+	 * The study, that has this study
 	 */
 	private Investigation investigation;
 
@@ -269,7 +269,7 @@ public class Study implements Commentable {
 	/**
 	 * Get {@link Investigation}, that this study belongs to
 	 *
-	 * @return the investigation, that this study belongs to
+	 * @return the study, that this study belongs to
 	 */
 	public Investigation getInvestigation() {
 		return investigation;
@@ -371,7 +371,7 @@ public class Study implements Commentable {
 	 * Set {@link Investigation}, that this study belongs to But this function can't
 	 * be used by user
 	 *
-	 * @param investigation the investigation, that study belongs to
+	 * @param study the study, that study belongs to
 	 */
 	protected void setInvestigation(Investigation investigation) {
 		this.investigation = investigation;
@@ -438,10 +438,14 @@ public class Study implements Commentable {
 	public void releaseStream() throws IOException {
 		this.outputstreamwriter.flush();
 		this.outputstreamwriter = null;
+		this.headers = null;
 	}
 	
 	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
 	public void writeHeadersFromExample(StudyOrAssayTableObject example) throws IOException {
+		if(this.outputstreamwriter == null)
+			throw new IllegalStateException("No file or stream open for writing");
+		
 		this.headers = new ArrayList<LinkedHashMap<String, String[]>>();
 		StringBuilder sb = new StringBuilder();
 		while(example != null) {
@@ -456,8 +460,13 @@ public class Study implements Commentable {
 	}
 	
 	public void writeLine(StudyOrAssayTableObject initiator) throws IOException {
+		if(this.outputstreamwriter == null)
+			throw new IllegalStateException("No file or stream open for writing");
+		if(this.headers == null)
+			throw new IllegalStateException("Headers were not written yet");
 		StringBuilder sb = new StringBuilder();
 		for(LinkedHashMap<String, String[]> currentObject : this.headers) {
+			Objects.requireNonNull(initiator, "The line is missing object(s) defined in the header");
 			Map<String, String[]> fields = initiator.getFields();
 			sb.append(currentObject.keySet().stream().map(o -> {
 				if(currentObject.get(o).length != fields.get(o).length)
