@@ -423,15 +423,21 @@ public class Study implements Commentable {
 	}
 	
 	private OutputStreamWriter outputstreamwriter;
-	//TODO also save headers so we can throw error if unknown header occurs and take care of order
 	
 	public void openFile() throws FileNotFoundException {
+		this.directToStream(new FileOutputStream(this.fileName));
+	}
+	
+	public void directToStream(OutputStream os) {
 		if(this.outputstreamwriter != null) {
-			//TODO correct type of excpetion
-			throw new IllegalArgumentException("A file is already open for writing");
+			throw new IllegalStateException("A file or stream is already being written to. Please close/release it first!");
 		}
-		OutputStream os = new FileOutputStream(this.fileName);
 		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
+	}
+	
+	public void releaseStream() throws IOException {
+		this.outputstreamwriter.flush();
+		this.outputstreamwriter = null;
 	}
 	
 	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
@@ -474,7 +480,7 @@ public class Study implements Commentable {
 	}
 	
 	public void closeFile() throws IOException {
+		this.releaseStream();
 		this.outputstreamwriter.close();
-		this.outputstreamwriter = null;
 	}
 }
