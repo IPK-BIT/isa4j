@@ -338,14 +338,7 @@ public class Investigation implements Commentable {
 		return InvestigationAttribute.INVESTIGATION_PUBLICATIONS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBMED_ID, this.publications, (o) -> o.getPubmedID())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_DOI, this.publications, (o) -> o.getDOI())
-			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, this.publications, 
-				// This method is a bit more complicated than the previous ones because we have to combine
-				// multiple fields in a certain way, but in principle it still works like before.
-				(o) -> {
-					return o.getAuthorList().stream()
-							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
-							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-				})
+			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_AUTHOR_LIST, this.publications,(o) -> o.getAuthors())
 			+ lineFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_TITLE, this.publications, (o) -> o.getTitle())
 			+ ontologyLinesFromList(InvestigationAttribute.INVESTIGATION_PUBLICATION_STATUS, this.publications, p -> p.getStatus())
 		
@@ -472,12 +465,7 @@ public class Investigation implements Commentable {
 		return InvestigationAttribute.STUDY_PUBLICATIONS.toString() + Symbol.ENTER
 			+ lineFromList(InvestigationAttribute.STUDY_PUBMED_ID, study.getPublications(), o -> o.getPubmedID())
 			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_DOI, study.getPublications(), o -> o.getDOI())
-			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), 
-				(o) -> {
-					return o.getAuthorList().stream()
-							.map(author -> (author.getLastName() + ", " + author.getFirstName().charAt(0)))
-							.collect(Collectors.joining(Symbol.SEMICOLON.toString() + " "));
-				})
+			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_AUTHOR_LIST, study.getPublications(), o -> o.getAuthors())
 			+ lineFromList(InvestigationAttribute.STUDY_PUBLICATION_TITLE, study.getPublications(), o -> o.getTitle())
 			+ ontologyLinesFromList(InvestigationAttribute.STUDY_PUBLICATION_STATUS, study.getPublications(), p -> p.getStatus())
 			+ formatComments(study.getPublications());

@@ -271,7 +271,7 @@ public class InvestigationTest {
     	pub.setDOI("PUB DOI");
     	pub.setTitle("A title");
     	pub.setStatus(new OntologyAnnotation("fictional","access123",creditOntology));
-    	pub.addAuthor(dennis);
+    	pub.setAuthors("Psaroudakis, D");
     	this.investigation.addPublication(pub);
     		
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("python_originals/i_investigation.txt")));

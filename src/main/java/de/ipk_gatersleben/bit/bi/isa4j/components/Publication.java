@@ -8,10 +8,6 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import de.ipk_gatersleben.bit.bi.isa4j.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.Study;
 
@@ -42,7 +38,7 @@ public class Publication implements Commentable {
     /**
      * The list of authors who contributed to this {@link Publication}
      */
-    private List<Person> authors = new ArrayList<Person>();
+    private String authors;
 
     /**
      * The title of the {@link Publication}
@@ -55,21 +51,11 @@ public class Publication implements Commentable {
     private OntologyAnnotation status;
 
     /**
-     * Add a {@link Person} to the list of authors of the {@link Publication}
-     *
-     * @param person the {@link Person} to add
-     */
-    public void addAuthor(Person person) {
-        Objects.requireNonNull(person);
-        this.authors.add(person);
-    }
-
-    /**
      * Get the list of authors of this {@link Publication}
      *
      * @return authors the {@link List} of the authors of this {@link Publication}
      */
-    public List<Person> getAuthorList() {
+    public String getAuthors() {
         return this.authors;
     }
 
@@ -114,9 +100,8 @@ public class Publication implements Commentable {
      *
      * @param authors authors' name of publication
      */
-    public void setAuthors(List<Person> authorList) {
-    	authorList.stream().forEach(Objects::requireNonNull);
-        this.authors = authorList;
+    public void setAuthors(String authors) {
+        this.authors = authors;
     }
 
     /**

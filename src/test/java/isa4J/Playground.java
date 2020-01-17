@@ -51,13 +51,10 @@ public class Playground {
 		karlheinz.comments().add(new Comment("Karlheinz says", "Hello World!"));
 		
 		Publication paper1 = new Publication();
-		paper1.addAuthor(karlheinz);
-		paper1.addAuthor(ursel);
 		paper1.setTitle("Wurst und Utilitarismus");
 		paper1.setDOI("doi.org/ursel.wurst12321");
 		
 		Publication paper2 = new Publication();
-		paper2.addAuthor(karlheinz);
 		paper2.setTitle("Hello World");
 		paper2.setPubmedID("pubmedio.com");
 		
