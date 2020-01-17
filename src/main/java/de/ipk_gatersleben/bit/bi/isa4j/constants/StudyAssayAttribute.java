@@ -20,17 +20,17 @@ public enum StudyAssayAttribute {
     CHARACTERISTICS("Characteristics[?]"),
     TERM_SOURCE_REF("Term Source REF"),
     TERM_ACCESSION_NUMBER("Term Accession Number"),
-    ASSAY_NAME("Assay Name" + Symbol.TAB),
-    RAW_DATA_FILE("Raw Data File" + Symbol.TAB),
-    IMAGE_FILE("Image File" + Symbol.TAB),
-    PARAMETER_VALUE("Parameter Value[?]" + Symbol.TAB),
-    UNIT("Unit" + Symbol.TAB),
-    DERIVED_DATA_FILE("Derived Data File" + Symbol.TAB),
-    COMMENT("Comment[?]" + Symbol.TAB),
-    EXTRACT_NAME("Extract Name" + Symbol.TAB),
-    LABELED_EXTRACT_NAME("Labeled Extract Name" + Symbol.TAB),
-    PROTOCOL("Protocol REF" + Symbol.TAB),
-    FACTOR_VALUE("Factor Value[?]" + Symbol.TAB);
+    ASSAY_NAME("Assay Name"),
+    RAW_DATA_FILE("Raw Data File"),
+    IMAGE_FILE("Image File"),
+    PARAMETER_VALUE("Parameter Value[?]"),
+    UNIT("Unit"),
+    DERIVED_DATA_FILE("Derived Data File"),
+    COMMENT("Comment[?]"),
+    EXTRACT_NAME("Extract Name"),
+    LABELED_EXTRACT_NAME("Labeled Extract Name"),
+    PROTOCOL("Protocol REF"),
+    FACTOR_VALUE("Factor Value[?]");
 
 	private String value;
 
