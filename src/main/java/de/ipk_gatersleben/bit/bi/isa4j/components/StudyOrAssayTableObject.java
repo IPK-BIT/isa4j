@@ -14,22 +14,28 @@ public abstract class StudyOrAssayTableObject {
 	 * Study or Assay File. For example, for a Source object this could look like:
 	 * {
 	 * 	"Source Name" 				=> ["Plant 1"],
-	 * 	"Characteristic[Organism] 	=> ["Arabidopsis thaliana", "NCBITaxon", "http://purl.obolibrary.org/obo/NCBITaxon_3702"],
-	 *  "Characteristic[Genotype]	=> ["Col0"]
+	 * 	"Characteristic[Organism]" 	=> ["Arabidopsis thaliana", "NCBITaxon", "http://purl.obolibrary.org/obo/NCBITaxon_3702"],
+	 *  "Characteristic[Genotype]"	=> ["Col0"]
 	 * }
 	 * 
 	 * For a Process it could look like the following:
 	 * {
-	 * 	"Protocol REF"					=> ["Growth"],
-	 *  "ParameterValue[Rooting medium]	=> ["85% substrate, 15% sand"],
-	 *  "ParameterValue[Container type] => ["pot", AgroOntology, "http://purl.obolibrary.org/obo/AGRO_00000309"],
+	 * 	"Protocol REF"						=> ["Growth"],
+	 *  "ParameterValue[Rooting medium]"	=> ["85% substrate, 15% sand"],
+	 *  "ParameterValue[Container type]" 	=> ["pot", AgroOntology, "http://purl.obolibrary.org/obo/AGRO_00000309"],
 	 * }
 	 * @return
 	 */
 	public abstract Map<String, String[]> getFields();
 	
 	/**
-	 * Like above, but here the order of items matters.
+	 * Like above, but here the order of items matters and instead of having actual values in the String arrays you only
+	 * have the headers:
+	 * {
+	 * 	"Source Name" 				=> ["Source Name"],
+	 * 	"Characteristic[Organism]" 	=> ["Characteristic [Organism]", "Term Source REF", "Term Accession Number"],
+	 *  "Characteristic[Genotype]"	=> ["Characteristic [Genotype]"]
+	 * }
 	 * @return
 	 */
 	public abstract LinkedHashMap<String, String[]> getHeaders();

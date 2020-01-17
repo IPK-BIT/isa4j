@@ -450,11 +450,21 @@ public class Study implements Commentable {
 	}
 	
 	public void writeLine(StudyOrAssayTableObject initiator) throws IOException {
-		// TODO Errors and Warnings!
 		StringBuilder sb = new StringBuilder();
 		for(LinkedHashMap<String, String[]> currentObject : this.headers) {
 			Map<String, String[]> fields = initiator.getFields();
-			sb.append(currentObject.keySet().stream().map(o -> String.join(Symbol.TAB.toString(), fields.get(o))).collect(Collectors.joining(Symbol.TAB.toString())));
+			sb.append(currentObject.keySet().stream().map(o -> {
+				if(currentObject.get(o).length != fields.get(o).length)
+					throw new IllegalStateException("Number of columns in header don't match number of columns for " + o);
+				String partOfLine = String.join(Symbol.TAB.toString(), fields.get(o));
+				// Now we delete the entry from fields so that we know when there's any left in the end, we are missing headers
+				fields.remove(o);
+				return partOfLine;  }
+				).collect(Collectors.joining(Symbol.TAB.toString())));
+
+			if(fields.size() > 0)
+				System.err.println("There were unused fields for Object" + initiator + ": " + String.join(",", fields.keySet()));
+				// TODO use proper logging
 			
 			initiator = initiator.getNextStudyOrAssayTableObject();
 			if(initiator != null)
