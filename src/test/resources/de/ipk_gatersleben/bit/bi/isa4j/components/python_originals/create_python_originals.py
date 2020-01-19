@@ -106,11 +106,10 @@ prot_phenotyping = Protocol(name="Phenotyping")
 prot_watering    = Protocol(name="Watering")
 study.protocols.append(prot_phenotyping)
 study.protocols.append(prot_watering)
-prot_watering.parameters.extend([
-        ProtocolParameter(parameter_name=OntologyAnnotation(term="Irrigation Type")),
-        ProtocolParameter(parameter_name=OntologyAnnotation(term="Volume")),
-        ProtocolParameter(parameter_name=OntologyAnnotation(term="Watering Time"))
-])
+parameter1 = ProtocolParameter(parameter_name=OntologyAnnotation(term="Irrigation Type"))
+parameter2 = ProtocolParameter(parameter_name=OntologyAnnotation(term="Volume"))
+parameter3 = ProtocolParameter(parameter_name=OntologyAnnotation(term="Watering Time"))
+prot_watering.parameters.extend([parameter1, parameter2, parameter3])
 
 ## Publication
 pub = Publication(doi="PUB DOI",title="A title",author_list="Psaroudakis, D",status=OntologyAnnotation(term="fictional",term_accession="access123",term_source=ontologies["CRediT"]))
@@ -118,6 +117,7 @@ investigation.publications.append(pub)
 
 ## ------- Study File -----------
 protocol1 = Protocol(name="foobar Protocol")
+protocol2 = Protocol(name="Protocol2")
 ontology1 = OntologySource(name="foobar Ontology")
 for i in range(1,6):
     source = Source("Source no. " + str(i))
@@ -132,15 +132,27 @@ for i in range(1,6):
     sample.characteristics.append(Characteristic(
         category=OntologyAnnotation(term="Characteristic 3"),
         value=OntologyAnnotation(term="Characteristic3Value"+str(i),term_source=ontology1,term_accession="Char3Acc")))
+    sample.factor_values.append(FactorValue(factor_name=fa_drought_stress, value=OntologyAnnotation(term="nope",term_source=ontology1,term_accession="nopeAcc")))
 
     process = Process(executes_protocol=protocol1)
-
+    process.parameter_values.append(ParameterValue(category=parameter1,value=OntologyAnnotation(term="IT"+str(i))))
+    process.parameter_values.append(ParameterValue(category=parameter2,value=12.4,unit=OntologyAnnotation(term="l")))
+    process.date = "2020-01-16"
     process.inputs.append(source)
     process.outputs.append(sample)
 
+    sample2 = Sample("Target Sample")
+    sample2.factor_values.append(FactorValue(factor_name=fa_drought_stress, value=34.12, unit=OntologyAnnotation(term="m")))
+    process2 = Process(executes_protocol=protocol2)
+    process2.date = "2020-01-16T13:53:23"
+    process2.inputs.append(sample)
+    process2.outputs.append(sample2)
+
     study.sources.append(source)
     study.samples.append(sample)
+    study.samples.append(sample2)
     study.process_sequence.append(process)
+    study.process_sequence.append(process2)
 
 isatab.dump(investigation, ".")
 shutil.copyfile("i_investigation.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/i_investigation.txt")

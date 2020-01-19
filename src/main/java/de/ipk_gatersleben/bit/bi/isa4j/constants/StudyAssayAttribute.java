@@ -30,6 +30,7 @@ public enum StudyAssayAttribute {
     EXTRACT_NAME("Extract Name"),
     LABELED_EXTRACT_NAME("Labeled Extract Name"),
     PROTOCOL("Protocol REF"),
+    PROTOCOL_DATE("Date"),
     FACTOR_VALUE("Factor Value[?]");
 
 	private String value;

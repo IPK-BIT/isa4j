@@ -17,9 +17,13 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
+	private LocalDate date;
+	
+	private LocalDateTime dateTime;
+	
+	private StudyOrAssayTableObject input;
+	
+	private List<ParameterValue> parameterValues = new ArrayList<ParameterValue>();
 	
 	private Protocol protocol;
 	
@@ -27,22 +31,41 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		this.setProtocol(protocol);
 	}
 	
-	private LinkedHashMap<String, String[]> getHeadersForParameterValues() {
-		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+	public void addParameterValue(ParameterValue parameterValue) {
+		if(this.parameterValues.stream().map(ParameterValue::getCategory).anyMatch(parameterValue.getCategory()::equals))
+			throw new RedundantItemException("Multiple ParameterValues for Parameter: " + parameterValue.getCategory().getName());
+		this.parameterValues.add(parameterValue);
+	}
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
+	
+	/**
+	 * @return the date
+	 */
+	public LocalDate getDate() {
+		return date;
+	}
+
+	/**
+	 * @return the dateTime
+	 */
+	public LocalDateTime getDateTime() {
+		return dateTime;
+	}
+	
+	public Map<String, String[]> getFields() {
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
 		
-		for(ParameterValue parameterValue : this.parameterValues) {
-			List<String> parameterValueColumns = new ArrayList<String>(3);
-			String parameterValueName = StringUtil.putNameInAttribute(StudyAssayAttribute.PARAMETER_VALUE, parameterValue.getCategory().getName());		
-			parameterValueColumns.add(parameterValueName);
-			parameterValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(parameterValue, c -> c.getValue()));
-			if(parameterValue.getUnit() != null) {
-				parameterValueColumns.add(StudyAssayAttribute.UNIT.toString());
-				parameterValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(parameterValue, c -> c.getUnit()));				
-			}
-			headers.put(parameterValueName, parameterValueColumns.toArray(new String[0]));
-		}
-		
-		return headers;
+		fields.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{this.protocol.getName()});
+		fields.putAll(this.getFieldsForParameterValues());
+		if(this.dateTime != null)
+			fields.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{this.dateTime.toString()});
+		else if(this.date != null)
+			fields.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{this.date.toString()});
+
+		return fields;
 	}
 	
 	private HashMap<String, String[]> getFieldsForParameterValues() {
@@ -50,7 +73,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		
 		for(ParameterValue parameterValue : this.parameterValues) {
 			List<String> parameterValueFields = new ArrayList<String>(3);
-			String parameterValueName = StringUtil.putNameInAttribute(StudyAssayAttribute.PARAMETER_VALUE, parameterValue.getCategory().getName());		
+			String parameterValueName = StringUtil.putNameInAttribute(StudyAssayAttribute.PARAMETER_VALUE, parameterValue.getCategory().getName().getTerm());		
 			parameterValueFields.add(parameterValue.getValue().getTerm());
 			parameterValueFields.addAll(this.getOntologyAnnotationExtensionFields(parameterValue, c -> c.getValue()));
 			if(parameterValue.getUnit() != null) {
@@ -62,27 +85,43 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		
 		return headers;
 	}
-	
+
 	public LinkedHashMap<String, String[]> getHeaders() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
 		headers.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{StudyAssayAttribute.PROTOCOL.toString()});
 		headers.putAll(this.getHeadersForParameterValues());
+		if(this.dateTime != null || this.date != null)
+			headers.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{StudyAssayAttribute.PROTOCOL_DATE.toString()});
 		
 		return headers;
 	}
-	
-	public Map<String, String[]> getFields() {
-		HashMap<String, String[]> fields = new HashMap<String, String[]>();
-		
-		fields.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{this.protocol.getName()});
-		fields.putAll(this.getFieldsForParameterValues());
 
-		return fields;
+	private LinkedHashMap<String, String[]> getHeadersForParameterValues() {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+		
+		for(ParameterValue parameterValue : this.parameterValues) {
+			List<String> parameterValueColumns = new ArrayList<String>(3);
+			String parameterValueName = StringUtil.putNameInAttribute(StudyAssayAttribute.PARAMETER_VALUE, parameterValue.getCategory().getName().getTerm());		
+			parameterValueColumns.add(parameterValueName);
+			parameterValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(parameterValue, c -> c.getValue()));
+			if(parameterValue.getUnit() != null) {
+				parameterValueColumns.add(StudyAssayAttribute.UNIT.toString());
+				parameterValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(parameterValue, c -> c.getUnit()));				
+			}
+			headers.put(parameterValueName, parameterValueColumns.toArray(new String[0]));
+		}
+		
+		return headers;
 	}
-	
-	private List<ParameterValue> parameterValues = new ArrayList<ParameterValue>();
-	
+	public StudyOrAssayTableObject getInput() {
+    	return this.input;
+    }
+
+	public StudyOrAssayTableObject getOutput() {
+    	return this.getNextStudyOrAssayTableObject();
+    }
+
 	/**
 	 * @return the factorValues
 	 */
@@ -91,56 +130,10 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 	}
 
 	/**
-	 * @param parameterValues the factorValues to set
-	 */
-	public void setParameterValues(List<ParameterValue> parameterValues) {
-		parameterValues.stream().forEach(Objects::requireNonNull);
-		this.parameterValues = parameterValues;
-	}
-	
-	public void addParameterValue(ParameterValue parameterValue) {
-		if(this.parameterValues.stream().map(ParameterValue::getCategory).anyMatch(parameterValue.getCategory()::equals))
-			throw new RedundantItemException("Multiple ParameterValues for Parameter: " + parameterValue.getCategory().getName());
-		this.parameterValues.add(parameterValue);
-	}
-	
-	/**
 	 * @return the protocol
 	 */
 	public Protocol getProtocol() {
 		return protocol;
-	}
-
-	/**
-	 * @param protocol the protocol to set
-	 */
-	public void setProtocol(Protocol protocol) {
-		this.protocol = Objects.requireNonNull(protocol, "Protocol cannot be null");
-	}
-
-	private LocalDate date;
-	private LocalDateTime dateTime;
-
-	/**
-	 * @return the dateTime
-	 */
-	public LocalDateTime getDateTime() {
-		return dateTime;
-	}
-
-	/**
-	 * @param dateTime the dateTime to set
-	 */
-	public void setDateTime(LocalDateTime dateTime) {
-		this.dateTime = dateTime;
-		this.date = null; // TODO document this behavior
-	}
-
-	/**
-	 * @return the date
-	 */
-	public LocalDate getDate() {
-		return date;
 	}
 
 	/**
@@ -150,9 +143,15 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		this.date = date;
 		this.dateTime = null;
 	}
-	
     
-	private StudyOrAssayTableObject input;
+	/**
+	 * @param dateTime the dateTime to set
+	 */
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
+		this.date = null; // TODO document this behavior
+	}
+	
     public void setInput(StudyOrAssayTableObject input) {
     	// Remove myself from previously defined input
     	if(this.input != null)
@@ -165,12 +164,19 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
     	this.setNextStudyOrAssayTableObject(output);
     }
     
-    public StudyOrAssayTableObject getInput() {
-    	return this.input;
-    }
+    /**
+	 * @param parameterValues the factorValues to set
+	 */
+	public void setParameterValues(List<ParameterValue> parameterValues) {
+		parameterValues.stream().forEach(Objects::requireNonNull);
+		this.parameterValues = parameterValues;
+	}
     
-    public StudyOrAssayTableObject getOutput() {
-    	return this.getNextStudyOrAssayTableObject();
-    }
+    /**
+	 * @param protocol the protocol to set
+	 */
+	public void setProtocol(Protocol protocol) {
+		this.protocol = Objects.requireNonNull(protocol, "Protocol cannot be null");
+	}
 
 }

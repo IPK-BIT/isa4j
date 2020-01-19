@@ -12,6 +12,9 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.StringReader;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -108,7 +111,11 @@ public class StudyTest {
     	this.study.directToStream(os);
     	
     	Protocol protocol1 = new Protocol("foobar Protocol");
+    	ProtocolParameter parameter1 = new ProtocolParameter("Irrigation Type");
+    	ProtocolParameter parameter2 = new ProtocolParameter("Volume");
+    	Protocol protocol2 = new Protocol("Protocol2");
     	Ontology ontology1 = new Ontology("foobar Ontology", null, null, null);
+    	Factor fa_drought_stress = new Factor("drought stress");
     	for(int i = 1; i < 6; i++) {
     		Source source = new Source("Source no. " + i);
     		source.addCharacteristic(new Characteristic("Characteristic 1", new OntologyAnnotation("Characteristic1Value"+i)));
@@ -116,11 +123,21 @@ public class StudyTest {
     		
     		Sample sample = new Sample("Sample no. " + i);
     		sample.addCharacteristic(new Characteristic("Characteristic 3", new OntologyAnnotation("Characteristic3Value"+i,"Char3Acc",ontology1)));
+    		sample.addFactorValue(new FactorValue(fa_drought_stress, new OntologyAnnotation("nope", "nopeAcc", ontology1)));
     		
     		Process process = new Process(protocol1);
-    		
+    		process.addParameterValue(new ParameterValue(parameter1, new OntologyAnnotation("IT"+i)));
+    		process.addParameterValue(new ParameterValue(parameter2, 12.4, new OntologyAnnotation("l")));
+    		process.setDate(LocalDate.of(2020, Month.JANUARY, 16));
     		process.setInput(source);
     		process.setOutput(sample);
+    		
+    		Sample sample2 = new Sample("Target Sample");
+    		sample2.addFactorValue(new FactorValue(fa_drought_stress, 34.12, new OntologyAnnotation("m")));
+    		Process process2 = new Process(protocol2);
+    		process2.setDateTime(LocalDateTime.of(2020, 1, 16, 13, 53, 23));
+    		process2.setInput(sample);
+    		process2.setOutput(sample2);
     		
     		if(!study.hasWrittenHeaders())
     			study.writeHeadersFromExample(source);
