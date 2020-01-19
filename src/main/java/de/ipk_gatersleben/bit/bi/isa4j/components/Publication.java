@@ -21,6 +21,11 @@ public class Publication implements Commentable {
 	public CommentCollection comments() {
 		return this.comments;
 	}
+	
+	public Publication(String title, String authors) {
+		this.setTitle(title);
+		this.setAuthors(authors);
+	}
 
     /**
      * The PubMed ID of this {@link Publication}

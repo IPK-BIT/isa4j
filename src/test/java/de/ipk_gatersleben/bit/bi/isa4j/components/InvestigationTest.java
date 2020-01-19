@@ -127,10 +127,10 @@ public class InvestigationTest {
     @Test
     void testOntologyLinesFromList() {
     	List<Publication> publications = new ArrayList<Publication>();
-    	Publication publication1 = new Publication();
-    	Publication publication2 = new Publication();
-    	Publication publication3 = new Publication();
-    	Publication publication4 = new Publication();
+    	Publication publication1 = new Publication(null, null);
+    	Publication publication2 = new Publication(null, null);
+    	Publication publication3 = new Publication(null, null);
+    	Publication publication4 = new Publication(null, null);
     	publication1.setStatus(new OntologyAnnotation("Status1"));
     	publication2.setStatus(null);
     	publication3.setStatus(new OntologyAnnotation("Status3", "Accession 3", null));
@@ -272,11 +272,9 @@ public class InvestigationTest {
     	prot_watering.addParameter(new ProtocolParameter(new OntologyAnnotation("Watering Time")));
     	
     	// Publication
-    	Publication pub = new Publication();
+    	Publication pub = new Publication("A title", "Psaroudakis, D");
     	pub.setDOI("PUB DOI");
-    	pub.setTitle("A title");
     	pub.setStatus(new OntologyAnnotation("fictional","access123",creditOntology));
-    	pub.setAuthors("Psaroudakis, D");
     	this.investigation.addPublication(pub);
     		
     	BufferedReader correctFile = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("python_originals/i_investigation.txt")));
