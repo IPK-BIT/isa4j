@@ -1,3 +1,6 @@
 Source Name	Protocol REF	Sample Name
-Another Source	Watering	Another Sample
-Source Name	Watering	Sample Name
+Source no. 1	foobar Protocol	Sample no. 1
+Source no. 2	foobar Protocol	Sample no. 2
+Source no. 3	foobar Protocol	Sample no. 3
+Source no. 4	foobar Protocol	Sample no. 4
+Source no. 5	foobar Protocol	Sample no. 5

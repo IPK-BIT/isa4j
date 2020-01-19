@@ -117,23 +117,19 @@ pub = Publication(doi="PUB DOI",title="A title",author_list="Psaroudakis, D",sta
 investigation.publications.append(pub)
 
 ## ------- Study File -----------
-source1 = Source("Source Name");
-source2 = Source("Another Source");
+protocol1 = Protocol(name="foobar Protocol")
+for i in range(1,6):
+    source = Source("Source no. " + str(i))
+    sample = Sample("Sample no. " + str(i))
 
-sample1 = Sample("Sample Name")
-sample2 = Sample("Another Sample")
+    process = Process(executes_protocol=protocol1)
 
-process1 = Process(executes_protocol=prot_watering)
-process2 = Process(executes_protocol=prot_watering)
+    process.inputs.append(source)
+    process.outputs.append(sample)
 
-process1.inputs.append(source1)
-process2.inputs.append(source2)
-process1.outputs.append(sample1)
-process2.outputs.append(sample2)
-
-study.sources.extend([source1, source2])
-study.samples.extend([sample1, sample2])
-study.process_sequence.extend([process1, process2])
+    study.sources.append(source)
+    study.samples.append(sample)
+    study.process_sequence.append(process)
 
 isatab.dump(investigation, ".")
 shutil.copyfile("i_investigation.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/i_investigation.txt")

@@ -91,7 +91,7 @@ public class Study implements Commentable {
 
 
 	/**
-	 * The study, that has this study
+	 * The investigation that has this study
 	 */
 	private Investigation investigation;
 
@@ -269,7 +269,7 @@ public class Study implements Commentable {
 	/**
 	 * Get {@link Investigation}, that this study belongs to
 	 *
-	 * @return the study, that this study belongs to
+	 * @return the investigation that this study belongs to
 	 */
 	public Investigation getInvestigation() {
 		return investigation;
@@ -371,7 +371,7 @@ public class Study implements Commentable {
 	 * Set {@link Investigation}, that this study belongs to But this function can't
 	 * be used by user
 	 *
-	 * @param study the study, that study belongs to
+	 * @param investigation the investigation that study belongs to
 	 */
 	protected void setInvestigation(Investigation investigation) {
 		this.investigation = investigation;
@@ -486,6 +486,10 @@ public class Study implements Commentable {
 				sb.append(Symbol.TAB.toString());
 		}
 		this.outputstreamwriter.write(sb.toString() + Symbol.ENTER);
+	}
+	
+	public boolean hasWrittenHeaders() {
+		return this.headers != null;
 	}
 	
 	public void closeFile() throws IOException {
