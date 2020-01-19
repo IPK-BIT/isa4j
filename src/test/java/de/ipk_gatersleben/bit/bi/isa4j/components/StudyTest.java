@@ -120,15 +120,19 @@ public class StudyTest {
     		Source source = new Source("Source no. " + i);
     		source.addCharacteristic(new Characteristic("Characteristic 1", new OntologyAnnotation("Characteristic1Value"+i)));
     		source.addCharacteristic(new Characteristic("Characteristic 2", new OntologyAnnotation("Characteristic2Value"+i,"Char2Acc",ontology1)));
+    		source.comments().add(new Comment("A Comment", "CommVal" + i));
     		
     		Sample sample = new Sample("Sample no. " + i);
     		sample.addCharacteristic(new Characteristic("Characteristic 3", new OntologyAnnotation("Characteristic3Value"+i,"Char3Acc",ontology1)));
     		sample.addFactorValue(new FactorValue(fa_drought_stress, new OntologyAnnotation("nope", "nopeAcc", ontology1)));
+    		sample.comments().add(new Comment("A Comment", "Comm2Val" + i));
+    		sample.comments().add(new Comment("Another Comment", "Comm3Val" + i));
     		
     		Process process = new Process(protocol1);
     		process.addParameterValue(new ParameterValue(parameter1, new OntologyAnnotation("IT"+i)));
     		process.addParameterValue(new ParameterValue(parameter2, 12.4, new OntologyAnnotation("l")));
     		process.setDate(LocalDate.of(2020, Month.JANUARY, 16));
+    		process.comments().add(new Comment("Process Comment", "Comm4Val" + i));
     		process.setInput(source);
     		process.setOutput(sample);
     		

@@ -107,6 +107,28 @@ public abstract class StudyOrAssayTableObject {
 		return headers;
 	}
 	
+	protected LinkedHashMap<String, String[]> getHeadersForComments(CommentCollection comments) {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+		
+		for(Comment comment : comments.getAll()) {
+			String commentName = StringUtil.putNameInAttribute(StudyAssayAttribute.COMMENT, comment.getName());		
+			headers.put(commentName, new String[]{commentName});
+		}
+		
+		return headers;	
+	}
+	
+	protected HashMap<String, String[]> getFieldsForComments(CommentCollection comments) {
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
+		
+		for(Comment comment : comments.getAll()) {
+			String commentName = StringUtil.putNameInAttribute(StudyAssayAttribute.COMMENT, comment.getName());		
+			fields.put(commentName, new String[]{comment.getValue()});
+		}
+		
+		return fields;	
+	}
+	
 	private StudyOrAssayTableObject nextStudyOrAssayTableObject;
 
 	/**

@@ -10,7 +10,13 @@ import java.util.Objects;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 
-public class Sample extends Source {
+public class Sample extends Source implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 	
 	private List<FactorValue> factorValues = new ArrayList<FactorValue>();
 	
@@ -48,6 +54,7 @@ public class Sample extends Source {
 		
 		headers.put(StudyAssayAttribute.SAMPLE_NAME.toString(), new String[]{StudyAssayAttribute.SAMPLE_NAME.toString()});
 		headers.putAll(this.getHeadersForCharacteristics());
+		headers.putAll(this.getHeadersForComments(this.comments));
 		headers.putAll(this.getHeadersForValues(StudyAssayAttribute.FACTOR_VALUE, this.factorValues, fv -> fv.getCategory().getName()));
 		
 		return headers;
@@ -58,6 +65,7 @@ public class Sample extends Source {
 		
 		fields.put(StudyAssayAttribute.SAMPLE_NAME.toString(), new String[]{this.getName()});
 		fields.putAll(this.getFieldsForCharacteristics());
+		fields.putAll(this.getFieldsForComments(this.comments));
 		fields.putAll(this.getFieldsForValues(StudyAssayAttribute.FACTOR_VALUE, this.factorValues, fv -> fv.getCategory().getName()));
 
 		return fields;

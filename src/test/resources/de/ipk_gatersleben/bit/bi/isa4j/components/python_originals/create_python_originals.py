@@ -127,17 +127,21 @@ for i in range(1,6):
     source.characteristics.append(Characteristic(
         category=OntologyAnnotation(term="Characteristic 2"),
         value=OntologyAnnotation(term="Characteristic2Value"+str(i),term_source=ontology1,term_accession="Char2Acc")))
+    source.comments.append(Comment(name="A Comment", value="CommVal" + str(i)))
 
     sample = Sample("Sample no. " + str(i))
     sample.characteristics.append(Characteristic(
         category=OntologyAnnotation(term="Characteristic 3"),
         value=OntologyAnnotation(term="Characteristic3Value"+str(i),term_source=ontology1,term_accession="Char3Acc")))
     sample.factor_values.append(FactorValue(factor_name=fa_drought_stress, value=OntologyAnnotation(term="nope",term_source=ontology1,term_accession="nopeAcc")))
+    sample.comments.append(Comment(name="A Comment", value="Comm2Val" + str(i)))
+    sample.comments.append(Comment(name="Another Comment", value="Comm3Val" + str(i)))
 
     process = Process(executes_protocol=protocol1)
     process.parameter_values.append(ParameterValue(category=parameter1,value=OntologyAnnotation(term="IT"+str(i))))
     process.parameter_values.append(ParameterValue(category=parameter2,value=12.4,unit=OntologyAnnotation(term="l")))
     process.date = "2020-01-16"
+    process.comments.append(Comment(name="Process Comment", value="Comm4Val" + str(i)))
     process.inputs.append(source)
     process.outputs.append(sample)
 

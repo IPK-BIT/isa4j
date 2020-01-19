@@ -11,7 +11,13 @@ import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
-public class Source extends StudyOrAssayTableObject {
+public class Source extends StudyOrAssayTableObject implements Commentable {
+	
+	private CommentCollection comments = new CommentCollection();
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
 	
 	private String name;
 	private List<Characteristic> characteristics = new ArrayList<Characteristic>();
@@ -62,6 +68,7 @@ public class Source extends StudyOrAssayTableObject {
 		
 		headers.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{StudyAssayAttribute.SOURCE_NAME.toString()});
 		headers.putAll(this.getHeadersForCharacteristics());
+		headers.putAll(this.getHeadersForComments(this.comments));
 		
 		return headers;
 	}
@@ -85,6 +92,7 @@ public class Source extends StudyOrAssayTableObject {
 		
 		fields.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{this.name});
 		fields.putAll(this.getFieldsForCharacteristics());
+		fields.putAll(this.getFieldsForComments(this.comments));
 
 		return fields;
 	}

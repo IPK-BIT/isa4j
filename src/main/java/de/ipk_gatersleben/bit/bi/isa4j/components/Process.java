@@ -63,6 +63,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 			fields.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{this.dateTime.toString()});
 		else if(this.date != null)
 			fields.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{this.date.toString()});
+		fields.putAll(this.getFieldsForComments(this.comments));
 
 		return fields;
 	}
@@ -74,6 +75,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		headers.putAll(this.getHeadersForValues(StudyAssayAttribute.PARAMETER_VALUE, this.parameterValues, pv -> pv.getCategory().getName().getTerm()));
 		if(this.dateTime != null || this.date != null)
 			headers.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{StudyAssayAttribute.PROTOCOL_DATE.toString()});
+		headers.putAll(this.getHeadersForComments(this.comments));
 		
 		return headers;
 	}
