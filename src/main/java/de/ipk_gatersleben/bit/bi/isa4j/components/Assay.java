@@ -14,23 +14,7 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
  *
  * @author liufe, arendd
  */
-public class Assay implements Commentable {
-	
-	private CommentCollection comments = new CommentCollection();
-	
-	public CommentCollection comments() {
-		return this.comments;
-	}
-
-	/**
-	 * id of assay
-	 */
-	private String identifier;
-
-	/**
-	 * The file name of this {@link Assay}
-	 */
-	private String fileName;
+public class Assay extends WideTableFile implements Commentable {
 
 	/**
 	 * The measurement being observed in this assay
@@ -54,35 +38,22 @@ public class Assay implements Commentable {
 
 
 	/**
-	 * Constructor, give file name
+	 * Constructor, give the identifier of study, filename is same with identifier
 	 *
-	 * @param fileName file name of assay
+	 * @param identifier
 	 */
-	public Assay(String fileName) {
-		// TODO BAD!
-		if (!fileName.endsWith(".txt")) {
-			fileName += ".txt";
-		}
-		this.fileName = fileName;
+	public Assay(String identifier) {
+		super(identifier, "a_" + identifier + ".txt");
 	}
-
+	
 	/**
-	 * get file name of assay
+	 * Constructor, give the identifier and filename
 	 *
-	 * @return file name of assay
+	 * @param identifier
+	 * @param fileName
 	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-
-	/**
-	 * get id of assay
-	 *
-	 * @return id of assay
-	 */
-	public String getIdentifier() {
-		return identifier;
+	public Assay(String identifier, String fileName) {
+		super(identifier, fileName);
 	}
 
 	/**
@@ -127,15 +98,6 @@ public class Assay implements Commentable {
 	 */
 	public OntologyAnnotation measurementType() {
 		return measurementType;
-	}
-
-	/**
-	 * set id of assay
-	 *
-	 * @param iD id of assay
-	 */
-	public void setIdentifier(String iD) {
-		identifier = iD;
 	}
 
 	/**
