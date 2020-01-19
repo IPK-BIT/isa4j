@@ -118,9 +118,20 @@ investigation.publications.append(pub)
 
 ## ------- Study File -----------
 protocol1 = Protocol(name="foobar Protocol")
+ontology1 = OntologySource(name="foobar Ontology")
 for i in range(1,6):
     source = Source("Source no. " + str(i))
+    source.characteristics.append(Characteristic(
+        category=OntologyAnnotation(term="Characteristic 1"),
+        value=OntologyAnnotation(term="Characteristic1Value"+str(i))))
+    source.characteristics.append(Characteristic(
+        category=OntologyAnnotation(term="Characteristic 2"),
+        value=OntologyAnnotation(term="Characteristic2Value"+str(i),term_source=ontology1,term_accession="Char2Acc")))
+
     sample = Sample("Sample no. " + str(i))
+    sample.characteristics.append(Characteristic(
+        category=OntologyAnnotation(term="Characteristic 3"),
+        value=OntologyAnnotation(term="Characteristic3Value"+str(i),term_source=ontology1,term_accession="Char3Acc")))
 
     process = Process(executes_protocol=protocol1)
 

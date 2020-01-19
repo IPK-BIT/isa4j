@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -109,9 +108,15 @@ public class StudyTest {
     	this.study.directToStream(os);
     	
     	Protocol protocol1 = new Protocol("foobar Protocol");
+    	Ontology ontology1 = new Ontology("foobar Ontology", null, null, null);
     	for(int i = 1; i < 6; i++) {
     		Source source = new Source("Source no. " + i);
+    		source.addCharacteristic(new Characteristic("Characteristic 1", new OntologyAnnotation("Characteristic1Value"+i)));
+    		source.addCharacteristic(new Characteristic("Characteristic 2", new OntologyAnnotation("Characteristic2Value"+i,"Char2Acc",ontology1)));
+    		
     		Sample sample = new Sample("Sample no. " + i);
+    		sample.addCharacteristic(new Characteristic("Characteristic 3", new OntologyAnnotation("Characteristic3Value"+i,"Char3Acc",ontology1)));
+    		
     		Process process = new Process(protocol1);
     		
     		process.setInput(source);
