@@ -247,6 +247,9 @@ public class InvestigationTest {
     	studyDesign.comments().add(new Comment("Experimental Unit Level Hierarchy", "plant"));
     	study.addDesignDescriptor(studyDesign);
     	
+    	// Assay
+    	study.addAssay(new Assay("a_assay.txt"));
+    	
     	// Contacts (Study and Investigation)
     	Person astrid = new Person("Junker", "Astrid", "junkera@ipk-gatersleben.de","Leibniz Institute of Plant Genetics and Crop Plant Research (IPK) Gatersleben","Corrensstrasse 3, 06466 Stadt Seeland, OT Gatersleben, Germany");
     	astrid.addRole(new OntologyAnnotation("project administration role","http://purl.org/credit/ontology#CREDIT_00000007",creditOntology));

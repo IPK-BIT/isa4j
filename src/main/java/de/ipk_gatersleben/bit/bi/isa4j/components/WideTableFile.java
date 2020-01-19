@@ -23,28 +23,19 @@ public abstract class WideTableFile implements Commentable {
 	}
 	
 	/**
-	 * Constructor, give the identifier and filename
+	 * Constructor, give the filename
 	 *
-	 * @param identifier
 	 * @param fileName
 	 */
-	public WideTableFile(String identifier, String fileName) {
-		this.setIdentifier(identifier);
+	public WideTableFile(String fileName) {
 		this.setFileName(fileName);
-	}
-
-	/**
-	 * @param identifier the identifier to set
-	 */
-	public void setIdentifier(String identifier) {
-		this.identifier = Objects.requireNonNull(identifier, "Study identifier cannot be null");
 	}
 
 	/**
 	 * @param fileName the fileName to set
 	 */
 	public void setFileName(String fileName) {
-		this.fileName = Objects.requireNonNull(fileName, "Study filename cannot be null");
+		this.fileName = Objects.requireNonNull(fileName, "Filename cannot be null");
 	}
 	
 	/**
@@ -55,21 +46,6 @@ public abstract class WideTableFile implements Commentable {
 	public String getFileName() {
 		return fileName;
 	}
-
-	/**
-	 * Get id of study
-	 *
-	 * @return id of study
-	 */
-	public String getIdentifier() {
-		return identifier;
-	}
-	
-
-	/**
-	 * A user defined identifier for the study.
-	 */
-	private String identifier;
 
 	/**
 	 * The name of the study sample file linked to this Study.

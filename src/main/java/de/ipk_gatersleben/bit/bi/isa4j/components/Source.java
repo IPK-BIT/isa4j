@@ -19,15 +19,14 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 		return this.comments;
 	}
 	
-	private String name;
+	protected String name;
 	private List<Characteristic> characteristics = new ArrayList<Characteristic>();
 	public Source(String name) {
-		this.name = name;
+		this.setName(name);
 	}
 	public Source(String name, List<Characteristic> characteristics) {
-		Objects.requireNonNull(characteristics);
-		this.name = name;
-		this.characteristics = characteristics;
+		this(name);
+		this.setCharacteristics(characteristics);
 	}
 	public void addCharacteristic(Characteristic characteristic) {
 		if(this.characteristics.stream().map(Characteristic::getCategory).anyMatch(characteristic.getCategory()::equals))
@@ -102,15 +101,15 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 	 * @param characteristics the characteristics to set
 	 */
 	public void setCharacteristics(List<Characteristic> characteristics) {
-		characteristics.stream().forEach(Objects::requireNonNull);
-		this.characteristics = characteristics;
+		this.characteristics.clear();
+		characteristics.stream().forEach(this::addCharacteristic);
 	}
 	
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.name = Objects.requireNonNull(name, "Name cannot be null");
 	}
 	
 }

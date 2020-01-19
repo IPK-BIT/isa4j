@@ -35,25 +35,15 @@ public class Assay extends WideTableFile implements Commentable {
 	 * the study, who has this assay
 	 */
 	private Study study;
-
-
-	/**
-	 * Constructor, give the identifier of study, filename is same with identifier
-	 *
-	 * @param identifier
-	 */
-	public Assay(String identifier) {
-		super(identifier, "a_" + identifier + ".txt");
-	}
 	
 	/**
-	 * Constructor, give the identifier and filename
+	 * Constructor, give the filename
 	 *
 	 * @param identifier
 	 * @param fileName
 	 */
-	public Assay(String identifier, String fileName) {
-		super(identifier, fileName);
+	public Assay(String fileName) {
+		super(fileName);
 	}
 
 	/**

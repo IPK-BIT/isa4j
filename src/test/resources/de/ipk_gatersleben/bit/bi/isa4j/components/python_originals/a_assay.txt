@@ -1,0 +1,6 @@
+Sample Name	Protocol REF	Extract Name	Protocol REF	Raw Data File
+Sample no. 1	foobar Protocol	extract-1	Protocol2	sequenced-data-1
+Sample no. 2	foobar Protocol	extract-2	Protocol2	sequenced-data-2
+Sample no. 3	foobar Protocol	extract-3	Protocol2	sequenced-data-3
+Sample no. 4	foobar Protocol	extract-4	Protocol2	sequenced-data-4
+Sample no. 5	foobar Protocol	extract-5	Protocol2	sequenced-data-5

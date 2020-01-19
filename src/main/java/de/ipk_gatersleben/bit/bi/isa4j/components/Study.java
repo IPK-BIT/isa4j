@@ -22,6 +22,30 @@ import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
  * @author liufe, arendd
  */
 public class Study extends WideTableFile implements Commentable {
+	
+
+	/**
+	 * A user defined identifier for the study.
+	 */
+	private String identifier;
+	
+
+	/**
+	 * Get id of study
+	 *
+	 * @return id of study
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+	
+
+	/**
+	 * @param identifier the identifier to set
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = Objects.requireNonNull(identifier, "Study identifier cannot be null");
+	}
 
 	/**
 	 * The title for the Study.
@@ -86,7 +110,8 @@ public class Study extends WideTableFile implements Commentable {
 	 * @param identifier
 	 */
 	public Study(String identifier) {
-		super(identifier, "s_" + identifier + ".txt");
+		super("s_" + identifier + ".txt");
+		this.setIdentifier(identifier);
 	}
 	
 	/**
@@ -96,7 +121,8 @@ public class Study extends WideTableFile implements Commentable {
 	 * @param fileName
 	 */
 	public Study(String identifier, String fileName) {
-		super(identifier, fileName);
+		super(fileName);
+		this.setIdentifier(identifier);
 	}
 
 	/**
@@ -114,10 +140,8 @@ public class Study extends WideTableFile implements Commentable {
 	 */
 	public void addAssay(Assay assay) {
 		Objects.requireNonNull(assay);
-		if(this.assays.stream().map(Assay::getIdentifier).anyMatch(assay.getIdentifier()::equals))
-			throw new RedundantItemException("Study ID not unique: " + assay.getIdentifier());
 		if(this.assays.stream().map(Assay::getFileName).anyMatch(assay.getFileName()::equals))
-			throw new RedundantItemException("Study Filename not unique: " + assay.getFileName());
+			throw new RedundantItemException("Assay Filename not unique: " + assay.getFileName());
 
 		assay.setStudy(this);
 		this.assays.add(assay);

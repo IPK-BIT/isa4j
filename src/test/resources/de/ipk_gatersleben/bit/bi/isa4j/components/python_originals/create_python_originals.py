@@ -53,6 +53,10 @@ study_design.comments.extend([
 ])
 study.design_descriptors.append(study_design)
 
+## Assay
+assay = Assay(filename="a_assay.txt")
+study.assays.append(assay)
+
 ## Contacts
 contacts = [
     ### Astrid
@@ -158,6 +162,50 @@ for i in range(1,6):
     study.process_sequence.append(process)
     study.process_sequence.append(process2)
 
+## ------- Assay File -----------
+for i in range(1,6):
+    sample = Sample("Sample no. " + str(i))
+
+
+    # The following code is taken from https://isatools.readthedocs.io/en/latest/example-createSimpleISAtab.html
+    # create an extraction process that executes the extraction protocol
+
+    extraction_process = Process(executes_protocol=protocol1)
+
+    # extraction process takes as input a sample, and produces an extract material as output
+
+    extraction_process.inputs.append(sample)
+    material = Material(name="extract-{}".format(i))
+    material.type = "Extract Name"
+    extraction_process.outputs.append(material)
+
+    # create a sequencing process that executes the sequencing protocol
+
+    sequencing_process = Process(executes_protocol=protocol2)
+    sequencing_process.name = "assay-name-{}".format(i)
+    sequencing_process.inputs.append(extraction_process.outputs[0])
+
+    # Sequencing process usually has an output data file
+
+    datafile = DataFile(filename="sequenced-data-{}".format(i), label="Raw Data File", generated_from=[sample])
+    sequencing_process.outputs.append(datafile)
+
+    # Ensure Processes are linked forward and backward. plink(from_process, to_process) is a function to set
+    # these links for you. It is found in the isatools.model package
+
+    plink(extraction_process, sequencing_process)
+
+    # make sure the extract, data file, and the processes are attached to the assay
+
+    assay.samples.append(sample)
+    assay.data_files.append(datafile)
+    assay.other_material.append(material)
+    assay.process_sequence.append(extraction_process)
+    assay.process_sequence.append(sequencing_process)
+#    assay.measurement_type = OntologyAnnotation(term="gene sequencing")
+#    assay.technology_type = OntologyAnnotation(term="nucleotide sequencing")
+
 isatab.dump(investigation, ".")
 shutil.copyfile("i_investigation.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/i_investigation.txt")
 shutil.copyfile("s_study.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/s_study.txt")
+shutil.copyfile("a_assay.txt", "../../isa4J/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/components/python_originals/a_assay.txt")

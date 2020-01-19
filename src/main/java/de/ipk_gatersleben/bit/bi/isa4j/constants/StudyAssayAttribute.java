@@ -27,8 +27,6 @@ public enum StudyAssayAttribute {
     UNIT("Unit"),
     DERIVED_DATA_FILE("Derived Data File"),
     COMMENT("Comment[?]"),
-    EXTRACT_NAME("Extract Name"),
-    LABELED_EXTRACT_NAME("Labeled Extract Name"),
     PROTOCOL("Protocol REF"),
     PROTOCOL_DATE("Date"),
     FACTOR_VALUE("Factor Value[?]");
