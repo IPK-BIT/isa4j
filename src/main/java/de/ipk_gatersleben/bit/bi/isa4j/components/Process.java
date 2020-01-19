@@ -11,7 +11,6 @@ import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
-import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public class Process extends StudyOrAssayTableObject implements Commentable {
 	
@@ -59,7 +58,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		HashMap<String, String[]> fields = new HashMap<String, String[]>();
 		
 		fields.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{this.protocol.getName()});
-		fields.putAll(this.getFieldsForParameterValues());
+		fields.putAll(this.getFieldsForValues(StudyAssayAttribute.PARAMETER_VALUE, this.parameterValues, pv -> pv.getCategory().getName().getTerm()));
 		if(this.dateTime != null)
 			fields.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{this.dateTime.toString()});
 		else if(this.date != null)
@@ -67,53 +66,18 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 
 		return fields;
 	}
-	
-	private HashMap<String, String[]> getFieldsForParameterValues() {
-		HashMap<String, String[]> headers = new HashMap<String, String[]>();
-		
-		for(ParameterValue parameterValue : this.parameterValues) {
-			List<String> parameterValueFields = new ArrayList<String>(3);
-			String parameterValueName = StringUtil.putNameInAttribute(StudyAssayAttribute.PARAMETER_VALUE, parameterValue.getCategory().getName().getTerm());		
-			parameterValueFields.add(parameterValue.getValue().getTerm());
-			parameterValueFields.addAll(this.getOntologyAnnotationExtensionFields(parameterValue, c -> c.getValue()));
-			if(parameterValue.getUnit() != null) {
-				parameterValueFields.add(parameterValue.getUnit().getTerm());
-				parameterValueFields.addAll(this.getOntologyAnnotationExtensionFields(parameterValue, c -> c.getUnit()));				
-			}
-			headers.put(parameterValueName, parameterValueFields.toArray(new String[0]));
-		}
-		
-		return headers;
-	}
 
 	public LinkedHashMap<String, String[]> getHeaders() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
 		headers.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{StudyAssayAttribute.PROTOCOL.toString()});
-		headers.putAll(this.getHeadersForParameterValues());
+		headers.putAll(this.getHeadersForValues(StudyAssayAttribute.PARAMETER_VALUE, this.parameterValues, pv -> pv.getCategory().getName().getTerm()));
 		if(this.dateTime != null || this.date != null)
 			headers.put(StudyAssayAttribute.PROTOCOL_DATE.toString(), new String[]{StudyAssayAttribute.PROTOCOL_DATE.toString()});
 		
 		return headers;
 	}
 
-	private LinkedHashMap<String, String[]> getHeadersForParameterValues() {
-		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
-		
-		for(ParameterValue parameterValue : this.parameterValues) {
-			List<String> parameterValueColumns = new ArrayList<String>(3);
-			String parameterValueName = StringUtil.putNameInAttribute(StudyAssayAttribute.PARAMETER_VALUE, parameterValue.getCategory().getName().getTerm());		
-			parameterValueColumns.add(parameterValueName);
-			parameterValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(parameterValue, c -> c.getValue()));
-			if(parameterValue.getUnit() != null) {
-				parameterValueColumns.add(StudyAssayAttribute.UNIT.toString());
-				parameterValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(parameterValue, c -> c.getUnit()));				
-			}
-			headers.put(parameterValueName, parameterValueColumns.toArray(new String[0]));
-		}
-		
-		return headers;
-	}
 	public StudyOrAssayTableObject getInput() {
     	return this.input;
     }

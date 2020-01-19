@@ -1,11 +1,14 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import de.ipk_gatersleben.bit.bi.isa4j.constants.StudyAssayAttribute;
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public abstract class StudyOrAssayTableObject {
 	
@@ -66,6 +69,42 @@ public abstract class StudyOrAssayTableObject {
 		if(ontologyAnnotation.getTermAccession() != null)
 			extensionFields.add(ontologyAnnotation.getTermAccession());
 		return extensionFields;
+	}
+	
+	protected <T extends Value<?>> LinkedHashMap<String, String[]> getHeadersForValues(StudyAssayAttribute tName, List<T> tValues, Function<T, String> lambda) {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+		
+		for(T tValue : tValues) {
+			List<String> tValueColumns = new ArrayList<String>(3);
+			String tValueName = StringUtil.putNameInAttribute(tName, lambda.apply(tValue));		
+			tValueColumns.add(tValueName);
+			tValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(tValue, c -> c.getValue()));
+			if(tValue.getUnit() != null) {
+				tValueColumns.add(StudyAssayAttribute.UNIT.toString());
+				tValueColumns.addAll(this.getOntologyAnnotationExtensionHeaders(tValue, c -> c.getUnit()));				
+			}
+			headers.put(tValueName, tValueColumns.toArray(new String[0]));
+		}
+		
+		return headers;
+	}
+	
+	protected <T extends Value<?>> HashMap<String, String[]> getFieldsForValues(StudyAssayAttribute tName, List<T> tValues, Function<T, String> lambda) {
+		HashMap<String, String[]> headers = new HashMap<String, String[]>();
+		
+		for(T tValue : tValues) {
+			List<String> tValueFields = new ArrayList<String>(3);
+			String tValueName = StringUtil.putNameInAttribute(tName, lambda.apply(tValue));		
+			tValueFields.add(tValue.getValue().getTerm());
+			tValueFields.addAll(this.getOntologyAnnotationExtensionFields(tValue, c -> c.getValue()));
+			if(tValue.getUnit() != null) {
+				tValueFields.add(tValue.getUnit().getTerm());
+				tValueFields.addAll(this.getOntologyAnnotationExtensionFields(tValue, c -> c.getUnit()));				
+			}
+			headers.put(tValueName, tValueFields.toArray(new String[0]));
+		}
+		
+		return headers;
 	}
 	
 	private StudyOrAssayTableObject nextStudyOrAssayTableObject;
