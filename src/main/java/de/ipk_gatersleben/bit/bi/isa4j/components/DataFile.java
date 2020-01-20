@@ -9,44 +9,40 @@ public class DataFile extends StudyOrAssayTableObject implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
+	private String path;
+	
+	private String type;
+	
+	/**
+	 * Creates a new Data File.
+	 * @param type Type of DataFile, will be used for the column header. Ideally one of ISATab's predefined types but that's not checked.
+	 * @param path Path to the file as should be printed in the ISATab. Existance or validity of path is not checked.
+	 */
+	public DataFile(String type, String path) {
+		this.setType(type);
+		this.setPath(path);
+	}
+	
 	public CommentCollection comments() {
 		return this.comments;
 	}
-	
-	private String name;
-	private String type;
-	
-	public DataFile(String type, String name) {
-		this.setType(type);
-		this.setName(name);
-	}
 
 	/**
-	 * @return the name
+	 * Please refer to documentation on StudyOrAssayTableObject.getFields
 	 */
-	public String getName() {
-		return name;
-	}
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = Objects.requireNonNull(name, "Name cannot be null");
-	}
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = Objects.requireNonNull(type, "Type cannot be null");
+	Map<String, String[]> getFields() {
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
+		
+		fields.put(this.type, new String[]{this.path});
+		fields.putAll(this.getFieldsForComments(this.comments));
+
+		return fields;
 	}
 	
-	public LinkedHashMap<String, String[]> getHeaders() {
+	/**
+	 * Please refer to documentation on StudyOrAssayTableObject.getHeaders
+	 */
+	LinkedHashMap<String, String[]> getHeaders() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
 		headers.put(this.type, new String[]{this.type});
@@ -54,15 +50,32 @@ public class DataFile extends StudyOrAssayTableObject implements Commentable {
 		
 		return headers;
 	}
+	/**
+	 * @return the path
+	 */
+	public String getPath() {
+		return path;
+	}
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+	
+	/**
+	 * @param path Path to the file as should be printed in the ISATab. Existance or validity of path is not checked.
+	 */
+	public void setPath(String path) {
+		this.path = Objects.requireNonNull(path, "Path cannot be null");
+	}
 	
 	
-	public Map<String, String[]> getFields() {
-		HashMap<String, String[]> fields = new HashMap<String, String[]>();
-		
-		fields.put(this.type, new String[]{this.name});
-		fields.putAll(this.getFieldsForComments(this.comments));
-
-		return fields;
+	/**
+	 * @param type Type of DataFile, will be used for the column header. Ideally one of ISATab's predefined types but that's not checked.
+	 */
+	public void setType(String type) {
+		this.type = Objects.requireNonNull(type, "Type cannot be null");
 	}
 
 }

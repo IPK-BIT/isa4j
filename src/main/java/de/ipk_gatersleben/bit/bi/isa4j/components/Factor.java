@@ -11,34 +11,32 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 import java.util.Objects;
 
 /**
- * Class representing a factor value to describe an observed in the
+ * Class representing a factor to describe an observed sample in the
  * {@link Study} or {@link Assay}, independent from a {@link Protocol}
- *
- * @author liufe, arendd
  */
 
 public class Factor implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
+	private String name;
 
 	/**
 	 * {@link OntologyAnnotation} description of {@link Factor}
 	 */
 	private OntologyAnnotation type;
 	
-	private String name;
+	public Factor(String name) {
+		this(name, null);
+	}
 	
 	public Factor(String name, OntologyAnnotation type) {
 		this.name = Objects.requireNonNull(name, "Factor name cannot be null");
 		this.type = type;
 	}
 	
-	public Factor(String name) {
-		this(name, null);
+	public CommentCollection comments() {
+		return this.comments;
 	}
 
 	/**

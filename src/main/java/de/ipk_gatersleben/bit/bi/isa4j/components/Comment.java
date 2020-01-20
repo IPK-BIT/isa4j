@@ -8,11 +8,14 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.util.Objects;
+
 /**
  * Class representing a {@link Comment} that can be assigned to an
- * {@link Investigation}, {@link Study} or {@link Assay}.
+ * {@link Investigation}, {@link Study}, {@link Assay}, {@link DataFile},
+ * {@link Factor}, {@link OntologyAnnotation}, {@link Person}, {@link Process},
+ * {@link Protocol}, {@link Publication}, {@link Sample}, or {@link Source}.
  *
- * @author liufe, arendd
  */
 public class Comment {
 
@@ -29,8 +32,12 @@ public class Comment {
 	/**
 	 * Constructor.
 	 */
-	public Comment(String type, String value) {
-		this.name = type;
+	/**
+	 * @param name Name of the comment. Cannot be null.
+	 * @param value
+	 */
+	public Comment(String name, String value) {
+		this.setName(name);
 		this.value = value;
 	}
 
@@ -46,10 +53,10 @@ public class Comment {
 	/**
 	 * Set the name of the {@link Comment}
 	 *
-	 * @param name name of the {@link Comment}
+	 * @param name name of the {@link Comment}. Cannot be null
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.name = Objects.requireNonNull(name, "Comment name cannot be null");
 	}
 
 	/**

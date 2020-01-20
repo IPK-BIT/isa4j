@@ -9,37 +9,39 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 /**
- * Class to represent a assay in context of the ISA hierarchy. It is used to
- * describe the measured traits and belong to a {@link Study}
+ * Class to represent an assay in the ISA hierarchy. It is used to
+ * describe the measured traits and belongs to a {@link Study}
+ */
+/**
+ * @author psaroudakis
  *
- * @author liufe, arendd
  */
 public class Assay extends WideTableFile implements Commentable {
 
 	/**
-	 * The measurement being observed in this assay
+	 * the measurement being observed in this assay
 	 */
 	private OntologyAnnotation measurementType;
 
 	/**
-	 * The technology being employed to observe this measurement
+	 * the study this assay belongs to
 	 */
-	private OntologyAnnotation technologyType;
+	private Study study;
 
 	/**
-	 * The technology platform used
+	 * the technology platform used
 	 */
 	private String technologyPlatform;
 
 	/**
-	 * the study, who has this assay
+	 * the technology being employed to observe this measurement
 	 */
-	private Study study;
+	private OntologyAnnotation technologyType;
 	
 	/**
-	 * Constructor, give the filename
+	 * Constructor, pass the filename the assay will be written to when using
+	 * the writeToFile method
 	 *
-	 * @param identifier
 	 * @param fileName
 	 */
 	public Assay(String fileName) {
@@ -54,18 +56,13 @@ public class Assay extends WideTableFile implements Commentable {
 	}
 
 	/**
-	 * get the study, that own this assay
-	 *
-	 * @return
+	 * @return the study this assay belongs to
 	 */
 	public Study getStudy() {
 		return study;
 	}
 
-
 	/**
-	 * get type of technology platform
-	 *
 	 * @return type of technology platform
 	 */
 	public String getTechnologyPlatform() {
@@ -73,8 +70,6 @@ public class Assay extends WideTableFile implements Commentable {
 	}
 
 	/**
-	 * get type of technology
-	 *
 	 * @return type of technology
 	 */
 	public OntologyAnnotation getTechnologyType() {
@@ -82,8 +77,6 @@ public class Assay extends WideTableFile implements Commentable {
 	}
 
 	/**
-	 * get type of measurement
-	 *
 	 * @return type of measurement
 	 */
 	public OntologyAnnotation measurementType() {
@@ -91,21 +84,21 @@ public class Assay extends WideTableFile implements Commentable {
 	}
 
 	/**
-	 * set type of measurement
-	 *
 	 * @param measurementType type of measurement
 	 */
 	public void setMeasurementType(OntologyAnnotation measurementType) {
 		this.measurementType = measurementType;
 	}
 
+	
+	/**
+	 * @param study
+	 */
 	protected void setStudy(Study study) {
 		this.study = study;
 	}
 
 	/**
-	 * set type of technology platform
-	 *
 	 * @param technologyPlatform type of technology platform
 	 */
 	public void setTechnologyPlatform(String technologyPlatform) {
@@ -113,8 +106,6 @@ public class Assay extends WideTableFile implements Commentable {
 	}
 
 	/**
-	 * set type of technology
-	 *
 	 * @param technologyType type of technology
 	 */
 	public void setTechnologyType(OntologyAnnotation technologyType) {

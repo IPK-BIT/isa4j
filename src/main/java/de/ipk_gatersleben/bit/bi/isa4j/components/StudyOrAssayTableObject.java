@@ -29,7 +29,7 @@ public abstract class StudyOrAssayTableObject {
 	 * }
 	 * @return
 	 */
-	public abstract Map<String, String[]> getFields();
+	abstract Map<String, String[]> getFields();
 	
 	/**
 	 * Like above, but here the order of items matters and instead of having actual values in the String arrays you only
@@ -41,7 +41,7 @@ public abstract class StudyOrAssayTableObject {
 	 * }
 	 * @return
 	 */
-	public abstract LinkedHashMap<String, String[]> getHeaders();
+	abstract LinkedHashMap<String, String[]> getHeaders();
 	
 	
 	/**
@@ -144,16 +144,5 @@ public abstract class StudyOrAssayTableObject {
 	protected void setNextStudyOrAssayTableObject(StudyOrAssayTableObject nextStudyOrAssayTableObject) {
 		this.nextStudyOrAssayTableObject = nextStudyOrAssayTableObject;
 	}
-	
-	
-//	/**
-//	 * @return the nextItem
-//	 */
-//	public StudyOrAssayTableObject getNextStudyOrAssayTableObject();
-	
-//	/**
-//	 * @param nextItem the nextItem to set
-//	 */
-//	public void setNextStudyOrAssayTableObject(StudyOrAssayTableObject nextItem);
 
 }
