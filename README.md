@@ -112,10 +112,11 @@ You can populate them just like you did the investigation.
 Don't forget to define Study Factors and Protocols
 
 ```java
-study1.addFactor(new Factor("soil coverage", new OntologyAnnotation("Factor Type")));
+Factor soilCoverage = new Factor("soil coverage", new OntologyAnnotation("Factor Type"));
+study1.addFactor(soilCoverage);
 Protocol plantTalking = new Protocol("Plant Talking");
-ProtocolParameter toneOfVoice = new ProtocolParameter("Tone of Voice");
 plantTalking.addComponent(new ProtocolComponent("Component Name", new OntologyAnnotation("Component Type")));
+ProtocolParameter toneOfVoice = new ProtocolParameter("Tone of Voice");
 plantTalking.addParameter(toneOfVoice);
 ```
 
@@ -142,4 +143,141 @@ OutputStream os = new ByteArrayOutputStream(); // of course you would already ha
 investigation.writeToStream(os);
 ```
 
+Please note that unlike the `isatab.dump` method from the [python API](https://github.com/ISA-tools/isa-api), this only writes the investigation file and no study or assay files.
+They have to be written separately.
+
 ## 3.2 Writing Study and Assay files
+isa4J is designed to also work with study and assay files that are too large to fit in memory, so instead of populating a study object with all sources and samples and then writing everything in one go, you build and flush out the file iteratively.
+After you have taken care of all information that's needed for the investigation file and have attached your study object to the investigation, you tell the study to open it's corresponding file for writing:
+
+```java
+study1.openFile(); // study1 is defined above
+```
+
+This will use the path or filename that you passed when you created the study or that you set with `.setFilename`, so no argument is needed here (this is done to ensure the filename mentioned in the investigation file matches the one you actually write to).
+
+You then create Source and Sample Objects, connect them via a Process and flush them out into the file before creating the next set of objects:
+
+```java
+// Instead of looping through meaningless numbers, you would loop through your database entries,
+// CSV entries, or whatever things you have that you want to describe with ISATab.
+for(int i = 0; i < 5; i++) {
+	Source source = new Source("Source Name");
+	Sample sample = new Sample("Sample Name");
+	Process talkingProcess = new Process(plantTalking); // plantTalking is a Protocol defined above
+	talkingProcess.setInput(source);
+	talkingProcess.setOutput(sample);
+
+	// WRITE TO FILE HERE (see below)
+}
+```
+
+The method to write a line to the study file is `writeLine(initiator)`, `initiator` being the first object in the line that is then connected via a chain of processes and samples/materials etc. to the last.
+In our case that would be `source`.
+But if you call `study1.writeLine(source)` at the marked space above, you will be met with an error:
+
+```
+Exception in thread "main" java.lang.IllegalStateException: Headers were not written yet
+```
+
+The reason is that, as explained before, isa4J doesn't know anything about the structure of any rows before or after the current one.
+So if, for example, a Source in a later line has a Characteristic attached to it, that needs to be accounted for by having a corresponding entry in the file header and keeping an empty column for all the Sources that do not have this Characteristic.
+That is why you have to explicitly tell isa4J what headers you need by passing an examplary initiator (e.g. Source) connected to a process/sample/material/datafile chain *that contains every field any of your future rows will need*:
+
+```java
+study1.writeHeadersFromExample(source);
+```
+
+In our case, where all lines are of homogenous structure, you can simply include it in the loop:
+
+```java
+for(int i = 0; i < 5; i++) {
+	Source source = new Source("Source Name");
+	Sample sample = new Sample("Sample Name");
+	Process talkingProcess = new Process(plantTalking); // plantTalking is a Protocol defined above
+	talkingProcess.setInput(source);
+	talkingProcess.setOutput(sample);
+
+	if(!study1.hasWrittenHeaders())
+		study1.writeHeadersFromExample(source);
+	study1.writeLine(source);
+}
+```
+
+After you have written everything you want to write, you can close the file with
+
+```java
+study1.closeFile();
+```
+
+### 3.2.1 Attributes for Sources, Samples, Processes etc.
+In the ISA specification, Sources and Samples can have more than just a name.
+You can attach, depending on the type of object, ParameterValues (for Processes), FactorValues (for Samples), and Characteristics (Sources, Samples, and Materials).
+Many objects can also be annotated with Comments.
+The way you do this is very similar to how you populate the Investigation file above:
+
+```java
+Source source = new Source("Source Name");
+source.addCharacteristic(new Characteristic("Characteristic 1", new OntologyAnnotation("Characteristic1Value","Char1Acc",creditOntology))); // creditOntology defined above
+
+Sample sample = new Sample("Sample Name");
+sample.addFactorValue(new FactorValue(
+	soilCoverage, // Factor devined above
+	34.12, // Value (can also be a String or an OntologyAnnotation)
+	new OntologyAnnotation("%") // Unit
+));
+
+Process process = new Process(plantTalking);
+process.addParameterValue(
+	new PrtocolParameter(toneOfVoice, "soft") // similar to FactorValue: can have double/string/OntologyAnnotation values and an optional unit
+); 
+
+// Comments work the same way as before
+source.comments().add(new Comment("Comment Name", "Comment Value"));
+```
+
+Of course it makes sense to define Objects that you are going to use multiple times outside of your loop, so a more complete example could look like this:
+
+```java
+Characteristic species = new Characteristic("Organism", new OntologyAnnotation("Arabidopsis thaliana","http://purl.obolibrary.org/obo/NCBITaxon_3702",ncbiTaxonomy)); // ontology not defined here
+ParameterValue softSpeaking = new ParameterValue(toneOfVoice, "Very softly");
+for(int i = 0; i < 5; i++) {
+	Source source = new Source("Source Name");
+	source.addCharacteristic(species);
+	Sample sample = new Sample("Sample Name");
+	sample.addFactorValue(new FactorValue(soilCoverage, i*10, new OntologyAnnotation("%")));
+	Process talkingProcess = new Process(plantTalking); // plantTalking is a Protocol defined above
+	talkingProcess.addParameterValue(softSpeaking);
+	talkingProcess.setInput(source);
+	talkingProcess.setOutput(sample);
+
+	if(!study1.hasWrittenHeaders())
+		study1.writeHeadersFromExample(source);
+	study1.writeLine(source);
+}
+```
+
+### 3.2.2 Writing to Streams
+Like the investigation file, you can also write study files to a stream instead of a file.
+
+```java
+study1.directToStream(os); // os = some OutputStream
+// Write your lines here
+study1.releaseStream();
+```
+
+The stream will not be closed by these methods so you can keep using it if you want to send anything after the study file content.
+
+### 3.3.3 What about Assays?
+Assays work in the exact same way that studies do, they also have `openFile, writeHeadersFromExample, writeLine, closeFile` as well as `directToStream` and `releaseStream` methods.
+In addition to Sources and Samples, you may want to make use of the `Material` and `DataFile` classes when writing assay files.
+
+```
+Material material = new Material("Extract Name", "Extract No. 232");
+processXY.setInput(sample);
+processXY.setOutput(material);
+
+DataFile sequenceFile = new DataFile("Raw Data File", "seq-232.fasta");
+processYZ.setInput(material);
+processYZ.setOutput(sequenceFile);
+```
