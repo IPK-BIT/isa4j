@@ -8,6 +8,8 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 /**
  * Class to represent an assay in the ISA hierarchy. It is used to
  * describe the measured traits and belongs to a {@link Study}
@@ -102,7 +104,7 @@ public class Assay extends WideTableFile implements Commentable {
 	 * @param technologyPlatform type of technology platform
 	 */
 	public void setTechnologyPlatform(String technologyPlatform) {
-		this.technologyPlatform = technologyPlatform;
+		this.technologyPlatform = StringUtil.sanitize(technologyPlatform);
 	}
 
 	/**

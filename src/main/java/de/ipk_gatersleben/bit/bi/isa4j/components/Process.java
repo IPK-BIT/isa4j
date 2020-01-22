@@ -54,7 +54,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		return dateTime;
 	}
 	
-	public Map<String, String[]> getFields() {
+	Map<String, String[]> getFields() {
 		HashMap<String, String[]> fields = new HashMap<String, String[]>();
 		
 		fields.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{this.protocol.getName()});
@@ -68,7 +68,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 		return fields;
 	}
 
-	public LinkedHashMap<String, String[]> getHeaders() {
+	LinkedHashMap<String, String[]> getHeaders() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
 		headers.put(StudyAssayAttribute.PROTOCOL.toString(), new String[]{StudyAssayAttribute.PROTOCOL.toString()});

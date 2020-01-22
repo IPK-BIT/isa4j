@@ -8,6 +8,10 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.util.Objects;
+
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 /**
  * Class representing a {@link Publication} connected to a {@link Investigation}
  * or {@link Study}
@@ -16,16 +20,17 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
  */
 public class Publication implements Commentable {
 	
+	/**
+     * The list of authors who contributed to this {@link Publication}
+     */
+    private String authors;
+	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
-	
-	public Publication(String title, String authors) {
-		this.setTitle(title);
-		this.setAuthors(authors);
-	}
+	/**
+     * DOI (Digital Object Identifier) for this {@link Publication}
+     */
+    private String doi;
 
     /**
      * The PubMed ID of this {@link Publication}
@@ -33,24 +38,30 @@ public class Publication implements Commentable {
     private String pubmedID;
 
     /**
-     * DOI (Digital Object Identifier) for this {@link Publication}
+     * The status of this {@link Publication}, e.g. Published, Submitted, etc.
      */
-    private String doi;
-
-    /**
-     * The list of authors who contributed to this {@link Publication}
-     */
-    private String authors;
+    private OntologyAnnotation status;
 
     /**
      * The title of the {@link Publication}
      */
     private String title;
 
-    /**
-     * The status of this {@link Publication}, e.g. Published, Submitted, etc.
-     */
-    private OntologyAnnotation status;
+    public Publication(String title, String authors) {
+		this.setTitle(title);
+		this.setAuthors(authors);
+	}
+    
+    public Publication(String title, String authors, String doi, String pubmedID, OntologyAnnotation status) {
+    	this(title, authors);
+    	this.setDOI(doi);
+    	this.setPubmedID(pubmedID);
+    	this.setStatus(status);
+    }
+
+    public CommentCollection comments() {
+		return this.comments;
+	}
 
     /**
      * Get the list of authors of this {@link Publication}
@@ -103,7 +114,7 @@ public class Publication implements Commentable {
      * @param authors authors' name of publication
      */
     public void setAuthors(String authors) {
-        this.authors = authors;
+        this.authors = StringUtil.sanitize(authors);
     }
 
     /**
@@ -112,7 +123,7 @@ public class Publication implements Commentable {
      * @param doi DOI of publication
      */
     public void setDOI(String doi) {
-        this.doi = doi;
+        this.doi = StringUtil.sanitize(doi);
     }
 
     /**
@@ -121,7 +132,7 @@ public class Publication implements Commentable {
      * @param pubmedID id of the publication
      */
     public void setPubmedID(String pubmedID) {
-        this.pubmedID = pubmedID;
+        this.pubmedID = StringUtil.sanitize(pubmedID);
     }
 
     /**
@@ -129,8 +140,8 @@ public class Publication implements Commentable {
      *
      * @param status status of publication
      */
-    public void setStatus(OntologyAnnotation statusOntology) {
-        this.status = statusOntology;
+    public void setStatus(OntologyAnnotation status) {
+        this.status = status;
     }
 
     /**
@@ -139,7 +150,7 @@ public class Publication implements Commentable {
      * @param title title of {@link Publication}
      */
     public void setTitle(String title) {
-        this.title = title;
+        this.title = StringUtil.sanitize(Objects.requireNonNull(title, "Publication title cannot be null"));
     }
 
 }

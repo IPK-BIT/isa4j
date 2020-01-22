@@ -13,14 +13,20 @@ import java.util.stream.Collectors;
 
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public abstract class WideTableFile implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
+	/**
+	 * The name of the study sample file linked to this Study.
+	 */
+	private String fileName;
+	
+	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
+
+	private OutputStreamWriter outputstreamwriter;
 	
 	/**
 	 * Constructor, give the filename
@@ -31,11 +37,20 @@ public abstract class WideTableFile implements Commentable {
 		this.setFileName(fileName);
 	}
 
-	/**
-	 * @param fileName the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = Objects.requireNonNull(fileName, "Filename cannot be null");
+	public void closeFile() throws IOException {
+		this.releaseStream();
+		this.outputstreamwriter.close();
+	}
+	
+	public CommentCollection comments() {
+		return this.comments;
+	}
+	
+	public void directToStream(OutputStream os) {
+		if(this.outputstreamwriter != null) {
+			throw new IllegalStateException("A file or stream is already being written to. Please close/release it first!");
+		}
+		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 	}
 	
 	/**
@@ -46,32 +61,27 @@ public abstract class WideTableFile implements Commentable {
 	public String getFileName() {
 		return fileName;
 	}
-
-	/**
-	 * The name of the study sample file linked to this Study.
-	 */
-	private String fileName;
 	
-	private OutputStreamWriter outputstreamwriter;
+	public boolean hasWrittenHeaders() {
+		return this.headers != null;
+	}
 	
 	public void openFile() throws FileNotFoundException {
 		this.directToStream(new FileOutputStream(this.fileName));
 	}
-	
-	public void directToStream(OutputStream os) {
-		if(this.outputstreamwriter != null) {
-			throw new IllegalStateException("A file or stream is already being written to. Please close/release it first!");
-		}
-		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
-	}
-	
 	public void releaseStream() throws IOException {
 		this.outputstreamwriter.flush();
 		this.outputstreamwriter = null;
 		this.headers = null;
 	}
 	
-	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = StringUtil.sanitize(Objects.requireNonNull(fileName, "Filename cannot be null"));
+	}
+	
 	public void writeHeadersFromExample(StudyOrAssayTableObject example) throws IOException {
 		if(this.outputstreamwriter == null)
 			throw new IllegalStateException("No file or stream open for writing");
@@ -116,14 +126,5 @@ public abstract class WideTableFile implements Commentable {
 				sb.append(Symbol.TAB.toString());
 		}
 		this.outputstreamwriter.write(sb.toString() + Symbol.ENTER);
-	}
-	
-	public boolean hasWrittenHeaders() {
-		return this.headers != null;
-	}
-	
-	public void closeFile() throws IOException {
-		this.releaseStream();
-		this.outputstreamwriter.close();
 	}
 }

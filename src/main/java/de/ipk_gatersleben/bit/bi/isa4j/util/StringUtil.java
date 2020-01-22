@@ -37,6 +37,9 @@ public class StringUtil {
 	 * @return
 	 */
 	public static String sanitize(String input) {
-		return input.replaceAll(Symbol.TAB.toString(), Symbol.SPACE.toString()).replaceAll(Symbol.ENTER.toString(),  Symbol.SPACE.toString());
+		if(input == null)
+			return null;
+		else
+			return input.replaceAll(Symbol.TAB.toString(), Symbol.SPACE.toString()).replaceAll(Symbol.ENTER.toString(),  Symbol.SPACE.toString());
 	}
 }

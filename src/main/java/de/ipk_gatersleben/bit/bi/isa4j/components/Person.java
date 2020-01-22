@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 /**
  * Class to represent a person as {@link Person} for the described
  * {@link Investigation} or {@link Study}
@@ -20,26 +22,17 @@ import java.util.Objects;
  */
 public class Person implements Commentable {
 	
-	private CommentCollection comments = new CommentCollection();
+	/**
+	 * The address for the {@link Person}
+	 */
+	private String address;
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
-
 	/**
-	 * The last name/surname of the {@link Person}
+	 * The affiliation for the {@link Person}
 	 */
-	private String lastName;
+	private String affiliation;
 
-	/**
-	 * The first name of the {@link Person}
-	 */
-	private String firstName;
-
-	/**
-	 * The mid initial of the {@link Person}
-	 */
-	private String midInitials;
+	private CommentCollection comments = new CommentCollection();
 
 	/**
 	 * The email corresponding to the {@link Person}
@@ -47,24 +40,29 @@ public class Person implements Commentable {
 	private String email;
 
 	/**
-	 * A phone number for the {@link Person}
-	 */
-	private String phone;
-
-	/**
 	 * A fax number for the {@link Person}
 	 */
 	private String fax;
 
 	/**
-	 * The address for the {@link Person}
+	 * The first name of the {@link Person}
 	 */
-	private String address;
+	private String firstName;
 
 	/**
-	 * The affiliation for the {@link Person}
+	 * The last name/surname of the {@link Person}
 	 */
-	private String affiliation;
+	private String lastName;
+
+	/**
+	 * The mid initial of the {@link Person}
+	 */
+	private String midInitials;
+
+	/**
+	 * A phone number for the {@link Person}
+	 */
+	private String phone;
 
 	/**
 	 * The role of the person in this {@link Investigation}
@@ -72,17 +70,20 @@ public class Person implements Commentable {
 	private List<OntologyAnnotation> roles = new ArrayList<OntologyAnnotation>();
 
 	public Person(String lastName, String firstName, String email, String affiliation, String address) {
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.email = email;
-		this.affiliation= affiliation;
-		this.address=address;
+		this.setLastName(lastName);
+		this.setFirstName(firstName);
+		this.setEmail(email);
+		this.setAffiliation(affiliation);
+		this.setAddress(address);
+	}
+
+	public void addRole(OntologyAnnotation role) {
+		this.roles.add(Objects.requireNonNull(role, "Role cannot be null"));
 	}
 
 
-	public boolean addRole(OntologyAnnotation role) {
-		Objects.requireNonNull(role);
-		return this.roles.add(role);
+	public CommentCollection comments() {
+		return this.comments;
 	}
 
 	/**
@@ -172,7 +173,7 @@ public class Person implements Commentable {
 	 * @param address address of the {@link Person}
 	 */
 	public void setAddress(String address) {
-		this.address = address;
+		this.address = StringUtil.sanitize(address);
 	}
 
 	/**
@@ -181,7 +182,7 @@ public class Person implements Commentable {
 	 * @param affiliation affiliation of the {@link Person}
 	 */
 	public void setAffiliation(String affiliation) {
-		this.affiliation = affiliation;
+		this.affiliation = StringUtil.sanitize(affiliation);
 	}
 
 	/**
@@ -190,7 +191,7 @@ public class Person implements Commentable {
 	 * @param email email of the {@link Person}
 	 */
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = StringUtil.sanitize(email);
 	}
 
 	/**
@@ -199,7 +200,7 @@ public class Person implements Commentable {
 	 * @param fax fax number of the {@link Person}
 	 */
 	public void setFax(String fax) {
-		this.fax = fax;
+		this.fax = StringUtil.sanitize(fax);
 	}
 
 	/**
@@ -208,7 +209,7 @@ public class Person implements Commentable {
 	 * @param firstName first name of the {@link Person}
 	 */
 	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		this.firstName = StringUtil.sanitize(firstName);
 	}
 
 	/**
@@ -217,7 +218,7 @@ public class Person implements Commentable {
 	 * @param lastName last name of the {@link Person}
 	 */
 	public void setLastName(String lastName) {
-		this.lastName = lastName;
+		this.lastName = StringUtil.sanitize(lastName);
 	}
 
 	/**
@@ -226,7 +227,7 @@ public class Person implements Commentable {
 	 * @param midInitials mid initials of the {@link Person}
 	 */
 	public void setMidInitials(String midInitials) {
-		this.midInitials = midInitials;
+		this.midInitials = StringUtil.sanitize(midInitials);
 	}
 	
 	/**
@@ -235,7 +236,7 @@ public class Person implements Commentable {
 	 * @param phone phone number of the {@link Person}
 	 */
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = StringUtil.sanitize(phone);
 	}
 
 	/**

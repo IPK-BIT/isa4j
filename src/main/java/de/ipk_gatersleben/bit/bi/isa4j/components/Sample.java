@@ -14,33 +14,8 @@ public class Sample extends Source implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
-	
 	private List<FactorValue> factorValues = new ArrayList<FactorValue>();
 	
-	/**
-	 * @return the factorValues
-	 */
-	public List<FactorValue> getFactorValues() {
-		return factorValues;
-	}
-
-	/**
-	 * @param factorValues the factorValues to set
-	 */
-	public void setFactorValues(List<FactorValue> factorValues) {
-		factorValues.stream().forEach(Objects::requireNonNull);
-		this.factorValues = factorValues;
-	}
-	
-	public void addFactorValue(FactorValue factorValue) {
-		if(this.factorValues.stream().map(FactorValue::getCategory).anyMatch(factorValue.getCategory()::equals))
-			throw new RedundantItemException("Multiple FactorValues for Factor: " + factorValue.getCategory().getName());
-		this.factorValues.add(factorValue);
-	}
-
 	public Sample(String name) {
 		super(name);
 	}
@@ -48,8 +23,36 @@ public class Sample extends Source implements Commentable {
 	public Sample(String name, List<Characteristic> characteristics) {
 		super(name, characteristics);
 	}
+
+	public void addFactorValue(FactorValue factorValue) {
+		if(this.factorValues.stream().map(FactorValue::getCategory).anyMatch(factorValue.getCategory()::equals))
+			throw new RedundantItemException("Multiple FactorValues for Factor: " + factorValue.getCategory().getName());
+		this.factorValues.add(factorValue);
+	}
 	
-	public LinkedHashMap<String, String[]> getHeaders() {
+	public CommentCollection comments() {
+		return this.comments;
+	}
+
+	/**
+	 * @return the factorValues
+	 */
+	public List<FactorValue> getFactorValues() {
+		return factorValues;
+	}
+	
+	Map<String, String[]> getFields() {
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
+		
+		fields.put(StudyAssayAttribute.SAMPLE_NAME.toString(), new String[]{this.getName()});
+		fields.putAll(this.getFieldsForCharacteristics());
+		fields.putAll(this.getFieldsForComments(this.comments));
+		fields.putAll(this.getFieldsForValues(StudyAssayAttribute.FACTOR_VALUE, this.factorValues, fv -> fv.getCategory().getName()));
+
+		return fields;
+	}
+	
+	LinkedHashMap<String, String[]> getHeaders() {
 		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
 		headers.put(StudyAssayAttribute.SAMPLE_NAME.toString(), new String[]{StudyAssayAttribute.SAMPLE_NAME.toString()});
@@ -60,15 +63,12 @@ public class Sample extends Source implements Commentable {
 		return headers;
 	}
 	
-	public Map<String, String[]> getFields() {
-		HashMap<String, String[]> fields = new HashMap<String, String[]>();
-		
-		fields.put(StudyAssayAttribute.SAMPLE_NAME.toString(), new String[]{this.getName()});
-		fields.putAll(this.getFieldsForCharacteristics());
-		fields.putAll(this.getFieldsForComments(this.comments));
-		fields.putAll(this.getFieldsForValues(StudyAssayAttribute.FACTOR_VALUE, this.factorValues, fv -> fv.getCategory().getName()));
-
-		return fields;
+	/**
+	 * @param factorValues the factorValues to set
+	 */
+	public void setFactorValues(List<FactorValue> factorValues) {
+		factorValues.stream().forEach(Objects::requireNonNull);
+		this.factorValues = factorValues;
 	}
 	
 }

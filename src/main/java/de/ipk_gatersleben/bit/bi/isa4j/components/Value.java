@@ -5,47 +5,43 @@ import java.util.Objects;
 abstract class Value<T> {
 	private T category;
 	
-	public Value(T category, OntologyAnnotation value, OntologyAnnotation unit) {
-		Objects.requireNonNull(category);
-		Objects.requireNonNull(value);
-		
-		this.category = category;
-		this.setValue(value);
-		this.setUnit(unit);
-	}
+	private OntologyAnnotation unit;
 	
-	public Value(T category, OntologyAnnotation value) {
+	private OntologyAnnotation value;
+	
+	public Value(T category, double value) {
 		this(category, value, null);
-	}
-	
-	public Value(T category, String value) {
-		this(category, new OntologyAnnotation(value, null, null));
 	}
 	
 	public Value(T category, double value, OntologyAnnotation unit) {
 		this(category, new OntologyAnnotation(String.valueOf(value), null, null), unit);
 	}
 	
-	public Value(T category, double value) {
+	public Value(T category, OntologyAnnotation value) {
 		this(category, value, null);
 	}
 
+	public Value(T category, OntologyAnnotation value, OntologyAnnotation unit) {
+		this.setCategory(category);
+		this.setValue(value);
+		this.setUnit(unit);
+	}
+
+	public Value(T category, String value) {
+		this(category, new OntologyAnnotation(value, null, null));
+	}
 	/**
 	 * @return the category
 	 */
 	public T getCategory() {
 		return category;
 	}
-
 	/**
-	 * @param category the category to set
+	 * @return the unit
 	 */
-	public void setCategory(T category) {
-		Objects.requireNonNull(category);
-		this.category = category;
+	public OntologyAnnotation getUnit() {
+		return unit;
 	}
-	private OntologyAnnotation value;
-	private OntologyAnnotation unit;
 	
 	/**
 	 * @return the value
@@ -54,39 +50,37 @@ abstract class Value<T> {
 		return value;
 	}
 
-	/**
-	 * @param value the value to set
-	 */
-	public void setValue(OntologyAnnotation value) {
-		Objects.requireNonNull(value);
-		this.value = value;
+	public boolean hasUnit() {
+		return !(this.unit == null);
 	}
 	
-	public void setValue(String value) {
-		Objects.requireNonNull(value);
-		this.value = new OntologyAnnotation(value, null, null);
+	/**
+	 * @param category the category to set
+	 */
+	public void setCategory(T category) {
+		this.category = Objects.requireNonNull(category, "Category cannot be null");
 	}
 	
-	public void setValue(int value) {
-		this.value = new OntologyAnnotation(String.valueOf(value), null, null);
-	}
-
-	/**
-	 * @return the unit
-	 */
-	public OntologyAnnotation getUnit() {
-		return unit;
-	}
-
 	/**
 	 * @param unit the unit to set
 	 */
 	public void setUnit(OntologyAnnotation unit) {
 		this.unit = unit;
 	}
+
+	public void setValue(int value) {
+		this.value = new OntologyAnnotation(String.valueOf(value), null, null);
+	}
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(OntologyAnnotation value) {
+		this.value = Objects.requireNonNull(value, "Value cannot be null");
+	}
 	
-	public boolean hasUnit() {
-		return !(this.unit == null);
+	public void setValue(String value) {
+		this.value = new OntologyAnnotation(Objects.requireNonNull(value, "Value cannot be null"), null, null);
 	}
 
 }

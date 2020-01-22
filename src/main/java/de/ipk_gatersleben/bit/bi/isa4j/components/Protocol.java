@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
  * Class to represent a protocol/process for a {@link Study}, which contains
@@ -24,9 +25,12 @@ public class Protocol implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
+	private List<ProtocolComponent> components = new ArrayList<ProtocolComponent>();
+
+    /**
+     * A description of the {@link Protocol}
+     */
+    private String description;
 
     /**
      * The name of the {@link Protocol}
@@ -34,14 +38,14 @@ public class Protocol implements Commentable {
     private String name;
 
     /**
+     * The {@link Parameter} list of this {@link Protocol}
+     */
+    private List<ProtocolParameter> parameters = new ArrayList<ProtocolParameter>(3);
+
+    /**
      * The {@link OntologyAnnotation} to describe the type of the {@link Protocol}
      */
     private OntologyAnnotation type;
-
-    /**
-     * A description of the {@link Protocol}
-     */
-    private String description;
 
     /**
      * A URI to linked with the {@link Protocol}
@@ -52,14 +56,7 @@ public class Protocol implements Commentable {
      * The used version of the {@link Protocol}.
      */
     private String version;
-
-    /**
-     * The {@link Parameter} list of this {@link Protocol}
-     */
-    private List<ProtocolParameter> parameters = new ArrayList<ProtocolParameter>(3);
     
-    private List<ProtocolComponent> components = new ArrayList<ProtocolComponent>();
-
     /**
      * Constructor the name of the {@link Protocol}
      *
@@ -69,7 +66,7 @@ public class Protocol implements Commentable {
         this.name = name;
     }
 
-	/**
+    /**
      * @param name         name of the {@link Protocol}
      * @param type type of the {@link Protocol}
      */
@@ -77,12 +74,12 @@ public class Protocol implements Commentable {
         this.name = name;
         this.type = typeOntology;
     }
-	
+
 	public void addComponent(ProtocolComponent component) {
 		Objects.requireNonNull(component);
 		this.components.add(component);
 	}
-
+	
 	/**
      * Add a {@link Parameter} to {@link Protocol}
      *
@@ -95,6 +92,10 @@ public class Protocol implements Commentable {
 
         this.parameters.add(parameter);
     }
+
+	public CommentCollection comments() {
+		return this.comments;
+	}
 
     /**
 	 * @return the components
@@ -172,7 +173,7 @@ public class Protocol implements Commentable {
      * @param description description of protocol
      */
     public void setDescription(String description) {
-        this.description = description;
+        this.description = StringUtil.sanitize(description);
     }
 
     /**
@@ -181,7 +182,7 @@ public class Protocol implements Commentable {
      * @param name name of protocol
      */
     public void setName(String name) {
-        this.name = name;
+        this.name = StringUtil.sanitize(Objects.requireNonNull(name, "Protocol Name cannot be null"));
     }
 
     /**
@@ -209,7 +210,7 @@ public class Protocol implements Commentable {
      * @param uri of protocol
      */
     public void setURI(String uri) {
-        URI = uri;
+        URI = StringUtil.sanitize(uri);
     }
 
     /**
@@ -218,7 +219,7 @@ public class Protocol implements Commentable {
      * @param version version of protocol
      */
     public void setVersion(String version) {
-        this.version = version;
+        this.version = StringUtil.sanitize(version);
     }
 
 }

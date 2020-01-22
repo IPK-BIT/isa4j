@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 public class DataFile extends StudyOrAssayTableObject implements Commentable { 
 	
 	private CommentCollection comments = new CommentCollection();
@@ -67,7 +69,7 @@ public class DataFile extends StudyOrAssayTableObject implements Commentable {
 	 * @param path Path to the file as should be printed in the ISATab. Existance or validity of path is not checked.
 	 */
 	public void setPath(String path) {
-		this.path = Objects.requireNonNull(path, "Path cannot be null");
+		this.path = StringUtil.sanitize(Objects.requireNonNull(path, "DataFile Path cannot be null"));
 	}
 	
 	
@@ -75,7 +77,7 @@ public class DataFile extends StudyOrAssayTableObject implements Commentable {
 	 * @param type Type of DataFile, will be used for the column header. Ideally one of ISATab's predefined types but that's not checked.
 	 */
 	public void setType(String type) {
-		this.type = Objects.requireNonNull(type, "Type cannot be null");
+		this.type = StringUtil.sanitize(Objects.requireNonNull(type, "DataFile Type cannot be null"));
 	}
 
 }

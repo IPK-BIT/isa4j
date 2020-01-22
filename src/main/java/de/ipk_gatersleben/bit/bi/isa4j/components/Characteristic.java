@@ -2,6 +2,8 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 public class Characteristic {
 	
 	private String category;
@@ -32,7 +34,7 @@ public class Characteristic {
 	 * @param category the category to set
 	 */
 	public void setCategory(String category) {
-		this.category = category;
+		this.category = StringUtil.sanitize(Objects.requireNonNull(category, "Characteristic category cannot be null"));
 	}
 
 	/**
@@ -41,8 +43,7 @@ public class Characteristic {
 	 * @param value the value to set
 	 */
 	public void setValue(OntologyAnnotation value) {
-		Objects.requireNonNull(value);
-		this.value = value;
+		this.value = Objects.requireNonNull(value, "Characteristic value cannot be null");
 	}
 
 }

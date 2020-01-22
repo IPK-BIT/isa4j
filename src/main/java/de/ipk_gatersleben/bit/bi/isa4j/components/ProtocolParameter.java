@@ -25,7 +25,7 @@ public class ProtocolParameter {
 	 * @param name the name to set
 	 */
 	public void setName(OntologyAnnotation name) {
-		this.name = Objects.requireNonNull(name, "ProtocolParameter name OntologyAnnotation cannot be null");
+		this.name = Objects.requireNonNull(name, "ProtocolParameter name OntologyAnnotation object cannot be null");
 	}
 
 }

@@ -29,17 +29,9 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 /**
  * Class to represent an Investigation in the ISA Context, which contains the
  * overall information about the goals and means of the experiment.
- *
- * @author liufe, arendd
  */
 public class Investigation implements Commentable {
 	
-	private CommentCollection comments = new CommentCollection();
-	
-	public CommentCollection comments() {
-		return this.comments;
-	}
-
 	/**
 	 * Pass a list of Commentables (Person, Publication...) and get back a String containing all comment lines
 	 * formatted in ISATab format.
@@ -99,9 +91,9 @@ public class Investigation implements Commentable {
 		}
 		return sb.toString();
 	}
-
+	
 	/**
-	 * Put a simple single-column attribute like Investigation Title into ISATab format.
+	 * Format a simple single-column attribute like Investigation Title.
 	 * 
 	 * formatSimpleAttribute(InvestigationAttributes.INVESTIGATION_TITLE, "Title #1");
 	 * 
@@ -110,15 +102,20 @@ public class Investigation implements Commentable {
 	 * 
 	 * @param lineName
 	 * @param value (can be null)
-	 * @return Line formatted in ISATab
+	 * @return Line formatted in ISATab (contains line break)
 	 */
-	private static String formatSimpleAttribute(InvestigationAttribute lineName, String value) {
+	static String formatSimpleAttribute(InvestigationAttribute lineName, String value) {
 		return lineName.toString() + Symbol.TAB
 			+ (value == null ? Symbol.EMPTY.toString() : value)
 			+ Symbol.ENTER.toString();
 	}
 
-	// This is meant for unique comments (e.g. study-wide or investigation-wide) that don't have multiple columns.
+	/**
+	 * Format comments that don't have multiple columns (e.g. study comments or investigation comments)
+	 * They will be sorted by their name
+	 * @param comments
+	 * @return comment lines formatted in ISA-Tab
+	 */
 	static String formatSimpleComments(List<Comment> comments) {
 		StringBuilder sb = new StringBuilder();
 		Collections.sort(comments, (c1, c2) -> c1.getName().compareTo(c2.getName()));
@@ -134,7 +131,7 @@ public class Investigation implements Commentable {
 	 * Contacts etc.) and a function to execute on each element of that list (each Ontology, Publication etc.) in order
 	 * to extract the content from that object that should go into the line. So, for example, if you want to create a line
 	 * containing all the names of the ontologies, your ontologies would be the list that's passed, and the function to get the
-	 * name of each ontology would be { ontology -> ontology.getName(); }
+	 * name of each ontology would be { ontology -> return ontology.getName(); }
 	 * That function is then executed for each ontology in the list and the results are joined with TABs (one column for each ontology).
 	 * In the beginning, the name of the line is printed and finally the line is finished with an ENTER.
 	 * @param <C> Type of Line Name (InvestigationAttribute, String...)
@@ -160,7 +157,6 @@ public class Investigation implements Commentable {
 		return sb.toString();
 	}
 
-	
 	/**
 	 * Built on lineFromList, pass a name, a list of things, and a lambda to extract an OntologyAnnotation from these things
 	 * and get a block of 3 ISATab formatted lines back describing the things.
@@ -188,6 +184,19 @@ public class Investigation implements Commentable {
 				a ->lambda.apply(a) == null || lambda.apply(a).getSourceREF() == null ? Symbol.EMPTY.toString() : lambda.apply(a).getSourceREF().getName());
 	}
 
+	private CommentCollection comments = new CommentCollection();
+
+	
+	/**
+	 * People, who are associated with the {@link Investigation}
+	 */
+	private List<Person> contacts = new ArrayList<>();
+
+	/**
+	 * A brief description of the aims of the {@link Investigation}
+	 */
+	private String description;
+
 	/**
 	 * The defined identifier for the {@link Investigation}.
 	 */
@@ -199,19 +208,9 @@ public class Investigation implements Commentable {
 	private List<Ontology> ontologies = new ArrayList<>();
 
 	/**
-	 * The title of the {@link Investigation}.
+	 * Connected {@link Publication}s of this {@link Investigation}
 	 */
-	private String title;
-
-	/**
-	 * A brief description of the aims of the {@link Investigation}
-	 */
-	private String description;
-
-	/**
-	 * The date the {@link Investigation} was submitted
-	 */
-	private LocalDate submissionDate;
+	private List<Publication> publications = new ArrayList<>();
 
 	/**
 	 * The date the {@link Investigation} was released.
@@ -219,19 +218,19 @@ public class Investigation implements Commentable {
 	private LocalDate publicReleaseDate;
 
 	/**
-	 * Connected {@link Publication}s of this {@link Investigation}
-	 */
-	private List<Publication> publications = new ArrayList<>();
-
-	/**
-	 * People, who are associated with the {@link Investigation}
-	 */
-	private List<Person> contacts = new ArrayList<>();
-
-	/**
 	 * Studies of investigations {@link Study}
 	 */
 	private List<Study> studies = new ArrayList<>();
+
+	/**
+	 * The date the {@link Investigation} was submitted
+	 */
+	private LocalDate submissionDate;
+
+	/**
+	 * The title of the {@link Investigation}.
+	 */
+	private String title;
 
 	/**
 	 * Constructor, every Investigation should have an identifier.
@@ -282,6 +281,10 @@ public class Investigation implements Commentable {
 
 		study.setInvestigation(this);
 		this.studies.add(study);
+	}
+
+	public CommentCollection comments() {
+		return this.comments;
 	}
 
 	private String formatInvestigationContacts() {
@@ -566,9 +569,9 @@ public class Investigation implements Commentable {
 	}
 
 	/**
-	 * Set id of invesigation
+	 * Set id of investigation
 	 *
-	 * @param iD id of invesigation
+	 * @param iD id of investigation
 	 */
 	public void setIdentifier(String iD) {
 		identifier = StringUtil.sanitize(iD);
@@ -633,6 +636,11 @@ public class Investigation implements Commentable {
 		this.title = StringUtil.sanitize(title);
 	}
 	
+	public void writeToFile(String filepath) throws IOException {
+		OutputStream os = new FileOutputStream(filepath);
+		this.writeToStream(os);
+	}
+	
 	public void writeToStream(OutputStream os) throws IOException {
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 		
@@ -651,11 +659,6 @@ public class Investigation implements Commentable {
 		}
 			
 		writer.flush();
-	}
-	
-	public void writeToFile(String filepath) throws IOException {
-		OutputStream os = new FileOutputStream(filepath);
-		this.writeToStream(os);
 	}
 
 }

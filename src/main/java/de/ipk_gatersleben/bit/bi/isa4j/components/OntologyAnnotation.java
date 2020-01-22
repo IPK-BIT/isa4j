@@ -10,6 +10,8 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 /**
  * Class representing a {@link Ontology} based term. Every {@link OntologyAnnotation} has
  * three Attributes: Name, AccessionNumber and SourceREF
@@ -20,9 +22,10 @@ public class OntologyAnnotation implements Commentable {
 	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
+	/**
+     * sourceREF of ontology term
+     */
+    private Ontology sourceREF;
 
     /**
      * term of Ontology term
@@ -34,11 +37,6 @@ public class OntologyAnnotation implements Commentable {
      */
     private String termAccession;
 
-    /**
-     * sourceREF of ontology term
-     */
-    private Ontology sourceREF;
-    
     public OntologyAnnotation(String term) {
     	this(term,  null, null);
     }
@@ -48,6 +46,10 @@ public class OntologyAnnotation implements Commentable {
     	this.termAccession = termAccessionNumber;
     	this.sourceREF = sourceREF;
     }
+    
+    public CommentCollection comments() {
+		return this.comments;
+	}
    
 
     /**
@@ -92,8 +94,7 @@ public class OntologyAnnotation implements Commentable {
      * @param term term of ontology term
      */
     public void setTerm(String term) {
-        Objects.requireNonNull(term);
-        this.term = term;
+        this.term = StringUtil.sanitize(Objects.requireNonNull(term));
     }
 
     /**
@@ -102,7 +103,7 @@ public class OntologyAnnotation implements Commentable {
      * @param termAccession accession number of ontology term
      */
     public void setTermAccession(String termAccession) {
-        this.termAccession = termAccession;
+        this.termAccession = StringUtil.sanitize(termAccession);
     }
 
 }

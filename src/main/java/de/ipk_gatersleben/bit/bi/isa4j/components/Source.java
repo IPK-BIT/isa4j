@@ -13,14 +13,11 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public class Source extends StudyOrAssayTableObject implements Commentable {
 	
+	private List<Characteristic> characteristics = new ArrayList<Characteristic>();
+	
 	private CommentCollection comments = new CommentCollection();
 	
-	public CommentCollection comments() {
-		return this.comments;
-	}
-	
 	protected String name;
-	private List<Characteristic> characteristics = new ArrayList<Characteristic>();
 	public Source(String name) {
 		this.setName(name);
 	}
@@ -34,6 +31,9 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 		
 		this.characteristics.add(characteristic);
 	}
+	public CommentCollection comments() {
+		return this.comments;
+	}
 	
 	/**
 	 * @return the characteristics
@@ -41,35 +41,14 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 	public List<Characteristic> getCharacteristics() {
 		return characteristics;
 	}
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	protected LinkedHashMap<String, String[]> getHeadersForCharacteristics() {
-		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+	Map<String, String[]> getFields() {
+		HashMap<String, String[]> fields = new HashMap<String, String[]>();
 		
-		for(Characteristic characteristic : this.characteristics) {
-			List<String> characteristicColumns = new ArrayList<String>(3);
-			String characteristicName = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());		
-			characteristicColumns.add(characteristicName);
-			characteristicColumns.addAll(this.getOntologyAnnotationExtensionHeaders(characteristic, c -> c.getValue()));
-			headers.put(characteristicName, characteristicColumns.toArray(new String[0]));
-		}
-		
-		return headers;	
-	}
-	
-	public LinkedHashMap<String, String[]> getHeaders() {
-		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
-		
-		headers.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{StudyAssayAttribute.SOURCE_NAME.toString()});
-		headers.putAll(this.getHeadersForCharacteristics());
-		headers.putAll(this.getHeadersForComments(this.comments));
-		
-		return headers;
+		fields.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{this.name});
+		fields.putAll(this.getFieldsForCharacteristics());
+		fields.putAll(this.getFieldsForComments(this.comments));
+
+		return fields;
 	}
 	
 	protected Map<String, String[]> getFieldsForCharacteristics() {
@@ -86,14 +65,35 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 		return fields;
 	}
 	
-	public Map<String, String[]> getFields() {
-		HashMap<String, String[]> fields = new HashMap<String, String[]>();
+	LinkedHashMap<String, String[]> getHeaders() {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
 		
-		fields.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{this.name});
-		fields.putAll(this.getFieldsForCharacteristics());
-		fields.putAll(this.getFieldsForComments(this.comments));
-
-		return fields;
+		headers.put(StudyAssayAttribute.SOURCE_NAME.toString(), new String[]{StudyAssayAttribute.SOURCE_NAME.toString()});
+		headers.putAll(this.getHeadersForCharacteristics());
+		headers.putAll(this.getHeadersForComments(this.comments));
+		
+		return headers;
+	}
+	
+	protected LinkedHashMap<String, String[]> getHeadersForCharacteristics() {
+		LinkedHashMap<String, String[]> headers = new LinkedHashMap<String, String[]>();
+		
+		for(Characteristic characteristic : this.characteristics) {
+			List<String> characteristicColumns = new ArrayList<String>(3);
+			String characteristicName = StringUtil.putNameInAttribute(StudyAssayAttribute.CHARACTERISTICS, characteristic.getCategory());		
+			characteristicColumns.add(characteristicName);
+			characteristicColumns.addAll(this.getOntologyAnnotationExtensionHeaders(characteristic, c -> c.getValue()));
+			headers.put(characteristicName, characteristicColumns.toArray(new String[0]));
+		}
+		
+		return headers;	
+	}
+	
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	
@@ -109,7 +109,7 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = Objects.requireNonNull(name, "Name cannot be null");
+		this.name = StringUtil.sanitize(Objects.requireNonNull(name, "Name cannot be null"));
 	}
 	
 }

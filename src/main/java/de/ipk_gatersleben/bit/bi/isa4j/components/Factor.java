@@ -10,6 +10,8 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
 /**
  * Class representing a factor to describe an observed sample in the
  * {@link Study} or {@link Assay}, independent from a {@link Protocol}
@@ -59,7 +61,7 @@ public class Factor implements Commentable {
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.name = StringUtil.sanitize(Objects.requireNonNull(name, "Factor Name cannot be null"));
 	}
 
 	/**

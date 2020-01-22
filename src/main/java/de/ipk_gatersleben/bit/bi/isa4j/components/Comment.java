@@ -10,6 +10,9 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
+
+
 /**
  * Class representing a {@link Comment} that can be assigned to an
  * {@link Investigation}, {@link Study}, {@link Assay}, {@link DataFile},
@@ -56,7 +59,7 @@ public class Comment {
 	 * @param name name of the {@link Comment}. Cannot be null
 	 */
 	public void setName(String name) {
-		this.name = Objects.requireNonNull(name, "Comment name cannot be null");
+		this.name = StringUtil.sanitize(Objects.requireNonNull(name, "Comment name cannot be null"));
 	}
 
 	/**
@@ -74,7 +77,7 @@ public class Comment {
 	 * @param value the value of the {@link Comment}
 	 */
 	public void setValue(String value) {
-		this.value = value;
+		this.value = StringUtil.sanitize(value);
 	}
 
 }

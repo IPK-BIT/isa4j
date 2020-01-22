@@ -14,43 +14,26 @@ import java.util.List;
 import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
+import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
  * Class to represent a study in context of the ISA hierarchy. It is used to
  * describe the studied objects and belong to a {@link Investigation}
- *
- * @author liufe, arendd
  */
 public class Study extends WideTableFile implements Commentable {
 	
 
 	/**
-	 * A user defined identifier for the study.
+	 * {@link Assay} of Study
 	 */
-	private String identifier;
+	private List<Assay> assays = new ArrayList<>(2);
 	
 
 	/**
-	 * Get id of study
-	 *
-	 * @return id of study
+	 * People, who take part to the Investigation {@link Person}
 	 */
-	public String getIdentifier() {
-		return identifier;
-	}
+	private List<Person> contacts = new ArrayList<>(2);
 	
-
-	/**
-	 * @param identifier the identifier to set
-	 */
-	public void setIdentifier(String identifier) {
-		this.identifier = Objects.requireNonNull(identifier, "Study identifier cannot be null");
-	}
-
-	/**
-	 * The title for the Study.
-	 */
-	private String title;
 
 	/**
 	 * The brief description of the study aims.
@@ -58,41 +41,24 @@ public class Study extends WideTableFile implements Commentable {
 	private String description;
 
 	/**
-	 * The date the study was submitted.
-	 */
-	private Date submissionDate;
-
-	/**
-	 * The date the study was released publicly.
-	 */
-	private Date publicReleaseDate;
-
-	/**
 	 * List of {@link DesignDescriptor}s to describe the {@link Study}
 	 */
 	private List<OntologyAnnotation> designDescriptors = new ArrayList<OntologyAnnotation>();
 
 	/**
-	 * {@link Publication} of study
+	 * The list of {@link Factor} columns
 	 */
-	private List<Publication> publications = new ArrayList<>(2);
+	private List<Factor> factors = new ArrayList<>();
 
 	/**
-	 * {@link Assay} of Study
+	 * A user defined identifier for the study.
 	 */
-	private List<Assay> assays = new ArrayList<>(2);
-
-	/**
-	 * People, who take part to the Investigation {@link Person}
-	 */
-	private List<Person> contacts = new ArrayList<>(2);
-
+	private String identifier;
 
 	/**
 	 * The investigation that has this study
 	 */
 	private Investigation investigation;
-
 
 	/**
 	 * The list of {@link Protocol} columns
@@ -100,9 +66,26 @@ public class Study extends WideTableFile implements Commentable {
 	private List<Protocol> protocols = new ArrayList<>();
 
 	/**
-	 * The list of {@link Factor} columns
+	 * {@link Publication} of study
 	 */
-	private List<Factor> factors = new ArrayList<>();
+	private List<Publication> publications = new ArrayList<>(2);
+
+	/**
+	 * The date the study was released publicly.
+	 */
+	private Date publicReleaseDate;
+
+	/**
+	 * The date the study was submitted.
+	 */
+	private Date submissionDate;
+
+
+	/**
+	 * The title for the Study.
+	 */
+	private String title;
+
 
 	/**
 	 * Constructor, give the identifier of study, filename is same with identifier
@@ -113,7 +96,7 @@ public class Study extends WideTableFile implements Commentable {
 		super("s_" + identifier + ".txt");
 		this.setIdentifier(identifier);
 	}
-	
+
 	/**
 	 * Constructor, give the identifier and filename
 	 *
@@ -123,14 +106,6 @@ public class Study extends WideTableFile implements Commentable {
 	public Study(String identifier, String fileName) {
 		super(fileName);
 		this.setIdentifier(identifier);
-	}
-
-	/**
-	 * @param publications the publications to set
-	 */
-	public void setPublications(List<Publication> publications) {
-		publications.stream().forEach(Objects::requireNonNull);
-		this.publications = publications;
 	}
 
 	/**
@@ -146,7 +121,7 @@ public class Study extends WideTableFile implements Commentable {
 		assay.setStudy(this);
 		this.assays.add(assay);
 	}
-
+	
 	/**
 	 * Add new {@link Person} to the list
 	 *
@@ -166,7 +141,7 @@ public class Study extends WideTableFile implements Commentable {
 		Objects.requireNonNull(designDescriptor);
 		this.designDescriptors.add(designDescriptor);
 	}
-	
+
 	public void addFactor(Factor factor) {
 		Objects.requireNonNull(factor);
 		this.factors.add(factor);
@@ -186,7 +161,7 @@ public class Study extends WideTableFile implements Commentable {
 		Objects.requireNonNull(publication);
 		this.publications.add(publication);
 	}
-
+	
 	/**
 	 * Get associated assays of this study
 	 *
@@ -230,6 +205,14 @@ public class Study extends WideTableFile implements Commentable {
 		return factors;
 	}
 
+	/**
+	 * Get id of study
+	 *
+	 * @return id of study
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
 
 	/**
 	 * Get {@link Investigation}, that this study belongs to
@@ -246,6 +229,7 @@ public class Study extends WideTableFile implements Commentable {
 	public List<Protocol> getProtocols() {
 		return protocols;
 	}
+
 
 	/**
 	 * Get publications of study
@@ -312,7 +296,7 @@ public class Study extends WideTableFile implements Commentable {
 	 * @param description description of study
 	 */
 	public void setDescription(String description) {
-		this.description = description;
+		this.description = StringUtil.sanitize(description);
 	}
 
 	/**
@@ -330,6 +314,13 @@ public class Study extends WideTableFile implements Commentable {
 	 */
 	public void setFactors(List<Factor> factors) {
 		this.factors = factors;
+	}
+
+	/**
+	 * @param identifier the identifier to set
+	 */
+	public void setIdentifier(String identifier) {
+		this.identifier = StringUtil.sanitize(Objects.requireNonNull(identifier, "Study identifier cannot be null"));
 	}
 
 	/**
@@ -361,6 +352,14 @@ public class Study extends WideTableFile implements Commentable {
 	}
 
 	/**
+	 * @param publications the publications to set
+	 */
+	public void setPublications(List<Publication> publications) {
+		publications.stream().forEach(Objects::requireNonNull);
+		this.publications = publications;
+	}
+
+	/**
 	 * Set public releaseDate of study
 	 *
 	 * @param publicReleaseDate public releaseDate of study
@@ -384,7 +383,7 @@ public class Study extends WideTableFile implements Commentable {
 	 * @param title title of study
 	 */
 	public void setTitle(String title) {
-		this.title = title;
+		this.title = StringUtil.sanitize(title);
 	}
 
 }
