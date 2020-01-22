@@ -127,10 +127,10 @@ public class InvestigationTest {
     @Test
     void testOntologyLinesFromList() {
     	List<Publication> publications = new ArrayList<Publication>();
-    	Publication publication1 = new Publication(null, null);
-    	Publication publication2 = new Publication(null, null);
-    	Publication publication3 = new Publication(null, null);
-    	Publication publication4 = new Publication(null, null);
+    	Publication publication1 = new Publication(Symbol.EMPTY.toString(), null);
+    	Publication publication2 = new Publication(Symbol.EMPTY.toString(), null);
+    	Publication publication3 = new Publication(Symbol.EMPTY.toString(), null);
+    	Publication publication4 = new Publication(Symbol.EMPTY.toString(), null);
     	publication1.setStatus(new OntologyAnnotation("Status1"));
     	publication2.setStatus(null);
     	publication3.setStatus(new OntologyAnnotation("Status3", "Accession 3", null));
