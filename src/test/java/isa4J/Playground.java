@@ -3,6 +3,8 @@ package isa4J;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,6 +31,10 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 public class Playground {
 
 	public static void main(String[] args) throws IOException, NoSuchMethodException, SecurityException {
+		ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
+		System.out.println(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
+		System.out.println(threadBean.getCurrentThreadCpuTime());
+		
 		// Create a new Investigation (Investigation identifier is required)
 		Investigation investigation = new Investigation("InvestigationID");
 		
@@ -163,8 +169,8 @@ public class Playground {
 		
 		study1.addContact(karlheinz);
 		
-		investigation.addStudy(study1);
-		investigation.addStudy(study2);
+		//investigation.addStudy(study1);
+		//investigation.addStudy(study2);
 		
 		investigation.writeToFile("test.txt");
 		
@@ -191,10 +197,13 @@ public class Playground {
 		process.setOutput(sample1);
 		
 		
-		study1.openFile();
-		study1.writeHeadersFromExample(source1);
-		study1.writeLine(source1);
-		study1.closeFile();
+//		study1.openFile();
+//		study1.writeHeadersFromExample(source1);
+//		study1.writeLine(source1);
+//		study1.closeFile();
+		
+		System.out.println(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
+		System.out.println(threadBean.getCurrentThreadCpuTime());
 		
 	}
 
