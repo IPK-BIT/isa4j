@@ -38,8 +38,9 @@ public abstract class WideTableFile implements Commentable {
 	}
 
 	public void closeFile() throws IOException {
-		this.releaseStream();
 		this.outputstreamwriter.close();
+		this.outputstreamwriter = null;
+		this.headers = null;
 	}
 	
 	public CommentCollection comments() {
