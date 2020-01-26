@@ -1,0 +1,31 @@
+Parameter name;Parameter Value;Value REF;Value Accession;Parameter Unit;Unit REF;Unit Accession
+Rooting medium;85% (v) red substrate 1 (Klasmann-Deilmann GmbH, Geeste, Germany) / 15% (v) sand);;;;;
+Container type;pot;AGRO;http://purl.obolibrary.org/obo/AGRO_00000309;;;
+Container volume;0.43;;;litre;UO;http://purl.obolibrary.org/obo/UO_0000099
+Container height;0.08;;;m;UO;http://purl.obolibrary.org/obo/UO_0000008
+Number of plants per containers;1;;;;;
+pH;5.5;;;;;
+Air temperature Day - Stratification;5;;;s;UO;http://purl.obolibrary.org/obo/UO_0000027
+Air temperature Night - Stratification;5;;;°C;UO;http://purl.obolibrary.org/obo/UO_0000027
+Average length of the light period - Stratification;24;;;h;UO;http://purl.obolibrary.org/obo/UO_0000032
+Light intensity - Stratification;0;;;µmol m-2 s-1;;
+Fraction of outside light intercepted by growth facility components and surrounding structures - Stratification;0;;;;;
+Type of lamps used;Whitelux Plus metal halide lamps (Venture Lighting Europe Ltd., Rickmansworth, Hertfordshire, England);;;;;
+Average relative humidity during the light period - Stratification;90;;;%;UO;http://purl.obolibrary.org/obo/UO_0000187
+Average relative humidity during the dark period - Stratification;90;;;%;UO;http://purl.obolibrary.org/obo/UO_0000187
+Air temperature Day - Germination;16;;;°C;UO;http://purl.obolibrary.org/obo/UO_0000027
+Air temperature Night - Germination;14;;;°C;UO;http://purl.obolibrary.org/obo/UO_0000027
+Average length of the light period - Germination;16;;;h;UO;http://purl.obolibrary.org/obo/UO_0000032
+Light intensity - Germination;140;;;µmol m-2 s-1;;
+Fraction of outside light intercepted by growth facility components and surrounding structures - Germination;0;;;;;
+Average relative humidity during the light period - Germination;75;;;%;UO;http://purl.obolibrary.org/obo/UO_0000187
+Average relative humidity during the dark period - Germination;75;;;%;UO;http://purl.obolibrary.org/obo/UO_0000187
+Air temperature Day - Post Germination;20;;;°C;UO;http://purl.obolibrary.org/obo/UO_0000027
+Air temperature Night - Post Germination;18;;;°C;UO;http://purl.obolibrary.org/obo/UO_0000027
+Average length of the light period - Post Germination;16;;;h;UO;http://purl.obolibrary.org/obo/UO_0000032
+Light intensity - Post Germination;140;;;µmol m-2 s-1;;
+Fraction of outside light intercepted by growth facility components and surrounding structures - Post Germination;0;;;;;
+Average relative humidity during the light period - Post Germination;60;;;%;UO;http://purl.obolibrary.org/obo/UO_0000187
+Average relative humidity during the dark period - Post Germination;60;;;%;UO;http://purl.obolibrary.org/obo/UO_0000187
+Watering regimen;initial watering before germination from bottom, then top irrigation;;;;;
+Composition of nutrient solutions used for irrigation;water;;;;;
