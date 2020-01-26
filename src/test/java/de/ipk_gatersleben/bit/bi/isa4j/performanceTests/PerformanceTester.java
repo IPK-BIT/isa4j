@@ -1,22 +1,33 @@
 package de.ipk_gatersleben.bit.bi.isa4j.performanceTests;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
+import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
 import de.ipk_gatersleben.bit.bi.isa4j.components.DataFile;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Factor;
+import de.ipk_gatersleben.bit.bi.isa4j.components.FactorValue;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Material;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Ontology;
 import de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.ParameterValue;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Process;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
+import de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
@@ -127,11 +138,169 @@ public class PerformanceTester {
 		return bean.getCurrentThreadCpuTime() - startingTime;
 	}
 	
+	public static long measureRealWorld(ThreadMXBean bean, int nRows) throws IOException {
+		long startingTime = bean.getCurrentThreadCpuTime();
+		
+		Investigation investigation = new Investigation("i1");
+		Study study = new Study("s1", "s_study.txt");
+		investigation.addStudy(study);
+		
+		HashMap<String, Ontology> ontologies = new HashMap<String, Ontology>();
+		ontologies.put("NCBITaxon", new Ontology("NCBITaxon", new URL("http://purl.obolibrary.org/obo/ncbitaxon"), null, "National Center for Biotechnology Information (NCBI) Organismal Classification"));
+		ontologies.put("AGRO", new Ontology("AGRO", new URL("http://purl.obolibrary.org/obo/agro/releases/2018-05-14/agro.owl"), "2018-05-14", "Agronomy Ontology"));
+		ontologies.put("UO", new Ontology("UO", new URL("http://data.bioontology.org/ontologies/UO"), "38802", "Units of Measurement Ontology"));
+		investigation.setOntologies(new ArrayList<>(ontologies.values()));
+		
+	    // Factors
+		Factor faSoilCover = new Factor("Soil Cover");
+		Factor faPlantMovement = new Factor("Plant Movement");
+		study.setFactors(List.of(faSoilCover, faPlantMovement));
+
+		FactorValue favCovered = new FactorValue(faSoilCover, "covered");
+		FactorValue favUncovered = new FactorValue(faSoilCover, "uncovered");
+		FactorValue favRotating = new FactorValue(faPlantMovement, "rotating");
+		FactorValue favStationary = new FactorValue(faPlantMovement, "stationary");
+		
+	    // Protocols
+	    Protocol phenotyping = new Protocol("Phenotyping");
+	    Protocol growth      = new Protocol("Growth");
+	    Protocol watering    = new Protocol("Watering");
+	    study.addProtocol(phenotyping);
+	    study.addProtocol(growth);
+	    study.addProtocol(watering);
+
+	    Assay assay = new Assay("a_assay.txt");
+	    study.addAssay(assay);
+	    
+	    List<Characteristic> commonCharacteristics = List.of(    
+		    new Characteristic("Species",new OntologyAnnotation("thaliana")),
+	        new Characteristic("Infraspecific Name",new OntologyAnnotation(" ")),
+	        new Characteristic("Biological Material Latitude",new OntologyAnnotation("51.827721")),
+	        new Characteristic("Biological Material Longitude",new OntologyAnnotation("11.27778")),
+	        new Characteristic("Material Source ID",new OntologyAnnotation("http://eurisco.ipk-gatersleben.de/apex/f?p=103:16:::NO::P16_EURISCO_ACC_ID:1668187")),
+	        new Characteristic("Seed Origin",new OntologyAnnotation("http://arabidopsis.info/StockInfo?NASC_id=22680")),
+	        new Characteristic("Growth Facility",new OntologyAnnotation("small LemnaTec phytochamber")),
+	        new Characteristic("Material Source Latitude",new OntologyAnnotation("51.827721")),
+	        new Characteristic("Material Source Longitude",new OntologyAnnotation("11.27778"))
+        );
+	    Characteristic sampleCharacteristic = new Characteristic("Observation Unit Type", new OntologyAnnotation("plant"));
+	    
+	    // Growth Parameters
+	    HashMap<String, String[]> growthParameters = new HashMap<String, String[]>(); // Name => [Value, Value REF, Value Accession, Unit, Unit REF, Unit Accession]
+	    BufferedReader csvReader = new BufferedReader(new InputStreamReader(PerformanceTester.class.getResourceAsStream("growth_parameters.csv")));
+	    String row = csvReader.readLine(); // Skip the first line (headers)
+	    while ((row = csvReader.readLine()) != null) {
+	        String[] data = row.split(";", -1);
+	        growthParameters.put(data[0], Arrays.copyOfRange(data, 1, data.length));
+	        growth.addParameter(new ProtocolParameter(data[0]));
+	    }
+	    csvReader.close();
+	    
+	    ArrayList<ParameterValue> growthParameterValues = new ArrayList<ParameterValue>();
+	    for(ProtocolParameter param : growth.getParameters()) {
+	    	String[] fieldValues = growthParameters.get(param.getName().getTerm());
+	    	OntologyAnnotation unit = null;
+	    	OntologyAnnotation value = null;
+	    	if(!fieldValues[3].isEmpty()) {
+	    		if(!fieldValues[4].isEmpty()) {
+	    			unit = new OntologyAnnotation(fieldValues[3], fieldValues[5], ontologies.get(fieldValues[4]));
+	    		} else {
+	    			unit = new OntologyAnnotation(fieldValues[3]);
+	    		}
+	    		value = new OntologyAnnotation(fieldValues[0]);
+	    	} else {
+	    		if(!fieldValues[1].isEmpty()) {
+	    			value = new OntologyAnnotation(fieldValues[0], fieldValues[2], ontologies.get(fieldValues[1]));
+	    		} else
+	    			value = new OntologyAnnotation(fieldValues[0]);
+	    	}
+	    	growthParameterValues.add(new ParameterValue(param, value, unit));
+	    }
+		
+		study.openFile();
+		for(int i = 0; i < nRows; i++) {
+			Source source = new Source("Plant_"+i);
+			Sample sample = new Sample("1135FA-"+i);
+			
+			Process process = new Process(growth);
+			process.setInput(source);
+			process.setOutput(sample);
+			
+			source.setCharacteristics(commonCharacteristics);
+			process.setParameterValues(growthParameterValues);
+			sample.addCharacteristic(sampleCharacteristic);
+			
+	        if(i % 2 == 0)
+	            sample.setFactorValues(List.of(favCovered, favRotating));
+	        else
+	        	sample.setFactorValues(List.of(favUncovered, favStationary));
+			
+			if(!study.hasWrittenHeaders())
+				study.writeHeadersFromExample(source);
+			study.writeLine(source);
+		}
+		study.closeFile();
+		
+	    // Read Phenotyping Parameters
+		HashMap<String, ProtocolParameter> phenotypingParameters = new HashMap<String, ProtocolParameter>();
+	    csvReader = new BufferedReader(new InputStreamReader(PerformanceTester.class.getResourceAsStream("phenotyping_parameters.csv")));
+	    row = csvReader.readLine(); // Skip the first line (headers)
+	    while ((row = csvReader.readLine()) != null) {
+	        String[] data = row.split(";", -1);
+	        ProtocolParameter param = new ProtocolParameter(data[0]);
+	        phenotypingParameters.put(data[0], param);
+	        phenotyping.addParameter(param);
+	    }
+	    csvReader.close();
+	    
+	    HashMap<String, ProtocolParameter> wateringParameters = new HashMap<String, ProtocolParameter>();
+	    wateringParameters.put("Irrigation Type", new ProtocolParameter("Irrigaiton Type"));
+	    wateringParameters.put("Volume", new ProtocolParameter("Volume"));
+
+	    Comment datafileComment = new Comment("Image analysis tool", "IAP");
+		assay.openFile();
+		for(int i = 0; i < nRows; i++) {
+			Sample sample = new Sample("1135FA-"+i);
+			
+			Process procPhenotyping = new Process(phenotyping);
+			procPhenotyping.setInput(sample);
+			
+			DataFile dataFile = new DataFile("Raw Data File", ""+i+"FA_images/fluo/side/54/1135FA1001 side.fluo das_54 DEG_000 2011-10-12 11_09_36.png");
+			procPhenotyping.setOutput(dataFile);
+			
+			procPhenotyping.setParameterValues(List.of(
+                new ParameterValue(phenotypingParameters.get("Imaging Time"), "28.09.2011 12:34:37"),
+                new ParameterValue(phenotypingParameters.get("Camera Configuration"), "A_Fluo_Side_Big_Plant"),
+                new ParameterValue(phenotypingParameters.get("Camera Sensor"),"FLUO"),
+                new ParameterValue(phenotypingParameters.get("Camera View"), "side"),
+                new ParameterValue(phenotypingParameters.get("Imaging Angle"), 90.0, new OntologyAnnotation("degree", "http://purl.obolibrary.org/obo/UO_0000185", ontologies.get("UO")))
+			));
+			
+			Process procWatering = new Process(watering);
+			procWatering.setInput(dataFile);
+			DataFile dataFile2 = new DataFile("Derived Data File", "derived_data_files/das_"+i+".txt");
+			dataFile2.comments().add(datafileComment);
+			procPhenotyping.setOutput(dataFile2);
+			
+			procWatering.setParameterValues(List.of(
+	    	    new ParameterValue(wateringParameters.get("Irrigation Type"), "automated (LemnaTec target weight)"),
+	    	    new ParameterValue(wateringParameters.get("Volume"), 80.4, new OntologyAnnotation("g", "http://purl.obolibrary.org/obo/UO_0000021", ontologies.get("UO")))
+			));
+			
+			if(!assay.hasWrittenHeaders())
+				assay.writeHeadersFromExample(sample);
+			assay.writeLine(sample);
+		}
+		assay.closeFile();
+		
+		return bean.getCurrentThreadCpuTime() - startingTime;
+	}
+	
 	public static void main(String[] args) throws IOException {
 		ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 		
 		// Warm up (discarded)
-		measureReduced(threadBean, 1000);
+		measureRealWorld(threadBean, 1000);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter("isa4J_performance_results.csv"));
 		
@@ -141,6 +310,9 @@ public class PerformanceTester {
 			}
 			for(int x = 0; x < 5; x++) {
 				writer.write("isa4J,reduced,"+nRows+","+measureReduced(threadBean, nRows)+",-1,"+LocalDateTime.now()+"\n");
+			}
+			for(int x = 0; x < 5; x++) {
+				writer.write("isa4J,real_world,"+nRows+","+measureRealWorld(threadBean, nRows)+",-1,"+LocalDateTime.now()+"\n");
 			}
 		}
 		

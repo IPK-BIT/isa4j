@@ -174,9 +174,6 @@ def measure_real_world(n_rows):
     fav_rotating = FactorValue(factor_name = fa_plant_movement, value="rotating")
     fav_stationary = FactorValue(factor_name = fa_plant_movement, value="stationary")
 
-    sample_collection_protocol = Protocol(name="sample collection")
-    study.protocols.append(sample_collection_protocol)
-
     # Protocols
     prot_phenotyping = Protocol(name="Phenotyping")
     prot_growth      = Protocol(name="Growth")
