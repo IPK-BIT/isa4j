@@ -9,5 +9,6 @@ doc/
 /out/
 /target/
 /logs/
-
 test.txt
+isa4J_performance_results.csv
+src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/performance_test_results.csv

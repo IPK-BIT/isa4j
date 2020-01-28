@@ -1,11 +1,16 @@
 import time
 import csv
 import os
+import gc
 from datetime import datetime
 from memory_profiler import memory_usage
 from isatools.model import *
 from isatools import isatab
 
+# This is the first method of 3 that measures how long it takes to write n_rows in Study and Assay File each.
+# It returns the CPU execution time in NS
+# The rows in this example are as simple as possible, no extra Characteristics, FactorValues etc.
+# It is a simplified version of the example given in the docs: https://isatools.readthedocs.io/en/latest/example-createSimpleISAtab.html
 def measure_minimal(n_rows):
     starting_time = time.process_time_ns()
     investigation = Investigation()
@@ -54,6 +59,10 @@ def measure_minimal(n_rows):
     return time.process_time_ns() - starting_time
 
 
+# This is the second complexity level. Basically the example from the docs,
+# just without Investigation File Attributes:
+# https://isatools.readthedocs.io/en/latest/example-createSimpleISAtab.html
+# Also, batch_create_materials was replaced with a manual loop because it was super slow
 def measure_reduced(n_rows):
     starting_time = time.process_time_ns()
     investigation = Investigation()
@@ -89,18 +98,6 @@ def measure_reduced(n_rows):
     study.protocols.append(extraction_protocol)
     sequencing_protocol = Protocol(name='sequencing')
     study.protocols.append(sequencing_protocol)
-
-    # To build out assay graphs, we enumereate the samples from the study-level, and for each sample we create an
-    # extraction process and a sequencing process. The extraction process takes as input a sample material, and produces
-    # an extract material. The sequencing process takes the extract material and produces a data file. This will
-    # produce three graphs, from sample material through to data, as follows:
-    #
-    # (sample_material-0)->(extraction)->(extract-0)->(sequencing)->(sequenced-data-0)
-    # (sample_material-1)->(extraction)->(extract-1)->(sequencing)->(sequenced-data-1)
-    # (sample_material-2)->(extraction)->(extract-2)->(sequencing)->(sequenced-data-2)
-    #
-    # Note that the extraction processes and sequencing processes are distinctly separate instances, where the three
-    # graphs are NOT interconnected.
 
     for i, sample in enumerate(study.samples):
 
@@ -148,6 +145,7 @@ def measure_reduced(n_rows):
     isatab.dump(investigation, "./")
     return time.process_time_ns() - starting_time
 
+# These Rows were modelled after https://doi.ipk-gatersleben.de/DOI/1c0c2b3e-7478-48b1-81f6-47981f44a5cb/3e0482d7-4580-4d77-8b89-653f4171d0f6/2/1847940088
 def measure_real_world(n_rows):
     starting_time = time.process_time_ns()
     investigation = Investigation()
@@ -308,15 +306,21 @@ def measure_real_world(n_rows):
 with open('performance_test_results.csv', 'w') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(["platform", "row.complexity", "n.rows", "time.in.ns", "memory.usage.in.mb", "date.test.performed"])
-    for i in []:
+    # Warm-Up
+    measure_real_world(100)
+    for i in [1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000]:
         for r in range(0, 5):
             writer.writerow(["isatools", "minimal", i, measure_minimal(i), -1, str(datetime.now())])
-    for i in []:
+            gc.collect() # do this now so it doesn't interfere with the running time
         for r in range(0, 5):
             writer.writerow(["isatools", "reduced", i, measure_reduced(i), -1, str(datetime.now())])
-    for i in [10,10000]:
+            gc.collect()
         for r in range(0, 5):
-            writer.writerow(["isatools", "real_world", i, measure_real_world(i), max(memory_usage((measure_real_world, (i,)), interval=1)), str(datetime.now())])
+            # Here we have to split it into two because we're measuring memory usage as well
+            time_taken = measure_real_world(i)
+            gc.collect()
+            writer.writerow(["isatools", "real_world", i, time_taken, max(memory_usage((measure_real_world, (i,)), interval=1)), str(datetime.now())])
+            gc.collect() # also collect GC after each memory measuring run
 
 os.remove("i_investigation.txt")
 os.remove("s_study.txt")
