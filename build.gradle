@@ -1,12 +1,21 @@
 plugins {
     id 'java-library'
     id "com.github.hierynomus.license" version "0.15.0"
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+    id "net.researchgate.release" version "2.6.0"
+  	id 'io.codearte.nexus-staging' version '0.12.0'
 }
 project.ext {
     jUnitVersion = '5.5.0'
 }
 
+apply plugin:'java'
+apply plugin:'maven'
+apply plugin:'signing'
 apply plugin:'com.github.hierynomus.license'
+apply plugin:'com.github.johnrengelman.shadow'
+apply plugin: 'net.researchgate.release'
+apply plugin: 'io.codearte.nexus-staging'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -14,7 +23,8 @@ java {
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
+	jcenter()
 }
  
 dependencies {
@@ -32,7 +42,6 @@ test {
 	else{
 		maxParallelForks = Runtime.runtime.availableProcessors()
 	}
-
 	minHeapSize = "4g"
 	maxHeapSize = "8g"
 }
@@ -55,3 +64,136 @@ sourceSets {
             resources {srcDirs=["src/test/resources"]}
         }
 	}
+
+task javadocJar(type: Jar) {
+	 	classifier = 'javadoc'
+	    from javadoc
+	}
+
+	task sourcesJar(type: Jar) {
+	    classifier = 'sources'
+	    from sourceSets.main.allSource
+	}
+	
+	shadowJar {
+   		classifier = 'jar-with-dependencies'
+	}
+	
+	artifacts {
+   		archives javadocJar, sourcesJar, shadowJar
+	}
+	
+	if(!project.hasProperty('signing.keyId') || !project.hasProperty('signing.password')|| !project.hasProperty('signing.secretKeyRingFile')){   
+		println "WARNING: If you want to sign your archives please provide the 'signing.keyId' and 'signing.password' and 'signing.secretKeyRingFile' properties"
+	}
+	else{
+		signing {
+		    sign configurations.archives
+		}
+	}
+	
+uploadArchives {
+		repositories {
+			mavenDeployer {
+				if(!project.hasProperty('nexusUsername') || !project.hasProperty('nexusPassword')){   
+	            	println "WARNING: If you want to release to Sonatype please provide the 'nexusUsername' and 'nexusPassword' properties"
+				}
+				else{
+				beforeDeployment { 
+						MavenDeployment deployment -> signing.signPom(deployment) 
+					}
+					repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+						authentication(userName: nexusUsername, password: nexusPassword)
+						if(project.hasProperty('systemProp.https.proxyHost') && project.hasProperty('systemProp.https.proxyPort')){
+							println "INFO: Using system proxy for upload : "+System.properties['https.proxyHost']+":"+System.properties['https.proxyPort']
+							proxy(host: System.properties['https.proxyHost'], port: System.properties['https.proxyPort'] as Integer, type: 'http')
+						}
+					}
+					snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+						authentication(userName: nexusUsername, password: nexusPassword)
+						if(project.hasProperty('systemProp.https.proxyHost') && project.hasProperty('systemProp.https.proxyPort')){
+							println "INFO: Using system proxy for upload : "+System.properties['https.proxyHost']+":"+System.properties['https.proxyPort']
+							proxy(host: System.properties['https.proxyHost'], port: System.properties['https.proxyPort'] as Integer, type: 'http')
+						}					
+					}
+				}
+				pom.project {
+		        name = projectname
+		        packaging = 'jar'
+		        artifactId = projectname
+		        description = projectdescription
+		        url = projecturl
+	
+		        scm {
+		          	connection 'scm:git:https://github.com/IPK-BIT/isa4J.git'
+		          	developerConnection 'scm:git:https://github.com/IPK-BIT/isa4J.git'
+		          	url 'https://github.com/IPK-BIT/isa4J.git'
+		        }
+	
+		        licenses {
+		          	license {
+		            	name 'GNU GPLv3 license'
+		            	url 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+		          	}
+		        }
+	
+		        developers {
+		         	developer {
+			            name 'Dennis Psaroudakis'
+			            email 'psaroudakis@ipk-gatersleben.de'
+			            organization = 'IPK Gatersleben'
+			            organizationUrl 'http://www.ipk.gatersleben.de'
+			          }
+			          developer {
+			            name 'Dr. Daniel Arend'
+			            email 'arendd@ipk-gatersleben.de'
+			            organization = 'IPK Gatersleben'
+			            organizationUrl 'http://www.ipk.gatersleben.de'
+			          }
+		        }
+	      	}
+			}
+		}	
+}
+uploadArchives.dependsOn test	
+
+nexusStaging {
+	if(project.hasProperty('nexusUsername') && project.hasProperty('nexusPassword')){
+		stagingProfileId  = "isa4J_ipk_gatersleben_de"	
+		username = nexusUsername
+		password = nexusPassword
+	}
+}
+
+release {
+    failOnCommitNeeded = false
+    failOnPublishNeeded = true
+    failOnSnapshotDependencies = true
+    failOnUnversionedFiles = true
+    failOnUpdateNeeded = true
+    revertOnFail = true
+
+  	preCommitText = ''
+  	preTagCommitMessage = '[gradle-release-plugin] - prepare release '
+    tagCommitMessage = '[gradle-release-plugin] - creating tag: '
+    newVersionCommitMessage = '[gradle-release-plugin] - prepare for next development iteration '
+    
+    tagTemplate = "isa4J-"+'$version'
+    versionPropertyFile = 'gradle.properties'
+    versionProperties = []
+    buildTasks = []
+   
+    scmAdapters = [
+        net.researchgate.release.GitAdapter
+    ]
+
+    git {
+        requireBranch = 'master'
+        pushToRemote = 'origin'
+        pushToBranchPrefix = ''
+        commitVersionFileOnly = false
+        signTag = false
+    }
+}
+
+project.tasks.afterReleaseBuild.dependsOn project.getSubprojects().collect({it.getTasks().getByName("uploadArchives")})
