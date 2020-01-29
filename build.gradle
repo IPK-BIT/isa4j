@@ -6,9 +6,6 @@ project.ext {
     jUnitVersion = '5.5.0'
 }
 
-group = 'de.ipk_gatersleben.bit.bi'
-version = '1.0'
-
 apply plugin:'com.github.hierynomus.license'
 
 java {
