@@ -7,10 +7,12 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.constants;
 
+import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
+
 /**
  * Constants for fixed attribute names for {@link Assay} file creation
  *
- * @author liufe, arendd
+ * @author liufe, arendd, psaroudakis
  */
 public enum StudyAssayAttribute {
     SOURCE_NAME("Source Name"),

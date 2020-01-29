@@ -7,10 +7,12 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.constants;
 
+import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
+
 /**
  * List of constant attributes for the {@link Investigation} files.
  * 
- * @author liufe, arendd
+ * @author liufe, arendd, psaroudakis
  */
 public enum InvestigationAttribute {
 

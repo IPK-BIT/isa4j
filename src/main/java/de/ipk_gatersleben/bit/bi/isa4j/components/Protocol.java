@@ -16,9 +16,9 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
  * Class to represent a protocol/process for a {@link Study}, which contains
- * several {@link Parameter}
+ * several {@link ParameterValue}
  *
- * @author liufe, arendd
+ * @author liufe, arendd, psaroudakis
  */
 public class Protocol implements Commentable {
 	
@@ -67,7 +67,7 @@ public class Protocol implements Commentable {
 
     /**
      * @param name         name of the {@link Protocol}
-     * @param type type of the {@link Protocol}
+     * @param typeOntology type of the {@link Ontology}
      */
     public Protocol(String name, OntologyAnnotation typeOntology) {
         this.name = name;
@@ -80,7 +80,7 @@ public class Protocol implements Commentable {
 	}
 	
 	/**
-     * Add a {@link Parameter} to {@link Protocol}
+     * Add a {@link ParameterValue} to {@link Protocol}
      *
      * @param parameter parameter, that you want to add
      */
@@ -123,7 +123,7 @@ public class Protocol implements Commentable {
     }
 
     /**
-     * Get list of {@link Parameter} of the {@link Protocol}
+     * Get list of {@link ParameterValue} of the {@link Protocol}
      *
      * @return parameters of protocol
      */
@@ -195,9 +195,9 @@ public class Protocol implements Commentable {
     }
 
     /**
-     * Set the type of the {@link Protocol}
+     * Set the type of the {@link Ontology}
      *
-     * @param type type of protocol
+     * @param typeOntology type of {@link Ontology}
      */
     public void setType(OntologyAnnotation typeOntology) {
         this.type = typeOntology;

@@ -7,6 +7,7 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.util.List;
 import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
@@ -15,7 +16,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
  * Class representing a {@link Publication} connected to a {@link Investigation}
  * or {@link Study}
  *
- * @author liufe, arendd
+ * @author liufe, arendd, psaroudakis
  */
 public class Publication implements Commentable {
 	

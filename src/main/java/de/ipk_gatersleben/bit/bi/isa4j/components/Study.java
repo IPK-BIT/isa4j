@@ -18,7 +18,10 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 /**
  * Class to represent a study in context of the ISA hierarchy. It is used to
  * describe the studied objects and belong to a {@link Investigation}
+ * 
+ * @author psaroudakis, arendd
  */
+
 public class Study extends WideTableFile implements Commentable {
 	
 
@@ -132,9 +135,9 @@ public class Study extends WideTableFile implements Commentable {
 	}
 
 	/**
-	 * Add a new {@link DesignDescriptor} to the list
+	 * Add a new design descriptior to the list
 	 *
-	 * @param designDescriptor new {@link DesignDescriptor} to add
+	 * @param designDescriptor new design descriptor to add
 	 */
 	public void addDesignDescriptor(OntologyAnnotation designDescriptor) {
 		Objects.requireNonNull(designDescriptor);

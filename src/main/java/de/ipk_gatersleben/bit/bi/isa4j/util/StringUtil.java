@@ -12,7 +12,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 /**
  * Utility class with functions to handle several {@link String} tasks
  * 
- * @author liufe, arendd
+ * @author liufe, arendd, psaroudakis
  *
  */
 public class StringUtil {
@@ -21,24 +21,28 @@ public class StringUtil {
 	 * index of ? this function is used only by writeToFile, get the index of ? and
 	 * use by replace of {@link StringBuilder}.
 	 *
-	 * @param stringBuilder {@link StringBuilder} to take parameter
-	 * @param parameter     to put in the {@link StringBuilder}
+	 * @param attribute the attribute to add
+	 * @param parameter to put in the {@link StringBuilder}
 	 * @return the {@link StringBuilder}
 	 */
 	public static <T> String putNameInAttribute(T attribute, String parameter) {
 		return attribute.toString().replace(Symbol.ATTRIBUTE_REPLACE.toString(), parameter);
 	}
-	
+
 	/**
-	 * Removes Symbol.TABs and Symbol.ENTERs from an input String and replaces them with
-	 * Symbol.EMPTY. To be used on any String input by the user that ends up in the ISATab files.
+	 * Removes Symbol.TABs and Symbol.ENTERs from an input String and replaces them
+	 * with Symbol.EMPTY. To be used on any String input by the user that ends up in
+	 * the ISATab files.
+	 * 
 	 * @param input
 	 * @return
 	 */
 	public static String sanitize(String input) {
-		if(input == null)
+		if (input == null) {
 			return null;
-		else
-			return input.replaceAll(Symbol.TAB.toString(), Symbol.SPACE.toString()).replaceAll(Symbol.ENTER.toString(),  Symbol.SPACE.toString());
+		} else {
+			return input.replaceAll(Symbol.TAB.toString(), Symbol.SPACE.toString()).replaceAll(Symbol.ENTER.toString(),
+					Symbol.SPACE.toString());
+		}
 	}
 }
