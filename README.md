@@ -38,8 +38,8 @@ To refer to an ontology later on in the Investigation, Study or Assay files, def
 Ontology creditOntology = new Ontology(
 	"CRediT",						// Name of the ontology
 	new URL("http://purl.org/credit/ontology"),		// URL to the ontology
-	"1.2",						// Version of the ontology
-	"CASRAI Contributor Roles Taxonomy (CRediT)"	// Short description of the ontotlogy
+	"1.2",							// Version of the ontology
+	"CASRAI Contributor Roles Taxonomy (CRediT)"		// Short description of the ontotlogy
 );
 
 investigation.addOntology(creditOntology);
@@ -47,29 +47,30 @@ investigation.addOntology(creditOntology);
 
 #### 3.1.3 OntologyAnnotations
 To improve the re-usability and quality of your metadata it is helpful to use as much as possible `OntologyAnnotation`s for described attributes instead of a simple String.
-They allow you to connect a `term` to an Ontology(`term source`) and identify it with a `term accession number`.
+They allow you to connect a `term` to an ontology (`term source`) and identify it with a `term accession number`.
 The latter two are optional though, and if you don't set them an OntologyAnnotation will be formatted like a simple String in most cases.
 
 ```java
 OntologyAnnotation paperPublished = new OntologyAnnotation(
 	"Published",			// Term
-	"<TermAccessionNumber>",		// Term Accession Number
+	"<TermAccessionNumber>",	// Term Accession Number
 	creditOntology			// Ontology object
 );
 ```
 
 #### 3.1.4 Publications
-If you want to link any Publications to the Investigation, you can do so similarly to Ontologies
+To link any publication to the Investigation, you can do so similarly to ontologies:
 
 ```java
-Publication statsStories = new Publication("Five Things I wish my Mother had told me, about Statistics that is", "Philip M. Dixon");
+Publication statsStories = new Publication("Five Things ... about Statistics that is", "Philip M. Dixon");
 statsStories.setDOI("https://doi.org/10.4148/2475-7772.1013");
 statsStories.setStatus(paperPublished); // this is the OntologyAnnotation we defined before
+
 investigation.addPublication(statsStories);
 ```
 
 #### 3.1.5 Contacts
-Contacts can be added as Objects of the type `Person`:
+Contacts can be added using the `Person` type:
 
 ```java
 Person schlomo = new Person(
@@ -79,6 +80,7 @@ Person schlomo = new Person(
 	"Ministry of Silly Walks", // Affiliation
 	"4 Hanover House, 14 Hanover Square, London W1S 1HP" // Address
 );
+
 Person agatha  = new Person("Agatha", "Stroganoff", null, "Stroganoff Essential Eels", null);
 // Agatha doesn't have an email or a postal address, but she has a fax number
 agatha.setFax("+49 3553N714L 33l2");
