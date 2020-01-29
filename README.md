@@ -63,6 +63,7 @@ To link any publication to the Investigation, you can do so similarly to ontolog
 
 ```java
 Publication statsStories = new Publication("Five Things ... about Statistics that is", "Philip M. Dixon");
+
 statsStories.setDOI("https://doi.org/10.4148/2475-7772.1013");
 statsStories.setStatus(paperPublished); // this is the OntologyAnnotation we defined before
 
@@ -82,22 +83,22 @@ Person schlomo = new Person(
 );
 
 Person agatha  = new Person("Agatha", "Stroganoff", null, "Stroganoff Essential Eels", null);
-// Agatha doesn't have an email or a postal address, but she has a fax number
-agatha.setFax("+49 3553N714L 33l2");
+agatha.setFax("+49 3553N714L 33l2"); // Agatha doesn't have an email or a postal address, but a fax number
+
 // Add them as investigation contacts
 investigation.addContact(schlomo);
 investigation.addContact(agatha);
 ```
 
 #### 3.1.6 Comments
-Many objects can take comments. Their `CommentCollection` is accessible through the `.comments()` method and provides the methods `add(Comment)`, `getAll`, and `findByName(String)`.
+The different components of the data model can be enriched with comments. Their `CommentCollection` is accessible through the `.comments()` method and provides the methods `add(Comment)`, `getAll`, and `findByName(String)`.
 
 ```java
-schlomo.comments().add(new Comment("Smell", "Very bad"));
-schlomo.comments().add(new Comment("Hair", "Fabolous"));
+schlomo.comments().add(new Comment("method name", "MyMethod"));
+schlomo.comments().add(new Comment("analysis software", "Analyzer Pro"));
 schlomo.comments().getAll() // Returns a List<Comment>
-schlomo.comments().findByName("Smell") // Returns an Optional<Comment>
-investigation.comments().add(new Comment("Usability", "None"));
+schlomo.comments().findByName("method name") // Returns an Optional<Comment>
+investigation.comments().add(new Comment("Usability", "high"));
 ```
 
 #### 3.1.7 Studies
