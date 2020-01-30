@@ -12,8 +12,6 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 /**
  * Class to represent an assay in the ISA hierarchy. It is used to
  * describe the measured traits and belongs to a {@link Study}
- */
-/**
  * @author psaroudakis
  *
  */
