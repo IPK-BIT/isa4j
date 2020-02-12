@@ -7,8 +7,15 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+/**
+ * Interface, which allows to enrich a component with a list of
+ * {@link Comment}s.
+ * 
+ * @author psaroudakis, arendd
+ *
+ */
 interface Commentable {
-	
+
 	public CommentCollection comments();
 
 }
