@@ -1,3 +1,8 @@
+---
+title: Home
+nav_order: 1
+---
+
 # Welcome
 isa4J is a comprehensive and scalable Java Library for the programmatic generation of experimental metadata descriptions using the ISATab container format.
 We're assuming you're familiar with the ISA-Tab framework in the remainder of the manual; if you're not, please [read up about it first](https://isa-specs.readthedocs.io/en/latest/).
