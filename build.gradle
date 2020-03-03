@@ -196,4 +196,4 @@ release {
     }
 }
 
-project.tasks.afterReleaseBuild.dependsOn project.getSubprojects().collect({it.getTasks().getByName("uploadArchives")})
+project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
