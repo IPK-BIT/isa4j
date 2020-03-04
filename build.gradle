@@ -202,7 +202,7 @@ release {
 createReleaseTag.enabled = false
 
 project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("githubRelease")})
-//project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
+project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
 
 githubRelease {
 
