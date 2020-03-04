@@ -3,6 +3,7 @@ plugins {
     id "com.github.hierynomus.license" version "0.15.0"
     id "com.github.johnrengelman.shadow" version "5.0.0"
     id "net.researchgate.release" version "2.6.0"
+    id "com.github.breadmoirai.github-release" version "2.2.11"
   	id 'io.codearte.nexus-staging' version '0.12.0'
 }
 project.ext {
@@ -15,6 +16,7 @@ apply plugin:'signing'
 apply plugin:'com.github.hierynomus.license'
 apply plugin:'com.github.johnrengelman.shadow'
 apply plugin: 'net.researchgate.release'
+apply plugin: "com.github.breadmoirai.github-release"
 apply plugin: 'io.codearte.nexus-staging'
 
 java {
@@ -196,4 +198,30 @@ release {
     }
 }
 
-project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
+//skip the task to tag this relsase because it is done by the githubRelease task
+createReleaseTag.enabled = false
+
+project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("githubRelease")})
+//project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
+
+githubRelease {
+
+	if(project.hasProperty('githubtoken')){
+    	token githubtoken
+    }
+   				// This is your personal access token with Repo permissions
+                         				// You get this from your user settings > developer settings > Personal Access Tokens
+    owner "IPK-BIT" 			// default is the last part of your group. Eg group: "com.github.breadmoirai" => owner: "breadmoirai"
+    repo "isa4J" 						// by default this is set to your project name
+    tagName "isa4J-"+ "${project.version}" 		// by default this is set to "v${project.version}"
+    targetCommitish "master" 			// by default this is set to "master"
+    releaseName "isa4J-"+ "${project.version}"				// Release title, by default this is the same as the tagName
+    body "" 							// by default this is empty
+    draft false 						// by default this is false
+    prerelease false 					// by default this is false
+   // releaseAssets jar.destinationDir 		// this points to which files you want to upload as assets with your release
+   releaseAssets.from("build/libs/isa4J-${project.version}-jar-with-dependencies.jar","build/libs/isa4J-${project.version}.jar","build/libs/isa4J-${project.version}-sources.jar","build/libs/isa4J-${project.version}-javadoc.jar")
+    overwrite false 								// by default false; if set to true, will delete an existing release with the same tag and name
+    dryRun false 									// by default false; you can use this to see what actions would be taken without making a release
+    apiEndpoint "https://api.github.com" 			// should only change for github enterprise users
+}
