@@ -1,0 +1,5 @@
+Source Name	Protocol REF	Sample Name	Characteristics[Organism]	Term Source REF	Term Accession Number
+source_material-0	sample collection	sample_material-0	Homo Sapiens	NCBITaxon	http://purl.bioontology.org/ontology/NCBITAXON/9606
+source_material-1	sample collection	sample_material-1	Homo Sapiens	NCBITaxon	http://purl.bioontology.org/ontology/NCBITAXON/9606
+source_material-2	sample collection	sample_material-2	Homo Sapiens	NCBITaxon	http://purl.bioontology.org/ontology/NCBITAXON/9606
+source_material-3	sample collection	sample_material-3	Homo Sapiens	NCBITaxon	http://purl.bioontology.org/ontology/NCBITAXON/9606

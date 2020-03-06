@@ -94,7 +94,7 @@ Assay File:
 |1135FA-0    |Phenotyping  |28.09.2011 12:34:37           |A_Fluo_Side_Big_Plant                 |FLUO                           |side                         |                             90|degree |UO              |http://purl.obolibrary.org/obo/UO_0000185 |derived_data_files/das_0.txt |IAP                          |
 |1135FA-1    |Phenotyping  |28.09.2011 12:34:37           |A_Fluo_Side_Big_Plant                 |FLUO                           |side                         |                             90|degree |UO              |http://purl.obolibrary.org/obo/UO_0000185 |derived_data_files/das_1.txt |IAP                          |
 |1135FA-2    |Phenotyping  |28.09.2011 12:34:37           |A_Fluo_Side_Big_Plant                 |FLUO                           |side                         |                             90|degree |UO              |http://purl.obolibrary.org/obo/UO_0000185 |derived_data_files/das_2.txt |IAP                          |
-|1135FA-3    |Phenotyping  |28.09.2011 12:34:37           |A_Fluo_Side_Big_Plant                 |FLUO                           |side                         |                             90|degree |UO              |http://purl.obolibrary.org/obo/UO_0000185 |derived_data_files/das_3.txt |IAP  
+|1135FA-3    |Phenotyping  |28.09.2011 12:34:37           |A_Fluo_Side_Big_Plant                 |FLUO                           |side                         |                             90|degree |UO              |http://purl.obolibrary.org/obo/UO_0000185 |derived_data_files/das_3.txt |IAP                          |
 
 ## Results
 
@@ -186,7 +186,7 @@ segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log)*0.98, 1.5, -max(memSub.
 segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 1, -min(memSub.isatools$memory.usage.in.mb.log), col="#EEF8F6", xpd=NA)
 ```
 
-![](ScalabilityEvaluation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
 #dev.off()
@@ -210,7 +210,7 @@ abline(model.isatools$coefficients[1]+model.isatools$coefficients[4], model.isat
 abline(model.isatools$coefficients[1]+model.isatools$coefficients[3], model.isatools$coefficients[2], col="red")
 ```
 
-![](ScalabilityEvaluation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 summary(model.isatools)
@@ -256,7 +256,7 @@ abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[4], model.isa4J$coef
 abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[3], model.isa4J$coefficients[2], col="red")
 ```
 
-![](ScalabilityEvaluation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 summary(model.isa4J)
@@ -308,7 +308,7 @@ abline(model.both)
 abline(model.both$coefficients[1]+model.both$coefficients[3], model.both$coefficients[2]+model.both$coefficients[4], col="red")
 ```
 
-![](ScalabilityEvaluation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ```r
 summary(model.both)

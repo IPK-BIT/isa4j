@@ -1,0 +1,5 @@
+Sample Name	Protocol REF	Parameter Value[Imaging Time]	Parameter Value[Camera Configuration]	Parameter Value[Camera Sensor]	Parameter Value[Camera View]	Parameter Value[Imaging Angle]	Unit	Term Source REF	Term Accession Number	Derived Data File	Comment[Image analysis tool]
+1135FA-0	Phenotyping	28.09.2011 12:34:37	A_Fluo_Side_Big_Plant	FLUO	side	90.0	degree	UO	http://purl.obolibrary.org/obo/UO_0000185	derived_data_files/das_0.txt	IAP
+1135FA-1	Phenotyping	28.09.2011 12:34:37	A_Fluo_Side_Big_Plant	FLUO	side	90.0	degree	UO	http://purl.obolibrary.org/obo/UO_0000185	derived_data_files/das_1.txt	IAP
+1135FA-2	Phenotyping	28.09.2011 12:34:37	A_Fluo_Side_Big_Plant	FLUO	side	90.0	degree	UO	http://purl.obolibrary.org/obo/UO_0000185	derived_data_files/das_2.txt	IAP
+1135FA-3	Phenotyping	28.09.2011 12:34:37	A_Fluo_Side_Big_Plant	FLUO	side	90.0	degree	UO	http://purl.obolibrary.org/obo/UO_0000185	derived_data_files/das_3.txt	IAP

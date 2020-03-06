@@ -1,0 +1,239 @@
+---
+title: "Scalability Evaluation"
+output:
+  html_document:
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Scalability Evaluation
+{: .no_toc }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
+Scalability of isa4J was assessed and compared to the python isatools API in two dimensions: number of entries and complexity of entries.
+
+At the simplest complexity (*minimum*) rows consisted only of a Source connected to a Sample through a Process in the Study File, and that Sample connected to a DataFile through another Process in the Assay File, with no Characteristics, Comments, or other additional Information.
+At the second level of complexity (*reduced*), a Characteristic was added to the Sample in the Study File, and the Assay File was expanded to Sample->Process->Material->Process->DataFile.
+The third and final level of complexity (*real world*) was modelled after the real-world metadata published for a plant phenotyping experiment that conform to the MIAPPE v1.1 data standard ([link](https://doi.ipk-gatersleben.de/DOI/1c0c2b3e-7478-48b1-81f6-47981f44a5cb/8a37f290-e7d3-45de-90eb-2e3f0106e574/0/1847940088)).
+Examplary ISA-Tab output for each of the three complexity levels can be found in the following section.
+
+For each complexity level, CPU execution time was measured for writing a number of $n$ rows in Study and Assay File each, starting at 1 row and increasing stepwise up to 25,000 rows.
+Every combination of complexity level and $n$ was measured for 5 consecutive runs (12 for isa4J because results varied more) after a warm-up of writing 100 rows.
+Additionally, memory usage was measured for realistic complexity in 5 separate runs after CPU execution time measurements.
+
+Performance evaluation was carried out on a Macbook Pro 2017 (2.3 GHz Dual-Core Intel Core i5 Processor, 16 GB 2133 MHz LPDDR3 RAM) with macOS Catalina (Version 10.15.2).
+isatools was evaluated under Python 3.7.3 [Clang 11.0.0 (clang-1100.0.33.16)] using isatools version 0.11 and memory-profiler version 0.57 for measuring RAM usage. CPU execution time was measured with `time.process_time_ns`. 
+isa4J was evaluated under AdoptOpenJDK 11.0.5 using `ThreadMXBean.getCurrentThreadCpuTime()` and `MemoryMXBean.getHeapMemory().getUsed() + MemoryMXBean.getNonHeapMemory().getUsed()`.
+
+The actual code generating the files and measuring time and memory usage can be found [here](https://github.com/IPK-BIT/isa4J/blob/master/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/isatools_performance_test.py) for python isatools and [here](https://github.com/IPK-BIT/isa4J/blob/master/src/test/java/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/PerformanceTester.java) for isa4J
+
+## Complexity Levels
+
+Here you can see what the output generated for the different complexity level looks like.
+It is identical between isa4J and python isatools.
+
+### Minimal
+
+Study File:
+```{r, echo=F}
+example = read.csv("isatab_examples/example_study_minimal.csv", sep="\t", check.names = F)
+knitr::kable(example, format="markdown")
+```
+
+Assay File:
+```{r, echo=F}
+example = read.csv("isatab_examples/example_assay_minimal.csv", sep="\t", check.names = F)
+knitr::kable(example, format="markdown")
+```
+
+### Minimal
+
+Study File:
+```{r, echo=F}
+example = read.csv("isatab_examples/example_study_reduced.csv", sep="\t", check.names = F)
+knitr::kable(example, format="markdown")
+```
+
+Assay File:
+```{r, echo=F}
+example = read.csv("isatab_examples/example_assay_reduced.csv", sep="\t", check.names = F)
+knitr::kable(example, format="markdown")
+```
+
+### Real World
+
+Study File:
+```{r, echo=F}
+example = read.csv("isatab_examples/example_study_real_world.csv", sep="\t", check.names = F)
+knitr::kable(example, format="markdown")
+```
+
+Assay File:
+```{r, echo=F}
+example = read.csv("isatab_examples/example_assay_real_world.csv", sep="\t", check.names = F)
+knitr::kable(example, format="markdown")
+```
+
+## Results
+
+The raw results can be found [here](https://ipk-bit.github.io/isa4J/performance_data.csv) if you want to perform your own analyses.
+
+```{r}
+data = read.csv("performance_data.csv")
+data[data$memory.usage.in.mb == -1,]$memory.usage.in.mb = NA # Where RAM usage was not measured it was set to -1
+data$time.in.ns.log = log(data$time.in.ns/1e+9, 10)
+data$n.rows.log     = log(data$n.rows, 10)
+data$memory.usage.in.mb.log = log(data$memory.usage.in.mb, 10)
+```
+
+This is the visualization that is also part of the paper:
+
+```{r}
+data$color = "black"
+data[data$row.complexity == "real_world",]$color = "#e69f00"
+data[data$row.complexity == "reduced",]$color = "#0072b2"
+data[data$row.complexity == "minimal",]$color = "#56B4E9"
+
+#pdf("figure.pdf", 6.92913, 3.6, colormodel="cmyk")
+par(family="serif", cex=0.7, mar=c(4.5,3.8,0,0), fig=c(0,1,0.2,1))
+xlim = c(0, 4.6)
+plot(data$time.in.ns.log ~ data$n.rows.log, xlim=xlim, col=data$color, axes=F, xlab=expression("Number of Rows (log"[10]~"Scale)"), ylab="", col.lab="gray72")
+axis(1, col=F, col.tick="gray72", at=log(c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), 10), labels=c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), col.axis="gray72")
+axis(2, las=2, at=c(seq(-3,2), log(600,10)), labels=c("1 ms","10 ms", "100 ms", "1 s", "10 s", "100 s", "10 m"), col=F, col.axis="gray72")
+
+text(0, 2, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1.5, family="sans")
+mtext("isatools", side=2, at=-1, line=-1, cex=0.7)
+mtext("isa4J", side=2, at=-3, line=-1, cex=0.7)
+mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "reduced",]$time.in.ns.log), col="#0072b2", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "minimal",]$time.in.ns.log), col="#56B4E9", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "reduced",]$time.in.ns.log), col="#0072b2", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "minimal",]$time.in.ns.log), col="#56B4E9", cex=0.5)
+
+sub = data[data$row.complexity == "real_world" & data$platform == "isatools",]
+t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
+lines(as.numeric(names(t)), t, col="#e69f00", type="b")
+text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Real World", pos=4, col="#e69f00", cex=0.7)
+text(max(sub$n.rows.log), max(sub$time.in.ns.log)-0.2, "Complexity", pos=4, col="#e69f00", cex=0.7)
+
+sub = data[data$row.complexity == "reduced" & data$platform == "isatools",]
+t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
+lines(as.numeric(names(t)), t, col="#0072b2", type="b")
+text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Reduced", pos=4, col="#0072b2", cex=0.7)
+
+sub = data[data$row.complexity == "minimal" & data$platform == "isatools",]
+t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
+lines(as.numeric(names(t)), t, col="#56B4E9", type="b")
+text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Minimal", pos=4, col="#56B4E9", cex=0.7)
+
+sub = data[data$row.complexity == "real_world" & data$platform == "isa4J",]
+t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
+lines(as.numeric(names(t)), t, col="#e69f00", type="b")
+
+sub = data[data$row.complexity == "reduced" & data$platform == "isa4J",]
+t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
+lines(as.numeric(names(t)), t, col="#0072b2", type="b")
+
+sub = data[data$row.complexity == "minimal" & data$platform == "isa4J",]
+t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
+lines(as.numeric(names(t)), t, col="#56B4E9", type="b")
+
+# Memory Plot
+par(fig=c(0,1,0,0.2), mar=c(0.2,3.8,0,0), new=T)
+memSub = data[data$row.complexity == "real_world",]
+plot(-memSub$memory.usage.in.mb.log ~ memSub$n.rows.log, type="n", axes=F, xlim=xlim, xlab="", ylab="")
+memSub.isatools = memSub[memSub$platform == "isatools",]
+memSub.isa4J = memSub[memSub$platform == "isa4J",]
+polygon(c(memSub.isatools$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isatools$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col="#EEF8F6", border=NA) #DBF3ED
+polygon(c(memSub.isa4J$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isa4J$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col="#DBF3ED", border=NA) #A1D7CA
+
+text(0.1, -1.6, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col="gray72")
+
+text(0, -0.9, "isa4J", pos=2, xpd=NA, col="gray72", cex=0.8)
+text(0, -1.85, "isatools", pos=2, xpd=NA, col="gray72", cex=0.8)
+
+text(log(24000,10), -1.05, paste(round(min(memSub.isa4J$memory.usage.in.mb), 0), "-", round(max(memSub.isa4J$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col="gray72", cex=0.6)
+
+text(log(24000,10), -1.9, paste(round(min(memSub.isatools$memory.usage.in.mb), 0), "-", round(max(memSub.isatools$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col="gray72", cex=0.6)
+
+segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log)*0.98, 1.5, -max(memSub.isa4J$memory.usage.in.mb.log)*0.98, col="#DBF3ED", xpd=NA)
+
+segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 1, -min(memSub.isatools$memory.usage.in.mb.log), col="#EEF8F6", xpd=NA)
+
+#dev.off()
+```
+
+### Regression Models
+
+To make quantitative statements about scalability it can be helpful to fit some regression models.
+
+#### python isatools
+
+It appears that the python isatools curves all become pretty linear after 100 rows and they all seem to be parallel, so we can fit a simple regression model without interaction term.
+
+```{r, warning=F}
+sub = data[data$platform == "isatools" & data$n.rows >= 100,]
+plot(sub$time.in.ns.log ~ sub$n.rows.log, col=sub$row.complexity, xlab=expression("log"[10]("Number of Rows")), ylab=expression("log"[10]("CPU Execution time [s]")))
+model.isatools = lm(time.in.ns.log ~ n.rows.log + row.complexity, data=sub)
+abline(model.isatools)
+abline(model.isatools$coefficients[1]+model.isatools$coefficients[4], model.isatools$coefficients[2], col="green")
+abline(model.isatools$coefficients[1]+model.isatools$coefficients[3], model.isatools$coefficients[2], col="red")
+summary(model.isatools)
+```
+
+Looks pretty good! What can we learn from it? 
+
+- Increasing the number of rows 10-fold will increase the required CPU execution time $10^{`r model.isatools$coefficients[2]`} = `r 10^model.isatools$coefficients[2]`$ -fold
+- Increasing the complexity from minimal to reduced increases execution time $10^{`r model.isatools$coefficients[4]`} = `r 10^model.isatools$coefficients[4]`$ -fold and increasing the complexity from minimal to real world increases it $10^{`r model.isatools$coefficients[3]`} = `r 10^model.isatools$coefficients[3]`$ -fold
+
+#### isa4J
+
+```{r, warning=F}
+sub = data[data$platform == "isa4J" & data$n.rows >= 100,]
+plot(sub$time.in.ns.log ~ sub$n.rows.log, col=sub$row.complexity, xlab=expression("log"[10]("Number of Rows")), ylab=expression("log"[10]("CPU Execution time [s]")))
+model.isa4J = lm(time.in.ns.log ~ n.rows.log + row.complexity, data=sub)
+abline(model.isa4J)
+abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[4], model.isa4J$coefficients[2], col="green")
+abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[3], model.isa4J$coefficients[2], col="red")
+summary(model.isa4J)
+```
+
+This model does not fit as well as the isatools one because there is a lot more variation in the data and there appear some points where the curve is non-linear (for example, Java translates JVM code into native machine code after a certain number of repititions).
+For simplicity's sake we will accept the model though and assume it is good enough for our purposes.
+
+So, same calculations like above:
+
+- Increasing the number of rows 10-fold will increase the required CPU execution time $10^{`r model.isa4J$coefficients[2]`} = `r 10^model.isa4J$coefficients[2]`$ -fold
+- Increasing the complexity from minimal to reduced increases execution time $10^{`r model.isa4J$coefficients[4]`} = `r 10^model.isa4J$coefficients[4]`$ -fold and increasing the complexity from minimal to real world increases it $10^{`r model.isa4J$coefficients[3]`} = `r 10^model.isa4J$coefficients[3]`$ -fold
+
+We can see that isa4J scales slightly better with number of rows and significantly better at increasing complexity of rows.
+
+#### Direct Comparison
+
+Now let's try a direct comparison for the real world scenario. The slopes are not the same so we need an interaction term here.
+
+```{r, warning=F}
+sub = data[data$row.complexity == "real_world" & data$n.rows >= 100,]
+plot(sub$time.in.ns.log ~ sub$n.rows.log, col=sub$row.complexity, xlab=expression("log"[10]("Number of Rows")), ylab=expression("log"[10]("CPU Execution time [s]")))
+model.both = lm(time.in.ns.log ~ n.rows.log * platform, data=sub)
+abline(model.both)
+abline(model.both$coefficients[1]+model.both$coefficients[3], model.both$coefficients[2]+model.both$coefficients[4], col="red")
+summary(model.both)
+```
+
+OK, the lines look good, now we can make actual comparisons.
+Since the slopes of the lines are different, isa4J is going to become relatively faster the more rows we write:
+
+- When writing 100 lines isa4J is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(100)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))`$ faster
+- When writing 25000 lines isa4J is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(25000)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))`$ faster
+
+
