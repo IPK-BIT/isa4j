@@ -22,7 +22,7 @@ Scalability of isa4J was assessed and compared to the python isatools API in two
 
 At the simplest complexity (*minimum*) rows consisted only of a Source connected to a Sample through a Process in the Study File, and that Sample connected to a DataFile through another Process in the Assay File, with no Characteristics, Comments, or other additional Information.
 At the second level of complexity (*reduced*), a Characteristic was added to the Sample in the Study File, and the Assay File was expanded to Sample->Process->Material->Process->DataFile.
-The third and final level of complexity (*real world*) was modelled after the real-world metadata published for a plant phenotyping experiment that conform to the MIAPPE v1.1 data standard ([link](https://doi.ipk-gatersleben.de/DOI/1c0c2b3e-7478-48b1-81f6-47981f44a5cb/8a37f290-e7d3-45de-90eb-2e3f0106e574/0/1847940088)).
+The third and final level of complexity (*real world*) was modelled after the real-world metadata published for a plant phenotyping experiment that conform to the MIAPPE v1.1 data standard ([link](https://dx.doi.org/10.5447/IPK/2020/3)).
 Examplary ISA-Tab output for each of the three complexity levels can be found in the following section.
 
 For each complexity level, CPU execution time was measured for writing a number of $n$ rows in Study and Assay File each, starting at 1 row and increasing stepwise up to 25,000 rows.
