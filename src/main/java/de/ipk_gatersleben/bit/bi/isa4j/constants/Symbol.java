@@ -10,16 +10,16 @@ package de.ipk_gatersleben.bit.bi.isa4j.constants;
 /**
  * Constants for frequently used symbols String symbols and literals
  *
- * @author liufe, arendd
+ * @author liufe, arendd, psaroudakis
  */
 public enum Symbol {
 
-	TAB("\t"), ENTER(System.getProperty("line.separator")), SPACE(" "), SEMICOLON(";"), EMPTY(""),ATTRIBUTE_REPLACE("?");
+	TAB("\t"), ENTER(System.getProperty("line.separator")), SPACE(" "), SEMICOLON(";"), EMPTY(""), WILDCARD("?");
 
 	private String value;
 
-	private Symbol(String val) {
-		this.value = val;
+	private Symbol(String value) {
+		this.value = value;
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class StringUtil {
 	 * @return the {@link StringBuilder}
 	 */
 	public static <T> String putNameInAttribute(T attribute, String parameter) {
-		return attribute.toString().replace(Symbol.ATTRIBUTE_REPLACE.toString(), parameter);
+		return attribute.toString().replace(Symbol.WILDCARD.toString(), parameter);
 	}
 
 	/**

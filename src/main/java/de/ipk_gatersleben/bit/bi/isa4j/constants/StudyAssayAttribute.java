@@ -8,15 +8,16 @@
 package de.ipk_gatersleben.bit.bi.isa4j.constants;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 
 /**
- * Constants for fixed attribute names for {@link Assay} file creation
+ * Constants for fixed attribute names for {@link Study} and {@link Assay} file creation
  *
  * @author liufe, arendd, psaroudakis
  */
 public enum StudyAssayAttribute {
+	
     SOURCE_NAME("Source Name"),
-
     SAMPLE_NAME("Sample Name"),
     CHARACTERISTICS("Characteristics[?]"),
     TERM_SOURCE_REF("Term Source REF"),
@@ -34,8 +35,8 @@ public enum StudyAssayAttribute {
 
 	private String value;
 
-	private StudyAssayAttribute(String val) {
-		this.value = val;
+	private StudyAssayAttribute(String value) {
+		this.value = value;
 	}
 
 	@Override
