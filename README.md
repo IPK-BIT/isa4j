@@ -10,6 +10,28 @@ If you're referring to isa4J in a scientific publication, we'd be grateful if yo
 
 > Citation forthcoming
 
+## Usage via common build management tools
+
+### Gradle
+
+```groovy
+repositories {
+	mavenCentral()
+}    
+dependencies {
+	compile group: 'de.ipk-gatersleben', name:'isa4j', version:'0.0.2'
+}
+
+```
+
+### Maven
+```
+<dependency>
+  <groupId>de.ipk-gatersleben</groupId>
+  <artifactId>isa4J</artifactId>
+  <version>0.0.2</version>
+</dependency>
+```
 
 ## Documentation
 Please see https://ipk-bit.github.io/isa4J/ for installation and usage documentation.
