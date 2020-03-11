@@ -100,24 +100,27 @@ This is the visualization that is also part of the paper:
 data$color = "black"
 data[data$row.complexity == "real_world",]$color = "#e69f00"
 data[data$row.complexity == "reduced",]$color = "#0072b2"
-data[data$row.complexity == "minimal",]$color = "#56B4E9"
+data[data$row.complexity == "minimal",]$color = "#61BEF3" #56B4E9
+col.gray = "gray52"
+col.green.dark = "#B8CDC8" #DBF3ED 
+col.green.light = "#E7F1EF" #EEF8F6 
 
 #pdf("figure.pdf", 6.92913, 3.6, colormodel="cmyk")
 par(family="serif", cex=0.7, mar=c(4.5,3.8,0,0), fig=c(0,1,0.2,1))
 xlim = c(0, 4.6)
-plot(data$time.in.ns.log ~ data$n.rows.log, xlim=xlim, col=data$color, axes=F, xlab=expression("Number of Rows (log"[10]~"Scale)"), ylab="", col.lab="gray72")
-axis(1, col=F, col.tick="gray72", at=log(c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), 10), labels=c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), col.axis="gray72")
-axis(2, las=2, at=c(seq(-3,2), log(600,10)), labels=c("1 ms","10 ms", "100 ms", "1 s", "10 s", "100 s", "10 m"), col=F, col.axis="gray72")
+plot(data$time.in.ns.log ~ data$n.rows.log, xlim=xlim, col=data$color, axes=F, xlab=expression("Number of Rows (log"[10]~"Scale)"), ylab="", col.lab=col.gray)
+axis(1, col=F, col.tick=col.gray, at=log(c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), 10), labels=c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), col.axis=col.gray)
+axis(2, las=2, at=c(seq(-3,2), log(600,10)), labels=c("1 ms","10 ms", "100 ms", "1 s", "10 s", "100 s", "10 m"), col=F, col.axis=col.gray)
 
 text(0, 2, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1.5, family="sans")
 mtext("isatools", side=2, at=-1, line=-1, cex=0.7)
 mtext("isa4J", side=2, at=-3, line=-1, cex=0.7)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "reduced",]$time.in.ns.log), col="#0072b2", cex=0.5)
-mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "minimal",]$time.in.ns.log), col="#56B4E9", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "minimal",]$time.in.ns.log), col="#61BEF3", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "reduced",]$time.in.ns.log), col="#0072b2", cex=0.5)
-mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "minimal",]$time.in.ns.log), col="#56B4E9", cex=0.5)
+mtext("|", side=2, at=max(data[data$platform == "isa4J" & data$row.complexity == "minimal",]$time.in.ns.log), col="#61BEF3", cex=0.5)
 
 sub = data[data$row.complexity == "real_world" & data$platform == "isatools",]
 t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
@@ -132,8 +135,8 @@ text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Reduced", pos=4, col="#0072b
 
 sub = data[data$row.complexity == "minimal" & data$platform == "isatools",]
 t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
-lines(as.numeric(names(t)), t, col="#56B4E9", type="b")
-text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Minimal", pos=4, col="#56B4E9", cex=0.7)
+lines(as.numeric(names(t)), t, col="#61BEF3", type="b")
+text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Minimal", pos=4, col="#61BEF3", cex=0.7)
 
 sub = data[data$row.complexity == "real_world" & data$platform == "isa4J",]
 t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
@@ -145,7 +148,7 @@ lines(as.numeric(names(t)), t, col="#0072b2", type="b")
 
 sub = data[data$row.complexity == "minimal" & data$platform == "isa4J",]
 t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
-lines(as.numeric(names(t)), t, col="#56B4E9", type="b")
+lines(as.numeric(names(t)), t, col="#61BEF3", type="b")
 
 # Memory Plot
 par(fig=c(0,1,0,0.2), mar=c(0.2,3.8,0,0), new=T)
@@ -153,21 +156,21 @@ memSub = data[data$row.complexity == "real_world",]
 plot(-memSub$memory.usage.in.mb.log ~ memSub$n.rows.log, type="n", axes=F, xlim=xlim, xlab="", ylab="")
 memSub.isatools = memSub[memSub$platform == "isatools",]
 memSub.isa4J = memSub[memSub$platform == "isa4J",]
-polygon(c(memSub.isatools$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isatools$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col="#EEF8F6", border=NA) #DBF3ED
-polygon(c(memSub.isa4J$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isa4J$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col="#DBF3ED", border=NA) #A1D7CA
+polygon(c(memSub.isatools$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isatools$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col=col.green.light, border=NA) #DBF3ED
+polygon(c(memSub.isa4J$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isa4J$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col=col.green.dark, border=NA) #A1D7CA
 
-text(0.1, -1.6, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col="gray72")
+text(0.1, -1.6, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col=col.gray)
 
-text(0, -0.9, "isa4J", pos=2, xpd=NA, col="gray72", cex=0.8)
-text(0, -1.85, "isatools", pos=2, xpd=NA, col="gray72", cex=0.8)
+text(0, -0.9, "isa4J", pos=2, xpd=NA, col=col.gray, cex=0.8)
+text(0, -1.85, "isatools", pos=2, xpd=NA, col=col.gray, cex=0.8)
 
-text(log(24000,10), -1.05, paste(round(min(memSub.isa4J$memory.usage.in.mb), 0), "-", round(max(memSub.isa4J$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col="gray72", cex=0.6)
+text(log(24000,10), -1.05, paste(round(min(memSub.isa4J$memory.usage.in.mb), 0), "-", round(max(memSub.isa4J$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
-text(log(24000,10), -1.9, paste(round(min(memSub.isatools$memory.usage.in.mb), 0), "-", round(max(memSub.isatools$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col="gray72", cex=0.6)
+text(log(24000,10), -1.9, paste(round(min(memSub.isatools$memory.usage.in.mb), 0), "-", round(max(memSub.isatools$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
-segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log)*0.98, 1.5, -max(memSub.isa4J$memory.usage.in.mb.log)*0.98, col="#DBF3ED", xpd=NA)
+segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log), 0.5, -min(memSub.isa4J$memory.usage.in.mb.log), col=col.green.dark, xpd=NA)
 
-segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 1, -min(memSub.isatools$memory.usage.in.mb.log), col="#EEF8F6", xpd=NA)
+segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 0.5, -min(memSub.isatools$memory.usage.in.mb.log), col=col.green.light, xpd=NA)
 
 #dev.off()
 ```
