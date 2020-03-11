@@ -7,8 +7,16 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.exceptions;
 
+/**
+ * Exception to handling non-unique parameter or attribute names
+ * 
+ * @author psaroudakis, arendd
+ *
+ */
 public class RedundantItemException extends IllegalArgumentException {
 	
+	private static final long serialVersionUID = 5225657453967236194L;
+
 	public RedundantItemException(String errorMsg) {
 		super(errorMsg);
 	}

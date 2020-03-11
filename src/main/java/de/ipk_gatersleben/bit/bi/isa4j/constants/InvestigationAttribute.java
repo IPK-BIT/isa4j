@@ -90,8 +90,8 @@ public enum InvestigationAttribute {
 	
 	private String value;
 
-	private InvestigationAttribute(String val) {
-		this.value = val;
+	private InvestigationAttribute(String value) {
+		this.value = value;
 	}
 
 	@Override
