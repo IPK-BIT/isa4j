@@ -152,5 +152,10 @@ public class Publication implements Commentable {
     public void setTitle(String title) {
         this.title = StringUtil.sanitize(Objects.requireNonNull(title, "Publication title cannot be null"));
     }
+    
+	@Override
+	public String toString() {
+		return "<Publication> '" + this.title + "' (" + this.authors + ")";
+	}
 
 }

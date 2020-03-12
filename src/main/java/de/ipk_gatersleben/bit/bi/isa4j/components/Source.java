@@ -119,4 +119,9 @@ public class Source extends StudyOrAssayTableObject implements Commentable {
 		this.name = StringUtil.sanitize(Objects.requireNonNull(name, "Name cannot be null"));
 	}
 	
+	@Override
+	public String toString() {
+		return "<Source> '" + this.name + "'";
+	}
+	
 }

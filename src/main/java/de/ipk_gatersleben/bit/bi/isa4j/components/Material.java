@@ -60,5 +60,10 @@ public class Material extends Source {
 	public void setType(String type) {
 		this.type = StringUtil.sanitize(Objects.requireNonNull(type, "Type cannot be null"));
 	}
+	
+	@Override
+	public String toString() {
+		return "<Material> '" + this.name + "'";
+	}
 
 }

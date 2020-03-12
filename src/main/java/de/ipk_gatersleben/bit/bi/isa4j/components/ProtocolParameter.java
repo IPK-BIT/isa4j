@@ -34,5 +34,10 @@ public class ProtocolParameter {
 	public void setName(OntologyAnnotation name) {
 		this.name = Objects.requireNonNull(name, "ProtocolParameter name OntologyAnnotation object cannot be null");
 	}
+	
+	@Override
+	public String toString() {
+		return "<ProtocolParameter> '" + this.name + "'";
+	}
 
 }

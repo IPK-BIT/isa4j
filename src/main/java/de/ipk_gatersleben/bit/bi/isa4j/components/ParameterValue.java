@@ -29,4 +29,9 @@ public class ParameterValue extends Value<ProtocolParameter> {
 		super(category, value);
 	}
 
+	@Override
+	public String toString() {
+		return "<ParameterValue> '" + (this.hasUnit() ? this.getValue().getTerm() + " " + this.getUnit().getTerm() : this.getValue().getTerm())
+				+ "(" + this.getCategory() + ")";
+	}
 }

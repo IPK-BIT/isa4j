@@ -220,5 +220,10 @@ public class Protocol implements Commentable {
     public void setVersion(String version) {
         this.version = StringUtil.sanitize(version);
     }
+    
+	@Override
+	public String toString() {
+		return "<Protocol> '" + this.name + "'";
+	}
 
 }

@@ -78,4 +78,9 @@ public class Sample extends Source implements Commentable {
 		this.factorValues = factorValues;
 	}
 	
+	@Override
+	public String toString() {
+		return "<Sample> '" + this.name + "'";
+	}
+	
 }

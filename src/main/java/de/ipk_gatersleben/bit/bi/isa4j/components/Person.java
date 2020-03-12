@@ -247,5 +247,10 @@ public class Person implements Commentable {
 		roles.stream().forEach(Objects::requireNonNull);
 		this.roles = roles;
 	}
+	
+	@Override
+	public String toString() {
+		return "<Person> '" + this.firstName + " " + this.lastName + "'";
+	}
 
 }

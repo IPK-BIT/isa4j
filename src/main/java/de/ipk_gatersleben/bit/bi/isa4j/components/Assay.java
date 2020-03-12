@@ -110,4 +110,9 @@ public class Assay extends WideTableFile implements Commentable {
 	public void setTechnologyType(OntologyAnnotation technologyType) {
 		this.technologyType = technologyType;
 	}
+	
+	@Override
+	public String toString() {
+		return "<Assay> '" + this.getFileName() + "'";
+	}
 }

@@ -51,6 +51,9 @@ public class ProtocolComponent {
 		this.type = type;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "<ProtocolComponent> '" + this.name + "'";
+	}
 
 }

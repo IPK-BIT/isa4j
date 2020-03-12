@@ -387,5 +387,10 @@ public class Study extends WideTableFile implements Commentable {
 	public void setTitle(String title) {
 		this.title = StringUtil.sanitize(title);
 	}
+	
+	@Override
+	public String toString() {
+		return "<Study> '" + this.getFileName() + "' (ID: '" + this.identifier + "')";
+	}
 
 }

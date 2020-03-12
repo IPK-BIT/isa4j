@@ -71,4 +71,9 @@ public class Factor implements Commentable {
 	public void setType(OntologyAnnotation type) {
 		this.type = type;
 	}
+	
+	@Override
+	public String toString() {
+		return "<Factor> '" + this.name + "'";
+	}
 }

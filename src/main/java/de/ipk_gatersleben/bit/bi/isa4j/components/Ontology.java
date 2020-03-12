@@ -126,5 +126,10 @@ public class Ontology {
     public void setVersion(String version) {
         this.version = StringUtil.sanitize(version);
     }
+    
+	@Override
+	public String toString() {
+		return "<Ontology> '" + this.name + "'";
+	}
 
 }

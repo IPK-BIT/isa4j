@@ -86,5 +86,10 @@ public class DataFile extends StudyOrAssayTableObject implements Commentable {
 	public void setType(String type) {
 		this.type = StringUtil.sanitize(Objects.requireNonNull(type, "DataFile Type cannot be null"));
 	}
+	
+	@Override
+	public String toString() {
+		return "<Datafile> '" + this.path + "'";
+	}
 
 }

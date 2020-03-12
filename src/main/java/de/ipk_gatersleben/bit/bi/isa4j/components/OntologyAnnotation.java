@@ -104,5 +104,10 @@ public class OntologyAnnotation implements Commentable {
     public void setTermAccession(String termAccession) {
         this.termAccession = StringUtil.sanitize(termAccession);
     }
+    
+	@Override
+	public String toString() {
+		return "<OntologyAnnotation> '" + this.term + "'" + (this.sourceREF == null ? "" : " (" + this.sourceREF + ")");
+	}
 
 }

@@ -65,6 +65,7 @@ public class Playground {
 		statsStories.setDOI("https://doi.org/10.4148/2475-7772.1013");
 		statsStories.setStatus(new OntologyAnnotation("Published")); // if we had a fitting Ontology, we could also add it here along an Ontology term accession number
 		investigation.addPublication(statsStories);
+		System.out.println(statsStories);
 		
 		// You can add Investigation Contacts in a likewise manner
 		Person schlomo = new Person("Schlomo", "Hootkins", "schlomoHootkins@miofsiwa.foo", "Ministry of Silly Walks", "4 Hanover House, 14 Hanover Square, London W1S 1HP");
@@ -79,6 +80,8 @@ public class Playground {
 		schlomo.comments().add(new Comment("Smell", "Very bad"));
 		schlomo.comments().add(new Comment("Hair", "Fabolous"));
 		investigation.comments().add(new Comment("Usability", "None"));
+		
+		System.out.println(schlomo.comments());
 		
 		// At some point you will want to create one or more Study objects and attach them to your investigation
 		Study study1 = new Study("Study1ID", "s_study1.txt");
@@ -133,6 +136,8 @@ public class Playground {
 		karlheinz.comments().add(new Comment("Person REF", "karlheinzREf"));
 		karlheinz.comments().add(new Comment("Karlheinz says", "Hello World!"));
 		
+		System.out.println(role1);
+		
 		Publication paper1 = new Publication("Wurst und Utilitarismus", "the authors");
 		paper1.setDOI("doi.org/ursel.wurst12321");
 		
@@ -147,6 +152,8 @@ public class Playground {
 		paper1Status.setTerm("Published");
 		paper1Status.setTermAccession("Term Accession alala");
 		paper1.setStatus(paper1Status);
+		
+		System.out.println(paper1Status);
 		
 		investigation.addContact(ursel);
 		investigation.addContact(karlheinz);
@@ -175,6 +182,7 @@ public class Playground {
 		study1.addProtocol(prot1);
 		
 		study1.addContact(karlheinz);
+		System.out.println(karlheinz);
 		
 		//investigation.addStudy(study1);
 		//investigation.addStudy(study2);
@@ -185,10 +193,14 @@ public class Playground {
 		Characteristic char1 = new Characteristic("Organism", new OntologyAnnotation("Arabidopsis thaliana"));
 		Characteristic char2 = new Characteristic("Plant Role", new OntologyAnnotation("Contributor", "Acess.123", ontology1));
 		
+		System.out.println(char1);
+		
 		Source source1 = new Source("Source 1");
 		
 		Process process = new Process(prot1);
 		process.setInput(source1);
+		
+		System.out.println(process);
 		
 		Sample sample1 = new Sample("Plant 1");
 		sample1.addCharacteristic(char2);
@@ -201,7 +213,13 @@ public class Playground {
 		sample1.addFactorValue(new FactorValue(f2, new OntologyAnnotation("value", "valueAccess", ontology1)));
 		sample1.addFactorValue(new FactorValue(f3, 43.3));
 		
+		System.out.println(sample1.getFactorValues());
+		
 		process.setOutput(sample1);
+		
+		System.out.println(study1);
+		System.out.println(study2);
+		System.out.println(assay1);
 		
 		
 //		study1.openFile();

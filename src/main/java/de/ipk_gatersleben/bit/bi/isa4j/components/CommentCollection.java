@@ -66,5 +66,10 @@ public class CommentCollection {
 		this.comments.clear();
 		comments.stream().forEach(this::add);
 	}
+	
+	@Override
+	public String toString() {
+		return this.comments.toString();
+	}
 
 }

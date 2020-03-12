@@ -78,5 +78,10 @@ public class Comment {
 	public void setValue(String value) {
 		this.value = StringUtil.sanitize(value);
 	}
+	
+	@Override
+	public String toString() {
+		return "<Comment> '" + this.name + "': " + this.value + "'";
+	}
 
 }

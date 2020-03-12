@@ -28,4 +28,10 @@ public class FactorValue extends Value<Factor> {
 	public FactorValue(Factor category, String value) {
 		super(category, value);
 	}
+	
+	@Override
+	public String toString() {
+		return "<FactorValue> '" + (this.hasUnit() ? this.getValue().getTerm() + " " + this.getUnit().getTerm() : this.getValue().getTerm())
+				+ " (" + this.getCategory().toString() + ")";
+	}
 }

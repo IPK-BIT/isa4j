@@ -635,6 +635,11 @@ public class Investigation implements Commentable {
 		this.title = StringUtil.sanitize(title);
 	}
 	
+	@Override
+	public String toString() {
+		return "<Investigation> '" + this.identifier + "'";
+	}
+	
 	public void writeToFile(String filepath) throws IOException {
 		OutputStream os = new FileOutputStream(filepath);
 		this.writeToStream(os);

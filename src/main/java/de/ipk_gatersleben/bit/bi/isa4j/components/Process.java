@@ -151,5 +151,10 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 	public void setProtocol(Protocol protocol) {
 		this.protocol = Objects.requireNonNull(protocol, "Protocol cannot be null");
 	}
+	
+	@Override
+	public String toString() {
+		return "<Process> '" + this.protocol.getName() + "' on input " + this.input.toString();
+	}
 
 }

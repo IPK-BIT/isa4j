@@ -52,5 +52,10 @@ public class Characteristic {
 	public void setValue(OntologyAnnotation value) {
 		this.value = Objects.requireNonNull(value, "Characteristic value cannot be null");
 	}
+	
+	@Override
+	public String toString() {
+		return "<Characteristic> '" + this.category + "' (Value = '" + this.value.getTerm() + "')";
+	}
 
 }
