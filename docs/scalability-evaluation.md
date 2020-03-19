@@ -3,6 +3,7 @@ title: "Scalability Evaluation"
 nav_order: 4
 ---
 
+
 # Scalability Evaluation
 {: .no_toc }
 
@@ -187,7 +188,7 @@ segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log), 0.5, -min(memSub.isa4J
 segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 0.5, -min(memSub.isatools$memory.usage.in.mb.log), col=col.green.light, xpd=NA)
 ```
 
-![](scalability-evaluation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](_scalability-evaluation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
 #dev.off()
@@ -211,7 +212,7 @@ abline(model.isatools$coefficients[1]+model.isatools$coefficients[4], model.isat
 abline(model.isatools$coefficients[1]+model.isatools$coefficients[3], model.isatools$coefficients[2], col="red")
 ```
 
-![](scalability-evaluation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](_scalability-evaluation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 summary(model.isatools)
@@ -247,6 +248,9 @@ Looks pretty good! What can we learn from it?
 
 #### isa4J
 
+Now let's repeat the same analyses for the isa4J performance data.
+We will again assume linearity and parallel lines for more than 100 rows.
+
 
 ```r
 sub = data[data$platform == "isa4J" & data$n.rows >= 100,]
@@ -257,7 +261,7 @@ abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[4], model.isa4J$coef
 abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[3], model.isa4J$coefficients[2], col="red")
 ```
 
-![](scalability-evaluation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](_scalability-evaluation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 summary(model.isa4J)
@@ -286,7 +290,7 @@ summary(model.isa4J)
 ## F-statistic:  8943 on 3 and 284 DF,  p-value: < 2.2e-16
 ```
 
-This model does not fit as well as the isatools one because there is a lot more variation in the data and there appear some points where the curve is non-linear (for example, Java translates JVM code into native machine code after a certain number of repititions).
+This model does not fit as well as the isatools one because there is a lot more variation in the data and there appear some points where the curve is not perfectly linear (for example, Java translates JVM code into native machine code after a certain number of repititions).
 For simplicity's sake we will accept the model though and assume it is good enough for our purposes.
 
 So, same calculations like above:
@@ -298,7 +302,8 @@ We can see that isa4J scales slightly better with number of rows and significant
 
 #### Direct Comparison
 
-Now let's try a direct comparison for the real world scenario. The slopes are not the same so we need an interaction term here.
+Now let's try a direct comparison of both libraries for real world complexity.
+The slopes are not the same so we need an interaction term here.
 
 
 ```r
@@ -309,7 +314,7 @@ abline(model.both)
 abline(model.both$coefficients[1]+model.both$coefficients[3], model.both$coefficients[2]+model.both$coefficients[4], col="red")
 ```
 
-![](scalability-evaluation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](_scalability-evaluation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ```r
 summary(model.both)
@@ -338,10 +343,15 @@ summary(model.both)
 ## F-statistic: 2.788e+04 on 3 and 132 DF,  p-value: < 2.2e-16
 ```
 
-OK, the lines look good, now we can make actual comparisons.
+OK, the models look good enough, now we can make actual comparisons.
 Since the slopes of the lines are different, isa4J is going to become relatively faster the more rows we write:
 
 - When writing 100 lines isa4J is $10^{2.4744312 + 0.0751934 * log_{10}(100)} = 421.5198222$ faster
 - When writing 25000 lines isa4J is $10^{2.4744312 + 0.0751934 * log_{10}(25000)} = 638.450546$ faster
 
+## Conclusion
 
+There are two take-aways from this:
+
+1. isa4J scales significantly better when complexity of rows increases (1.4487755 and 5.5272749-fold increase for isa4J compared to 2.5193116 and 8.9179401-fold for isatools).
+2. The more lines are written, the faster isa4J becomes compared to isatools (421.5198222 faster for 100 lines, 638.450546 faster for 25,00 lines).

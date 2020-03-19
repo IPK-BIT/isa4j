@@ -200,6 +200,9 @@ Looks pretty good! What can we learn from it?
 
 #### isa4J
 
+Now let's repeat the same analyses for the isa4J performance data.
+We will again assume linearity and parallel lines for more than 100 rows.
+
 ```{r, warning=F}
 sub = data[data$platform == "isa4J" & data$n.rows >= 100,]
 plot(sub$time.in.ns.log ~ sub$n.rows.log, col=sub$row.complexity, xlab=expression("log"[10]("Number of Rows")), ylab=expression("log"[10]("CPU Execution time [s]")))
@@ -210,7 +213,7 @@ abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[3], model.isa4J$coef
 summary(model.isa4J)
 ```
 
-This model does not fit as well as the isatools one because there is a lot more variation in the data and there appear some points where the curve is non-linear (for example, Java translates JVM code into native machine code after a certain number of repititions).
+This model does not fit as well as the isatools one because there is a lot more variation in the data and there appear some points where the curve is not perfectly linear (for example, Java translates JVM code into native machine code after a certain number of repititions).
 For simplicity's sake we will accept the model though and assume it is good enough for our purposes.
 
 So, same calculations like above:
@@ -222,7 +225,8 @@ We can see that isa4J scales slightly better with number of rows and significant
 
 #### Direct Comparison
 
-Now let's try a direct comparison for the real world scenario. The slopes are not the same so we need an interaction term here.
+Now let's try a direct comparison of both libraries for real world complexity.
+The slopes are not the same so we need an interaction term here.
 
 ```{r, warning=F}
 sub = data[data$row.complexity == "real_world" & data$n.rows >= 100,]
@@ -233,10 +237,15 @@ abline(model.both$coefficients[1]+model.both$coefficients[3], model.both$coeffic
 summary(model.both)
 ```
 
-OK, the lines look good, now we can make actual comparisons.
+OK, the models look good enough, now we can make actual comparisons.
 Since the slopes of the lines are different, isa4J is going to become relatively faster the more rows we write:
 
 - When writing 100 lines isa4J is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(100)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))`$ faster
 - When writing 25000 lines isa4J is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(25000)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))`$ faster
 
+## Conclusion
 
+There are two take-aways from this:
+
+1. isa4J scales significantly better when complexity of rows increases (`r 10^model.isa4J$coefficients[4]` and `r 10^model.isa4J$coefficients[3]`-fold increase for isa4J compared to `r 10^model.isatools$coefficients[4]` and `r 10^model.isatools$coefficients[3]`-fold for isatools).
+2. The more lines are written, the faster isa4J becomes compared to isatools (`r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))` faster for 100 lines, `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))` faster for 25,00 lines).
