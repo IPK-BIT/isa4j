@@ -17,6 +17,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Comment;
@@ -229,6 +232,9 @@ public class Playground {
 		
 		System.out.println(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
 		System.out.println(threadBean.getCurrentThreadCpuTime());
+		
+	    Logger logger = LoggerFactory.getLogger(Playground.class);
+	    logger.info("Hello World, {}", investigation);
 		
 	}
 
