@@ -54,7 +54,7 @@ example = read.csv("isatab_examples/example_assay_minimal.csv", sep="\t", check.
 knitr::kable(example, format="markdown")
 ```
 
-### Minimal
+### Reduced
 
 Study File:
 ```{r, echo=F}

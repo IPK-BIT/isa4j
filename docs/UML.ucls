@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolComponent" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/ProtocolComponent.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="174" width="281" x="943" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Material" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Material.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="174" width="273" x="2450" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Process" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Process.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="372" width="286" x="2286" y="-176"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Source" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Source.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="246" width="273" x="2805" y="506"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.ProtocolParameter" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/ProtocolParameter.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="138" width="240" x="1264" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Value" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Value.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="300" width="288" x="1565" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Sample" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Sample.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="210" width="273" x="2923" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Investigation" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Investigation.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="624" width="420" x="-94" y="506"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.DataFile" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/DataFile.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="210" width="273" x="1952" y="1654"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Factor" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Factor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="192" width="209" x="694" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Ontology" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Ontology.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="228" width="211" x="-157" y="1922"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Protocol" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Protocol.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="408" width="283" x="1545" y="506"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.OntologyAnnotation" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/OntologyAnnotation.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="228" width="257" x="654" y="1654"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Assay" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Assay.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="228" width="281" x="408" y="506"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Person" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Person.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="444" width="245" x="325" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.ParameterValue" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/ParameterValue.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="156" width="437" x="2286" y="1654"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Comment" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Comment.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="156" width="200" x="1891" y="2190"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.WideTableFile" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/WideTableFile.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="246" width="345" x="701" y="-462"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.FactorValue" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/FactorValue.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="156" width="349" x="2805" y="1654"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Characteristic" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Characteristic.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="156" width="248" x="1956" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/CommentCollection.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="156" width="243" x="1891" y="1922"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Publication" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Publication.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="300" width="337" x="-52" y="1170"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <interface id="23" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Commentable" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Commentable.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="200" x="614" y="1922"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </interface>  
+  <class id="24" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.Study" project="isa4J" 
+    file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/Study.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="642" width="312" x="368" y="-176"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="de.ipk_gatersleben.bit.bi.isa4j.components.StudyOrAssayTableObject" 
+    project="isa4J" file="/isa4J/src/main/java/de/ipk_gatersleben/bit/bi/isa4j/components/StudyOrAssayTableObject.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="120" width="359" x="2286" y="-462"/>    
+    <display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="false" private="false" static="true"/>      
+      <operations public="true" package="true" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <generalization id="26">    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <association id="27">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="28" name="parameters"/>      
+      <multiplicity id="29" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="31" name="factorValues"/>      
+      <multiplicity id="32" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="34" name="investigation"/>      
+      <multiplicity id="35" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="37" name="roles"/>      
+      <multiplicity id="38" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="39">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="40">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="41" name="protocol"/>      
+      <multiplicity id="42" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="43">    
+    <end type="SOURCE" refId="19"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <realization id="44">    
+    <bendpoint x="-125" y="506"/>    
+    <bendpoint x="-125" y="1170"/>    
+    <bendpoint x="-125" y="1654"/>    
+    <end type="SOURCE" refId="24"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <realization id="45">    
+    <bendpoint x="3184" y="1654"/>    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <realization id="46">    
+    <bendpoint x="290" y="1654"/>    
+    <end type="SOURCE" refId="22"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="47">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="48" name="study"/>      
+      <multiplicity id="49" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="50">    
+    <bendpoint x="1925" y="506"/>    
+    <bendpoint x="1925" y="1170"/>    
+    <bendpoint x="1921" y="1654"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="51">    
+    <bendpoint x="1301" y="1654"/>    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="52" name="comments"/>      
+      <multiplicity id="53" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <bendpoint x="719" y="506"/>    
+    <bendpoint x="663" y="1170"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="55" name="designDescriptors"/>      
+      <multiplicity id="56" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="57">    
+    <bendpoint x="621" y="1170"/>    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="58" name="technologyType"/>      
+      <multiplicity id="59" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="60">    
+    <bendpoint x="710" y="-176"/>    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="18"/>  
+  </generalization>  
+  <generalization id="61">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <generalization id="62">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="25"/>  
+  </generalization>  
+  <generalization id="63">    
+    <bendpoint x="2234" y="1170"/>    
+    <bendpoint x="2234" y="506"/>    
+    <bendpoint x="2234" y="-176"/>    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="25"/>  
+  </generalization>  
+  <association id="64">    
+    <bendpoint x="2295" y="506"/>    
+    <bendpoint x="2295" y="1170"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="65" name="parameterValues"/>      
+      <multiplicity id="66" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="67">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="68" name="name"/>      
+      <multiplicity id="69" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="70">    
+    <bendpoint x="3205" y="1654"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="71" name="comments"/>      
+      <multiplicity id="72" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="73">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </generalization>  
+  <realization id="74">    
+    <bendpoint x="-167" y="-176"/>    
+    <bendpoint x="-167" y="506"/>    
+    <bendpoint x="-167" y="1170"/>    
+    <bendpoint x="-146" y="1654"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="75">    
+    <bendpoint x="740" y="506"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="76" name="factors"/>      
+      <multiplicity id="77" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="78">    
+    <bendpoint x="579" y="1654"/>    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="79" name="comments"/>      
+      <multiplicity id="80" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="81">    
+    <bendpoint x="537" y="1654"/>    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="82" name="comments"/>      
+      <multiplicity id="83" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="84">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="85" name="characteristics"/>      
+      <multiplicity id="86" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="87">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="88" name="comments"/>      
+      <multiplicity id="89" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="90">    
+    <bendpoint x="3226" y="1170"/>    
+    <bendpoint x="3226" y="1654"/>    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="91" name="comments"/>      
+      <multiplicity id="92" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="93">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="94" name="assays"/>      
+      <multiplicity id="95" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="96">    
+    <bendpoint x="1534" y="1170"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="97" name="type"/>      
+      <multiplicity id="98" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="99">    
+    <bendpoint x="623" y="1654"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="100">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="101" name="comments"/>      
+      <multiplicity id="102" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="103">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="104" name="type"/>      
+      <multiplicity id="105" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="106">    
+    <bendpoint x="642" y="1170"/>    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="107" name="measurementType"/>      
+      <multiplicity id="108" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="109">    
+    <bendpoint x="377" y="506"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="110" name="contacts"/>      
+      <multiplicity id="111" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="112">    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="113" name="comments"/>      
+      <multiplicity id="114" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="115">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="116" name="input"/>      
+      <multiplicity id="117" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="25" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="118">    
+    <bendpoint x="-83" y="1170"/>    
+    <bendpoint x="-83" y="1654"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="119" name="comments"/>      
+      <multiplicity id="120" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="121">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="122" name="sourceREF"/>      
+      <multiplicity id="123" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="124">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="125" name="status"/>      
+      <multiplicity id="126" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="127">    
+    <bendpoint x="-104" y="1170"/>    
+    <bendpoint x="-104" y="1654"/>    
+    <end type="SOURCE" refId="8"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="128">    
+    <bendpoint x="-146" y="1170"/>    
+    <bendpoint x="-167" y="1654"/>    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="129" name="ontologies"/>      
+      <multiplicity id="130" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="131">    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="132" name="protocols"/>      
+      <multiplicity id="133" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="134">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="135" name="value"/>      
+      <multiplicity id="136" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="137">    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="138" name="unit"/>      
+      <multiplicity id="139" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="140">    
+    <bendpoint x="1904" y="1170"/>    
+    <bendpoint x="1900" y="1654"/>    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="141" name="comments"/>      
+      <multiplicity id="142" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="143">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="144" name="type"/>      
+      <multiplicity id="145" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="146">    
+    <end type="SOURCE" refId="12" navigable="false">      
+      <attribute id="147" name="components"/>      
+      <multiplicity id="148" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="149">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="150" name="value"/>      
+      <multiplicity id="151" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="152">    
+    <bendpoint x="2774" y="506"/>    
+    <bendpoint x="2774" y="1170"/>    
+    <bendpoint x="2774" y="1654"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="153" name="comments"/>      
+      <multiplicity id="154" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="155">    
+    <bendpoint x="356" y="506"/>    
+    <end type="SOURCE" refId="24" navigable="false">      
+      <attribute id="156" name="publications"/>      
+      <multiplicity id="157" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="158">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="159" name="nextStudyOrAssayTableObject"/>      
+      <multiplicity id="160" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="25" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="161">    
+    <bendpoint x="600" y="1170"/>    
+    <bendpoint x="600" y="1654"/>    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <realization id="162">    
+    <bendpoint x="558" y="1654"/>    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="163">    
+    <bendpoint x="2213" y="-176"/>    
+    <bendpoint x="2255" y="506"/>    
+    <bendpoint x="2255" y="1170"/>    
+    <bendpoint x="2255" y="1654"/>    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="164" name="comments"/>      
+      <multiplicity id="165" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="166">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="167" name="contacts"/>      
+      <multiplicity id="168" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="169">    
+    <bendpoint x="2602" y="-176"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="25"/>  
+  </generalization>  
+  <association id="170">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="171" name="publications"/>      
+      <multiplicity id="172" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="173">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <generalization id="174">    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="6"/>  
+  </generalization>  
+  <realization id="175">    
+    <bendpoint x="2753" y="1170"/>    
+    <bendpoint x="2753" y="1654"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <realization id="176">    
+    <bendpoint x="1883" y="1170"/>    
+    <bendpoint x="1879" y="1654"/>    
+    <end type="SOURCE" refId="12"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="177">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="178" name="studies"/>      
+      <multiplicity id="179" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="24" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="false" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="false" private="false" static="true"/>    
+    <operations public="true" package="true" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

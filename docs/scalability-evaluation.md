@@ -188,7 +188,7 @@ segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log), 0.5, -min(memSub.isa4J
 segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 0.5, -min(memSub.isatools$memory.usage.in.mb.log), col=col.green.light, xpd=NA)
 ```
 
-![](_scalability-evaluation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 ```r
 #dev.off()
@@ -212,7 +212,7 @@ abline(model.isatools$coefficients[1]+model.isatools$coefficients[4], model.isat
 abline(model.isatools$coefficients[1]+model.isatools$coefficients[3], model.isatools$coefficients[2], col="red")
 ```
 
-![](_scalability-evaluation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 ```r
 summary(model.isatools)
@@ -261,7 +261,7 @@ abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[4], model.isa4J$coef
 abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[3], model.isa4J$coefficients[2], col="red")
 ```
 
-![](_scalability-evaluation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 ```r
 summary(model.isa4J)
@@ -314,7 +314,7 @@ abline(model.both)
 abline(model.both$coefficients[1]+model.both$coefficients[3], model.both$coefficients[2]+model.both$coefficients[4], col="red")
 ```
 
-![](_scalability-evaluation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](scalability-evaluation_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ```r
 summary(model.both)
