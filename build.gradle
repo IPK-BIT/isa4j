@@ -203,11 +203,9 @@ release {
 //skip the task to tag this relsase because it is done by the githubRelease task
 createReleaseTag.enabled = false
 
-project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("githubRelease")})
 project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
 
 githubRelease {
-
 	// This is your personal access token with Repo permissions
 	// You get this from your user settings > developer settings > Personal Access Tokens
 	if(project.hasProperty('githubtoken')){
@@ -227,3 +225,5 @@ githubRelease {
     dryRun false
     apiEndpoint "https://api.github.com" 			
 }
+
+signArchives.finalizedBy('githubRelease')
