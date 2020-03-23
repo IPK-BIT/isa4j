@@ -3,6 +3,8 @@ title: "Simple Working Example"
 nav_order: 4
 ---
 
+# Simple Working Example
+
 Here is a simple complete working example that you can just copy and paste into your favorite IDE and run.
 You can play with it and use it as a template to extend to your use case.
 
