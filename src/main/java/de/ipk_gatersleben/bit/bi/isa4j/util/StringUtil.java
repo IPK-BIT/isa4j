@@ -21,9 +21,10 @@ public class StringUtil {
 	 * index of ? this function is used only by writeToFile, get the index of ? and
 	 * use by replace of {@link StringBuilder}.
 	 *
+	 * @param <T>       the attribute type
 	 * @param attribute the attribute to add
 	 * @param parameter to put in the {@link StringBuilder}
-	 * @return the {@link StringBuilder}
+	 * @return the type
 	 */
 	public static <T> String putNameInAttribute(T attribute, String parameter) {
 		return attribute.toString().replace(Symbol.WILDCARD.toString(), parameter);
@@ -34,8 +35,8 @@ public class StringUtil {
 	 * with Symbol.EMPTY. To be used on any String input by the user that ends up in
 	 * the ISATab files.
 	 * 
-	 * @param input
-	 * @return
+	 * @param input the input {@link String}
+	 * @return the cleanded {@link String}
 	 */
 	public static String sanitize(String input) {
 		if (input == null) {

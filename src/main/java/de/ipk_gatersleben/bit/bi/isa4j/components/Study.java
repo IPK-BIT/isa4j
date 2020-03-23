@@ -23,19 +23,16 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
  */
 
 public class Study extends WideTableFile implements Commentable {
-	
 
 	/**
 	 * {@link Assay} of Study
 	 */
 	private List<Assay> assays = new ArrayList<>(2);
-	
 
 	/**
 	 * People, who take part to the Investigation {@link Person}
 	 */
 	private List<Person> contacts = new ArrayList<>(2);
-	
 
 	/**
 	 * The brief description of the study aims.
@@ -82,17 +79,15 @@ public class Study extends WideTableFile implements Commentable {
 	 */
 	private Date submissionDate;
 
-
 	/**
 	 * The title for the Study.
 	 */
 	private String title;
 
-
 	/**
 	 * Constructor, give the identifier of study, filename is same with identifier
 	 *
-	 * @param identifier
+	 * @param identifier the id of the {@link Study}
 	 */
 	public Study(String identifier) {
 		super("s_" + identifier + ".txt");
@@ -102,8 +97,8 @@ public class Study extends WideTableFile implements Commentable {
 	/**
 	 * Constructor, give the identifier and filename
 	 *
-	 * @param identifier
-	 * @param fileName
+	 * @param identifier the id of the {@link Study}
+	 * @param fileName   the name of the {@link Study} file
 	 */
 	public Study(String identifier, String fileName) {
 		super(fileName);
@@ -117,13 +112,13 @@ public class Study extends WideTableFile implements Commentable {
 	 */
 	public void addAssay(Assay assay) {
 		Objects.requireNonNull(assay);
-		if(this.assays.stream().map(Assay::getFileName).anyMatch(assay.getFileName()::equals))
+		if (this.assays.stream().map(Assay::getFileName).anyMatch(assay.getFileName()::equals))
 			throw new RedundantItemException("Assay Filename not unique: " + assay.getFileName());
 
 		assay.setStudy(this);
 		this.assays.add(assay);
 	}
-	
+
 	/**
 	 * Add new {@link Person} to the list
 	 *
@@ -163,7 +158,7 @@ public class Study extends WideTableFile implements Commentable {
 		Objects.requireNonNull(publication);
 		this.publications.add(publication);
 	}
-	
+
 	/**
 	 * Get associated assays of this study
 	 *
@@ -231,7 +226,6 @@ public class Study extends WideTableFile implements Commentable {
 	public List<Protocol> getProtocols() {
 		return protocols;
 	}
-
 
 	/**
 	 * Get publications of study
@@ -387,7 +381,7 @@ public class Study extends WideTableFile implements Commentable {
 	public void setTitle(String title) {
 		this.title = StringUtil.sanitize(title);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "<Study> '" + this.getFileName() + "' (ID: '" + this.identifier + "')";

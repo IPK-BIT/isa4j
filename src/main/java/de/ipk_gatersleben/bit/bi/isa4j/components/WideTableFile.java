@@ -23,19 +23,19 @@ import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public abstract class WideTableFile implements Commentable {
-	
+
 	private CommentCollection comments = new CommentCollection();
-	
+
 	private String fileName;
-	
+
 	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
 
 	private OutputStreamWriter outputstreamwriter;
-	
+
 	/**
 	 * Constructor, give the filename
 	 *
-	 * @param fileName
+	 * @param fileName the name of the file
 	 */
 	public WideTableFile(String fileName) {
 		this.setFileName(fileName);
@@ -43,25 +43,27 @@ public abstract class WideTableFile implements Commentable {
 
 	/**
 	 * Closes the file and forgets all headers.
-	 * @throws IOException
+	 * 
+	 * @throws IOException is unable to close file
 	 */
 	public void closeFile() throws IOException {
 		this.outputstreamwriter.close();
 		this.outputstreamwriter = null;
 		this.headers = null;
 	}
-	
+
 	public CommentCollection comments() {
 		return this.comments;
 	}
-	
+
 	public void directToStream(OutputStream os) {
-		if(this.outputstreamwriter != null) {
-			throw new IllegalStateException("A file or stream is already being written to. Please close/release it first!");
+		if (this.outputstreamwriter != null) {
+			throw new IllegalStateException(
+					"A file or stream is already being written to. Please close/release it first!");
 		}
 		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 	}
-	
+
 	/**
 	 * Get filename of study
 	 *
@@ -70,92 +72,102 @@ public abstract class WideTableFile implements Commentable {
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 	/**
-	 * Returns true if headers have already been written to file/stream.
-	 * Can be used within a loop to make sure headers are exactly written once
-	 * @return
+	 * Returns true if headers have already been written to file/stream. Can be used
+	 * within a loop to make sure headers are exactly written once
+	 * 
+	 * @return if the headers are written
 	 */
 	public boolean hasWrittenHeaders() {
 		return this.headers != null;
 	}
-	
+
 	public void openFile() throws FileNotFoundException {
 		this.directToStream(new FileOutputStream(this.fileName));
 	}
+
 	public void releaseStream() throws IOException {
 		this.outputstreamwriter.flush();
 		this.outputstreamwriter = null;
 		this.headers = null;
 	}
-	
+
 	/**
 	 * @param fileName the fileName to set
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = StringUtil.sanitize(Objects.requireNonNull(fileName, "Filename cannot be null"));
 	}
-	
+
 	public void writeHeadersFromExample(StudyOrAssayTableObject example) throws IOException {
-		if(this.outputstreamwriter == null)
+		if (this.outputstreamwriter == null)
 			throw new IllegalStateException("No file or stream open for writing");
-		if(this.hasWrittenHeaders())
+		if (this.hasWrittenHeaders())
 			throw new IllegalStateException("Headers were already written to this file or stream");
-		
+
 		this.headers = new ArrayList<LinkedHashMap<String, String[]>>();
 		StringBuilder sb = new StringBuilder();
-		while(example != null) {
+		while (example != null) {
 			LinkedHashMap<String, String[]> headers = example.getHeaders();
 			this.headers.add(headers);
-			sb.append(headers.values().stream().map(o -> String.join(Symbol.TAB.toString(), o)).collect(Collectors.joining(Symbol.TAB.toString())));
+			sb.append(headers.values().stream().map(o -> String.join(Symbol.TAB.toString(), o))
+					.collect(Collectors.joining(Symbol.TAB.toString())));
 			example = example.getNextStudyOrAssayTableObject();
-			if(example != null)
+			if (example != null)
 				sb.append(Symbol.TAB.toString());
 		}
 		this.outputstreamwriter.write(sb.toString() + Symbol.ENTER);
 	}
-	
+
 	public void writeLine(StudyOrAssayTableObject initiator) throws IOException {
-		if(this.outputstreamwriter == null)
+		if (this.outputstreamwriter == null)
 			throw new IllegalStateException("No file or stream open for writing");
-		if(this.headers == null)
+		if (this.headers == null)
 			throw new IllegalStateException("Headers were not written yet");
-		
+
 		StringBuilder sb = new StringBuilder();
 		StudyOrAssayTableObject currentObject = initiator;
-		// Loop through header groups and objects at the same time (see below where currentObject = currentObject.getNextStudyOrAssayTableObject();
+		// Loop through header groups and objects at the same time (see below where
+		// currentObject = currentObject.getNextStudyOrAssayTableObject();
 		// each header group corresponds to one object (Sample, Process ...)
 		// So a header group for a Source could for example look like this:
 		// {
-		// 	"Source Name" 				=> ["Source Name"],
-		// 	"Characteristic[Organism]" 	=> ["Characteristic [Organism]", "Term Source REF", "Term Accession Number"],
-		//  "Characteristic[Genotype]"	=> ["Characteristic [Genotype]"]
+		// "Source Name" => ["Source Name"],
+		// "Characteristic[Organism]" => ["Characteristic [Organism]", "Term Source
+		// REF", "Term Accession Number"],
+		// "Characteristic[Genotype]" => ["Characteristic [Genotype]"]
 		// }
-		for(LinkedHashMap<String, String[]> currentHeaderGroup : this.headers) {
-			// This happens if we have header groups left but no more currentObjects in the line
-			Objects.requireNonNull(currentObject, "This line contains fewer objects (Sources, Samples, Processes...) than were defined in the header."
-					+ "\n Please make sure your line structure is uniform (e.g. Sample->Process->Material->Process->DataFile for ALL lines) and everything is linked with Processes correctly.");
-			
+		for (LinkedHashMap<String, String[]> currentHeaderGroup : this.headers) {
+			// This happens if we have header groups left but no more currentObjects in the
+			// line
+			Objects.requireNonNull(currentObject,
+					"This line contains fewer objects (Sources, Samples, Processes...) than were defined in the header."
+							+ "\n Please make sure your line structure is uniform (e.g. Sample->Process->Material->Process->DataFile for ALL lines) and everything is linked with Processes correctly.");
+
 			Map<String, String[]> fields = currentObject.getFields();
-			
+
 			sb.append(currentHeaderGroup.keySet().stream().map(o -> {
-				if(currentHeaderGroup.get(o).length != fields.get(o).length)
-					throw new IllegalStateException("Object has " + (currentHeaderGroup.get(o).length > fields.get(o).length ? "fewer" : "more") 
+				if (currentHeaderGroup.get(o).length != fields.get(o).length)
+					throw new IllegalStateException("Object has "
+							+ (currentHeaderGroup.get(o).length > fields.get(o).length ? "fewer" : "more")
 							+ "columns than header for " + o
 							+ "\n Please make sure that every object contains the same information as the examplary objects that were passed to writeHeadersFromExample."
 							+ "This error mostly occurs when only some objects of the same column (e.g. a specific Process ParameterValue) have Term Source Refs and Term Accession numbers.");
 				String partOfLine = String.join(Symbol.TAB.toString(), fields.get(o));
-				// Now we delete the entry from fields so that we know when there's any left in the end, we are missing headers
+				// Now we delete the entry from fields so that we know when there's any left in
+				// the end, we are missing headers
 				fields.remove(o);
-				return partOfLine;  }
-				).collect(Collectors.joining(Symbol.TAB.toString())));
+				return partOfLine;
+			}).collect(Collectors.joining(Symbol.TAB.toString())));
 
-			if(fields.size() > 0)
-				System.err.println("There were fields for Object" + currentObject + " that had no corresponding header. They were ignored: " + String.join(",", fields.keySet()));
-				// TODO use proper logging
-			
+			if (fields.size() > 0)
+				System.err.println("There were fields for Object" + currentObject
+						+ " that had no corresponding header. They were ignored: " + String.join(",", fields.keySet()));
+			// TODO use proper logging
+
 			currentObject = currentObject.getNextStudyOrAssayTableObject();
-			if(currentObject != null)
+			if (currentObject != null)
 				sb.append(Symbol.TAB.toString());
 		}
 		this.outputstreamwriter.write(sb.toString() + Symbol.ENTER);

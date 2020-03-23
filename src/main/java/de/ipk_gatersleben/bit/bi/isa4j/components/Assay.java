@@ -10,8 +10,9 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
- * Class to represent an assay in the ISA hierarchy. It is used to
- * describe the measured traits and belongs to a {@link Study}
+ * Class to represent an assay in the ISA hierarchy. It is used to describe the
+ * measured traits and belongs to a {@link Study}
+ * 
  * @author psaroudakis
  *
  */
@@ -36,12 +37,12 @@ public class Assay extends WideTableFile implements Commentable {
 	 * the technology being employed to observe this measurement
 	 */
 	private OntologyAnnotation technologyType;
-	
+
 	/**
-	 * Constructor, pass the filename the assay will be written to when using
-	 * the writeToFile method
+	 * Constructor, pass the filename the assay will be written to when using the
+	 * writeToFile method
 	 *
-	 * @param fileName
+	 * @param fileName the name of the assay file
 	 */
 	public Assay(String fileName) {
 		super(fileName);
@@ -89,9 +90,8 @@ public class Assay extends WideTableFile implements Commentable {
 		this.measurementType = measurementType;
 	}
 
-	
 	/**
-	 * @param study
+	 * @param study the associated {@link Study} to set
 	 */
 	protected void setStudy(Study study) {
 		this.study = study;
@@ -110,7 +110,7 @@ public class Assay extends WideTableFile implements Commentable {
 	public void setTechnologyType(OntologyAnnotation technologyType) {
 		this.technologyType = technologyType;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "<Assay> '" + this.getFileName() + "'";

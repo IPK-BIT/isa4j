@@ -11,7 +11,6 @@ import java.util.Objects;
 
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
-
 /**
  * Class representing a {@link Comment} that can be assigned to an
  * {@link Investigation}, {@link Study}, {@link Assay}, {@link DataFile},
@@ -30,13 +29,13 @@ public class Comment {
 	 * The value of the {@link Comment}.
 	 */
 	private String value;
-	
+
 	/**
 	 * Constructor.
 	 */
 	/**
-	 * @param name Name of the comment. Cannot be null.
-	 * @param value
+	 * @param name  Name of the comment. Cannot be null.
+	 * @param value the value of the {@link Comment}
 	 */
 	public Comment(String name, String value) {
 		this.setName(name);
@@ -78,7 +77,7 @@ public class Comment {
 	public void setValue(String value) {
 		this.value = StringUtil.sanitize(value);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "<Comment> '" + this.name + "': " + this.value + "'";
