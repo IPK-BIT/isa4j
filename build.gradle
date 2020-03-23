@@ -203,6 +203,7 @@ release {
 //skip the task to tag this relsase because it is done by the githubRelease task
 createReleaseTag.enabled = false
 
+//project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("githubRelease")})
 project.tasks.afterReleaseBuild.dependsOn project.collect({it.getTasks().getByName("uploadArchives")})
 
 githubRelease {
@@ -226,4 +227,4 @@ githubRelease {
     apiEndpoint "https://api.github.com" 			
 }
 
-signArchives.finalizedBy('githubRelease')
+afterReleaseBuild.finalizedBy('githubRelease')
