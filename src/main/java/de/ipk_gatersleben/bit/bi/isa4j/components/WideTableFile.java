@@ -13,10 +13,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
@@ -31,7 +35,9 @@ public abstract class WideTableFile implements Commentable {
 	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
 
 	private OutputStreamWriter outputstreamwriter;
-
+	
+	private final Logger logger = LoggerFactory.getLogger(WideTableFile.class);
+	
 	/**
 	 * Constructor, give the filename
 	 *
@@ -47,6 +53,7 @@ public abstract class WideTableFile implements Commentable {
 	 * @throws IOException is unable to close file
 	 */
 	public void closeFile() throws IOException {
+		logger.debug("{}: Closing output file.", this);
 		this.outputstreamwriter.close();
 		this.outputstreamwriter = null;
 		this.headers = null;
@@ -84,10 +91,12 @@ public abstract class WideTableFile implements Commentable {
 	}
 
 	public void openFile() throws FileNotFoundException {
+		logger.debug("{}: Directing output to File '{}'.", this, this.fileName);
 		this.directToStream(new FileOutputStream(this.fileName));
 	}
 
 	public void releaseStream() throws IOException {
+		logger.debug("{}: Releasing output stream.", this);	
 		this.outputstreamwriter.flush();
 		this.outputstreamwriter = null;
 		this.headers = null;
@@ -117,6 +126,14 @@ public abstract class WideTableFile implements Commentable {
 			if (example != null)
 				sb.append(Symbol.TAB.toString());
 		}
+		
+		logger.debug("{}: Writing these headers to output: [{}]", this,
+			this.headers.stream().map(
+				t -> "{" + t.keySet().stream().map(
+					k -> k + " = " + Arrays.toString(t.get(k)) )
+				.collect(Collectors.joining(", ")) + "}")
+			.collect(Collectors.joining(", ")));
+		
 		this.outputstreamwriter.write(sb.toString() + Symbol.ENTER);
 	}
 
@@ -161,11 +178,9 @@ public abstract class WideTableFile implements Commentable {
 				return partOfLine;
 			}).collect(Collectors.joining(Symbol.TAB.toString())));
 
-			if (fields.size() > 0)
-				System.err.println("There were fields for Object" + currentObject
-						+ " that had no corresponding header. They were ignored: " + String.join(",", fields.keySet()));
-			// TODO use proper logging
-
+			if(fields.size() > 0)
+				logger.warn("{}: There were fields for Object {} that had no corresponding header. They were ignored: {}", this, currentObject, String.join(", ", fields.keySet()));
+			
 			currentObject = currentObject.getNextStudyOrAssayTableObject();
 			if (currentObject != null)
 				sb.append(Symbol.TAB.toString());

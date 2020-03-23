@@ -643,6 +643,7 @@ public class Investigation implements Commentable {
 	public void writeToFile(String filepath) throws IOException {
 		OutputStream os = new FileOutputStream(filepath);
 		this.writeToStream(os);
+		os.close();
 	}
 	
 	public void writeToStream(OutputStream os) throws IOException {

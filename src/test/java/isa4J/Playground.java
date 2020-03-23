@@ -41,6 +41,8 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 public class Playground {
 
 	public static void main(String[] args) throws IOException, NoSuchMethodException, SecurityException {
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "TRACE");
+		
 		ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 		System.out.println(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
 		System.out.println(threadBean.getCurrentThreadCpuTime());
@@ -225,16 +227,16 @@ public class Playground {
 		System.out.println(assay1);
 		
 		
-//		study1.openFile();
-//		study1.writeHeadersFromExample(source1);
-//		study1.writeLine(source1);
-//		study1.closeFile();
+		study1.openFile();
+		study1.writeHeadersFromExample(source1);
+		source1.addCharacteristic(new Characteristic("New", new OntologyAnnotation("Irrelevant")));
+		source1.addCharacteristic(new Characteristic("New2", new OntologyAnnotation("Irrelevant2")));
+		study1.writeLine(source1);
+		study1.closeFile();
 		
 		System.out.println(ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed());
 		System.out.println(threadBean.getCurrentThreadCpuTime());
 		
-	    Logger logger = LoggerFactory.getLogger(Playground.class);
-	    logger.info("Hello World, {}", investigation);
 		
 	}
 
