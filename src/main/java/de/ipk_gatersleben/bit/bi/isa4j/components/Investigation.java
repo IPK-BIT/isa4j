@@ -19,6 +19,9 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
@@ -200,6 +203,8 @@ public class Investigation implements Commentable {
 	 * The defined identifier for the {@link Investigation}.
 	 */
 	private String identifier;
+	
+	private final Logger logger = LoggerFactory.getLogger(Investigation.class);
 
 	/**
 	 * The list of the used ontologies for this investigation {@link Ontology}
@@ -641,12 +646,14 @@ public class Investigation implements Commentable {
 	}
 	
 	public void writeToFile(String filepath) throws IOException {
+		logger.debug("{}: Directing output to file '{}'", this, filepath);
 		OutputStream os = new FileOutputStream(filepath);
 		this.writeToStream(os);
 		os.close();
 	}
 	
 	public void writeToStream(OutputStream os) throws IOException {
+		logger.debug("{}: Start writing output.", this);
 		OutputStreamWriter writer = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 		
 		writer.write(formatOntologies());
@@ -664,6 +671,7 @@ public class Investigation implements Commentable {
 		}
 			
 		writer.flush();
+		logger.debug("{}: Finished writing output.", this);
 	}
 
 }
