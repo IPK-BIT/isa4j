@@ -110,6 +110,7 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 	}
 
 	/**
+	 * Sets a Date for this Process (without time of day). Overwrites any Date or DateTime set before.
 	 * @param date the date to set
 	 */
 	public void setDate(LocalDate date) {
@@ -118,13 +119,19 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
 	}
     
 	/**
+	 * Sets a DateTime for this Process. Overwrites any Date or DateTime set before.
 	 * @param dateTime the dateTime to set
 	 */
 	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
-		this.date = null; // TODO document this behavior
+		this.date = null;
 	}
 	
+	/**
+	 * Declares the input to this Process. This information is used to link different entities
+	 * together in the output Study and Assay Files through Processes, e.g. Source->Process->Sample.
+	 * @param input
+	 */
     public void setInput(StudyOrAssayTableObject input) {
     	// Remove myself from previously defined input
     	if(this.input != null)
@@ -133,6 +140,11 @@ public class Process extends StudyOrAssayTableObject implements Commentable {
     	this.input = input;
     }
     
+    /**
+     * Declares the output of this Process. This information is used to link different entities
+	 * together in the output Study and Assay Files through Processes, e.g. Source->Process->Sample.
+     * @param output
+     */
     public void setOutput(StudyOrAssayTableObject output) {
     	this.setNextStudyOrAssayTableObject(output);
     }

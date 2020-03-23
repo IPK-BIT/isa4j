@@ -15,9 +15,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+
+import de.ipk_gatersleben.bit.bi.isa4j.performanceTests.PerformanceTester;
 
 public class AssayTest {
 	Assay assay;
@@ -71,4 +80,117 @@ public class AssayTest {
     	assertNull(correctFile.readLine());
 	}
 
+	@Test
+	@Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
+	void testTimeout() throws IOException {
+		Investigation investigation = new Investigation("i1");
+		Study study = new Study("s1", "s_study.txt");
+		investigation.addStudy(study);
+		
+		HashMap<String, Ontology> ontologies = new HashMap<String, Ontology>();
+		ontologies.put("NCBITaxon", new Ontology("NCBITaxon", new URL("http://purl.obolibrary.org/obo/ncbitaxon"), null, "National Center for Biotechnology Information (NCBI) Organismal Classification"));
+		ontologies.put("AGRO", new Ontology("AGRO", new URL("http://purl.obolibrary.org/obo/agro/releases/2018-05-14/agro.owl"), "2018-05-14", "Agronomy Ontology"));
+		ontologies.put("UO", new Ontology("UO", new URL("http://data.bioontology.org/ontologies/UO"), "38802", "Units of Measurement Ontology"));
+		investigation.setOntologies(new ArrayList<>(ontologies.values()));
+		
+	    // Factors
+		Factor faSoilCover = new Factor("Soil Cover");
+		Factor faPlantMovement = new Factor("Plant Movement");
+		study.setFactors(List.of(faSoilCover, faPlantMovement));
+		
+	    // Protocols
+	    Protocol phenotyping = new Protocol("Phenotyping");
+	    Protocol growth      = new Protocol("Growth");
+	    Protocol watering    = new Protocol("Watering");
+	    study.addProtocol(phenotyping);
+	    study.addProtocol(growth);
+	    study.addProtocol(watering);
+
+	    study.addAssay(assay);
+	    
+	    // Growth Parameters
+	    HashMap<String, String[]> growthParameters = new HashMap<String, String[]>(); // Name => [Value, Value REF, Value Accession, Unit, Unit REF, Unit Accession]
+	    BufferedReader csvReader = new BufferedReader(new InputStreamReader(PerformanceTester.class.getResourceAsStream("growth_parameters.csv")));
+	    String row = csvReader.readLine(); // Skip the first line (headers)
+	    while ((row = csvReader.readLine()) != null) {
+	        String[] data = row.split(";", -1);
+	        growthParameters.put(data[0], Arrays.copyOfRange(data, 1, data.length));
+	        growth.addParameter(new ProtocolParameter(data[0]));
+	    }
+	    csvReader.close();
+	    
+	    ArrayList<ParameterValue> growthParameterValues = new ArrayList<ParameterValue>();
+	    for(ProtocolParameter param : growth.getParameters()) {
+	    	String[] fieldValues = growthParameters.get(param.getName().getTerm());
+	    	OntologyAnnotation unit = null;
+	    	OntologyAnnotation value = null;
+	    	if(!fieldValues[3].isEmpty()) {
+	    		if(!fieldValues[4].isEmpty()) {
+	    			unit = new OntologyAnnotation(fieldValues[3], fieldValues[5], ontologies.get(fieldValues[4]));
+	    		} else {
+	    			unit = new OntologyAnnotation(fieldValues[3]);
+	    		}
+	    		value = new OntologyAnnotation(fieldValues[0]);
+	    	} else {
+	    		if(!fieldValues[1].isEmpty()) {
+	    			value = new OntologyAnnotation(fieldValues[0], fieldValues[2], ontologies.get(fieldValues[1]));
+	    		} else
+	    			value = new OntologyAnnotation(fieldValues[0]);
+	    	}
+	    	growthParameterValues.add(new ParameterValue(param, value, unit));
+	    }
+		
+	    // Read Phenotyping Parameters
+		HashMap<String, ProtocolParameter> phenotypingParameters = new HashMap<String, ProtocolParameter>();
+	    csvReader = new BufferedReader(new InputStreamReader(PerformanceTester.class.getResourceAsStream("phenotyping_parameters.csv")));
+	    row = csvReader.readLine(); // Skip the first line (headers)
+	    while ((row = csvReader.readLine()) != null) {
+	        String[] data = row.split(";", -1);
+	        ProtocolParameter param = new ProtocolParameter(data[0]);
+	        phenotypingParameters.put(data[0], param);
+	        phenotyping.addParameter(param);
+	    }
+	    csvReader.close();
+	    
+	    HashMap<String, ProtocolParameter> wateringParameters = new HashMap<String, ProtocolParameter>();
+	    wateringParameters.put("Irrigation Type", new ProtocolParameter("Irrigaiton Type"));
+	    wateringParameters.put("Volume", new ProtocolParameter("Volume"));
+
+	    Comment datafileComment = new Comment("Image analysis tool", "IAP");
+		assay.openFile();
+		for(int i = 0; i < 1000; i++) {
+			Sample sample = new Sample("1135FA-"+i);
+			
+			Process procPhenotyping = new Process(phenotyping);
+			procPhenotyping.setInput(sample);
+			
+			DataFile dataFile = new DataFile("Raw Data File", ""+i+"FA_images/fluo/side/54/1135FA1001 side.fluo das_54 DEG_000 2011-10-12 11_09_36.png");
+			procPhenotyping.setOutput(dataFile);
+			
+			procPhenotyping.setParameterValues(List.of(
+                new ParameterValue(phenotypingParameters.get("Imaging Time"), "28.09.2011 12:34:37"),
+                new ParameterValue(phenotypingParameters.get("Camera Configuration"), "A_Fluo_Side_Big_Plant"),
+                new ParameterValue(phenotypingParameters.get("Camera Sensor"),"FLUO"),
+                new ParameterValue(phenotypingParameters.get("Camera View"), "side"),
+                new ParameterValue(phenotypingParameters.get("Imaging Angle"), 90.0, new OntologyAnnotation("degree", "http://purl.obolibrary.org/obo/UO_0000185", ontologies.get("UO")))
+			));
+			
+			Process procWatering = new Process(watering);
+			procWatering.setInput(dataFile);
+			DataFile dataFile2 = new DataFile("Derived Data File", "derived_data_files/das_"+i+".txt");
+			dataFile2.comments().add(datafileComment);
+			procPhenotyping.setOutput(dataFile2);
+			
+			procWatering.setParameterValues(List.of(
+	    	    new ParameterValue(wateringParameters.get("Irrigation Type"), "automated (LemnaTec target weight)"),
+	    	    new ParameterValue(wateringParameters.get("Volume"), 80.4, new OntologyAnnotation("g", "http://purl.obolibrary.org/obo/UO_0000021", ontologies.get("UO")))
+			));
+			
+			if(!assay.hasWrittenHeaders())
+				assay.writeHeadersFromExample(sample);
+			assay.writeLine(sample);
+		}
+		assay.closeFile();
+	}
+	
 }
