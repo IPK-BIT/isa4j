@@ -157,7 +157,8 @@ public class AssayTest {
 	    wateringParameters.put("Volume", new ProtocolParameter("Volume"));
 
 	    Comment datafileComment = new Comment("Image analysis tool", "IAP");
-		assay.openFile();
+    	ByteArrayOutputStream os   = new ByteArrayOutputStream();
+    	this.assay.directToStream(os);
 		for(int i = 0; i < 1000; i++) {
 			Sample sample = new Sample("1135FA-"+i);
 			
