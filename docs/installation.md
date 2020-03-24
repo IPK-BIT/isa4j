@@ -19,7 +19,7 @@ repositories {
 	mavenCentral()
 }    
 dependencies {
-	compile group: 'de.ipk-gatersleben', name:'isa4j', version:'{{site.github.latest_release.name | split: "-" | last}}'
+	implementation group: 'de.ipk-gatersleben', name:'isa4j', version:'{{site.github.latest_release.name | split: "-" | last}}'
 }
 ```
 
@@ -30,4 +30,36 @@ dependencies {
   <artifactId>isa4J</artifactId>
   <version>{{site.github.latest_release.name | split: "-" | last}}</version>
 </dependency>
+```
+
+## Scala BST
+```
+libraryDependencies += "de.ipk-gatersleben" % "isa4J" % "{{site.github.latest_release.name | split: "-" | last}}"
+```
+
+## Apache Ivy
+```
+<dependency org="de.ipk-gatersleben" name="isa4J" rev="{{site.github.latest_release.name | split: "-" | last}}" />
+```
+
+## Groovy Grape
+```
+@Grapes(
+  @Grab(group='de.ipk-gatersleben', module='isa4J', version='{{site.github.latest_release.name | split: "-" | last}}')
+)
+```
+
+## Leiningen
+```
+[de.ipk-gatersleben/isa4J "{{site.github.latest_release.name | split: "-" | last}}"]
+```
+
+## Apache Buildr
+```
+'de.ipk-gatersleben:isa4J:jar:{{site.github.latest_release.name | split: "-" | last}}'
+```
+
+## PURL
+```
+pkg:maven/de.ipk-gatersleben/isa4J@{{site.github.latest_release.name | split: "-" | last}}
 ```
