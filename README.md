@@ -14,7 +14,28 @@ The software provided as-is and made available under the terms of the GNU GPLv3 
 
 ### Installation
 
-Please see the [Installation page](https://ipk-bit.github.io/isa4J/installation.html) in the documentation for installation instructions.
+#### Gradle
+
+```
+repositories {
+	mavenCentral()
+}    
+dependencies {
+	compile group: 'de.ipk-gatersleben', name:'isa4j', version:'1.0.0'
+}
+```
+
+#### Maven
+
+```
+<dependency>
+  <groupId>de.ipk-gatersleben</groupId>
+  <artifactId>isa4J</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+If you don't use Gradle or Maven, please see the [Installation page](https://ipk-bit.github.io/isa4J/installation.html) in the documentation for further instructions.
 
 ### Simple Working Example
 
