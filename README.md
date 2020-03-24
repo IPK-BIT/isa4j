@@ -21,7 +21,7 @@ repositories {
 	mavenCentral()
 }    
 dependencies {
-	compile group: 'de.ipk-gatersleben', name:'isa4j', version:'1.0.0'
+	implementation group: 'de.ipk-gatersleben', name:'isa4j', version:'1.0.0'
 }
 ```
 
