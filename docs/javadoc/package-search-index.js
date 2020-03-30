@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"de.ipk_gatersleben.bit.bi.isa4j.components"},{"l":"de.ipk_gatersleben.bit.bi.isa4j.constants"},{"l":"de.ipk_gatersleben.bit.bi.isa4j.exceptions"},{"l":"de.ipk_gatersleben.bit.bi.isa4j.util"}]
