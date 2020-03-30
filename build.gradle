@@ -70,31 +70,31 @@ sourceSets {
 	}
 
 task javadocJar(type: Jar) {
-	 	classifier = 'javadoc'
-	    from javadoc
-	}
+	 classifier = 'javadoc'
+	 from javadoc
+}
 
-	task sourcesJar(type: Jar) {
-	    classifier = 'sources'
-	    from sourceSets.main.allSource
-	}
+task sourcesJar(type: Jar) {
+	 classifier = 'sources'
+	 from sourceSets.main.allSource
+}
 	
-	shadowJar {
-   		classifier = 'jar-with-dependencies'
-	}
+shadowJar {
+	classifier = 'jar-with-dependencies'
+}
 	
-	artifacts {
-   		archives javadocJar, sourcesJar, shadowJar
-	}
+artifacts {
+	archives javadocJar, sourcesJar, shadowJar
+}
 	
-	if(!project.hasProperty('signing.keyId') || !project.hasProperty('signing.password')|| !project.hasProperty('signing.secretKeyRingFile')){   
-		println "WARNING: If you want to sign your archives please provide the 'signing.keyId' and 'signing.password' and 'signing.secretKeyRingFile' properties"
+if(!project.hasProperty('signing.keyId') || !project.hasProperty('signing.password')|| !project.hasProperty('signing.secretKeyRingFile')){   
+	println "WARNING: If you want to sign your archives please provide the 'signing.keyId' and 'signing.password' and 'signing.secretKeyRingFile' properties"
+}
+else{
+	signing {
+	    sign configurations.archives
 	}
-	else{
-		signing {
-		    sign configurations.archives
-		}
-	}
+}
 	
 uploadArchives {
 		repositories {
@@ -228,3 +228,12 @@ githubRelease {
 }
 
 afterReleaseBuild.finalizedBy('githubRelease')
+
+
+task copyJavaDocs(type: Copy) {
+     from 'build/docs/javadoc'
+     into 'docs/javadoc'
+}
+
+copyJavaDocs.dependsOn(javadoc)
+javadocJar.finalizedBy(copyJavaDocs)
