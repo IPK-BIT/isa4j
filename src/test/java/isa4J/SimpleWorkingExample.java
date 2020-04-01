@@ -43,7 +43,7 @@ public class SimpleWorkingExample {
 			
 			/* Study File */
 			myStudy.openFile();
-			/* Instead of looping through numbers, here you would loop through your database, CSV etc. */
+			/* Here you would loop through your database, CSV, JSON etc. */
 			for(int i = 0; i < 5; i++) {
 				Source source = new Source("Source " + i);
 				Sample sample = new Sample("Sample " + i);
