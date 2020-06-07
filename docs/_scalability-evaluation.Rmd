@@ -26,12 +26,14 @@ The third and final level of complexity (*real world*) was modelled after the re
 Examplary ISA-Tab output for each of the three complexity levels can be found in the following section.
 
 For each complexity level, CPU execution time was measured for writing a number of $n$ rows in Study and Assay File each, starting at 1 row and increasing stepwise up to 25,000 rows.
-Every combination of complexity level and $n$ was measured for 5 consecutive runs (12 for isa4J because results varied more) after a warm-up of writing 100 rows.
+Every combination of complexity level and $n$ was measured for 5 consecutive runs (15 for isa4J because results varied more) after a warm-up of writing 100 rows.
 Additionally, memory usage was measured for realistic complexity in 5 separate runs after CPU execution time measurements.
 
 Performance evaluation was carried out on a Macbook Pro 2017 (2.3 GHz Dual-Core Intel Core i5 Processor, 16 GB 2133 MHz LPDDR3 RAM) with macOS Catalina (Version 10.15.2).
 isatools was evaluated under Python 3.7.3 [Clang 11.0.0 (clang-1100.0.33.16)] using isatools version 0.11 and memory-profiler version 0.57 for measuring RAM usage. CPU execution time was measured with `time.process_time_ns`. 
-isa4J was evaluated under AdoptOpenJDK 11.0.5 using `ThreadMXBean.getCurrentThreadCpuTime()` and `MemoryMXBean.getHeapMemory().getUsed() + MemoryMXBean.getNonHeapMemory().getUsed()`.
+isa4J was evaluated under AdoptOpenJDK 11.0.5 using `ThreadMXBean.getCurrentThreadCpuTime()` and `MemoryMXBean.getHeapMemory().getUsed()`.
+For both platform, memory consumption baseline was calculated after the warm-up runs and an additional GC invocation.
+This baseline consumption was subtracted from all subsequent memory consumption values (we wanted to measure purely the memory consumed by the ISA-Tab content, not libraries and other periphery).
 
 The actual code generating the files and measuring time and memory usage can be found [here](https://github.com/IPK-BIT/isa4J/blob/master/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/isatools_performance_test.py) for python isatools and [here](https://github.com/IPK-BIT/isa4J/blob/master/src/test/java/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/PerformanceTester.java) for isa4J
 
@@ -105,7 +107,7 @@ col.gray = "gray52"
 col.green.dark = "#B8CDC8" #DBF3ED 
 col.green.light = "#E7F1EF" #EEF8F6 
 
-#pdf("figure.pdf", 6.92913, 3, colormodel="cmyk")
+#pdf("figure.pdf", 6.92913, 3.3, colormodel="srgb")
 par(family="serif", cex=0.7, mar=c(4.5,3.8,0,0), fig=c(0,1,0.2,1))
 xlim = c(0, 4.6)
 plot(data$time.in.ns.log ~ data$n.rows.log, xlim=xlim, col=data$color, axes=F, xlab=expression("Number of Rows (log"[10]~"Scale)"), ylab="", col.lab=col.gray)
@@ -156,21 +158,17 @@ memSub = data[data$row.complexity == "real_world",]
 plot(-memSub$memory.usage.in.mb.log ~ memSub$n.rows.log, type="n", axes=F, xlim=xlim, xlab="", ylab="")
 memSub.isatools = memSub[memSub$platform == "isatools",]
 memSub.isa4J = memSub[memSub$platform == "isa4J",]
-polygon(c(memSub.isatools$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isatools$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col=col.green.light, border=NA) #DBF3ED
-polygon(c(memSub.isa4J$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isa4J$memory.usage.in.mb.log, min(memSub$n.rows.log), min(memSub$n.rows.log) ), col=col.green.dark, border=NA) #A1D7CA
+polygon(c(memSub.isatools$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isatools$memory.usage.in.mb.log, min(memSub$memory.usage.in.mb.log), min(memSub$memory.usage.in.mb.log) ), col=col.green.light, border=NA) #DBF3ED
+polygon(c(memSub.isa4J$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isa4J$memory.usage.in.mb.log, min(memSub$memory.usage.in.mb.log), min(memSub$memory.usage.in.mb.log) ), col=col.green.dark, border=NA) #A1D7CA
 
-text(0.1, -1.6, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col=col.gray)
+text(0.01, -1, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col=col.gray)
 
-text(0, -0.9, "isa4J", pos=2, xpd=NA, col=col.gray, cex=0.8)
-text(0, -1.85, "isatools", pos=2, xpd=NA, col=col.gray, cex=0.8)
+#text(0, 0.4, "isa4J", pos=2, xpd=NA, col=col.gray, cex=0.8)
+#text(0, -1.6, "isatools", pos=2, xpd=NA, col=col.gray, cex=0.8)
 
-text(log(24000,10), -1.05, paste(round(min(memSub.isa4J$memory.usage.in.mb), 0), "-", round(max(memSub.isa4J$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
+text(log(24000,10), 0.3, paste("isa4J \n  ",round(min(memSub.isa4J$memory.usage.in.mb), 1), "-", round(max(memSub.isa4J$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
-text(log(24000,10), -1.9, paste(round(min(memSub.isatools$memory.usage.in.mb), 0), "-", round(max(memSub.isatools$memory.usage.in.mb), 0),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
-
-segments(-0.3, -min(memSub.isa4J$memory.usage.in.mb.log), 0.5, -min(memSub.isa4J$memory.usage.in.mb.log), col=col.green.dark, xpd=NA)
-
-segments(-0.4, -min(memSub.isatools$memory.usage.in.mb.log), 0.5, -min(memSub.isatools$memory.usage.in.mb.log), col=col.green.light, xpd=NA)
+text(log(24000,10), -1.6, paste("isatools \n  ", round(min(memSub.isatools$memory.usage.in.mb), 1), "-", round(max(memSub.isatools$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
 #dev.off()
 ```

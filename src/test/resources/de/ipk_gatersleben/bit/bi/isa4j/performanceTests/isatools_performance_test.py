@@ -303,11 +303,13 @@ def measure_real_world(n_rows):
     isatab.dump(investigation, "./")
     return time.process_time_ns() - starting_time
 
-with open('performance_test_results.csv', 'w') as csvfile:
+with open('isatools_performance_test_results.csv', 'w') as csvfile:
     writer = csv.writer(csvfile, delimiter=',')
     writer.writerow(["platform", "row.complexity", "n.rows", "time.in.ns", "memory.usage.in.mb", "date.test.performed"])
     # Warm-Up
     measure_real_world(100)
+    gc.collect()
+    baseline_memory = memory_usage()[0]
     for i in [1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000]:
         for r in range(0, 5):
             writer.writerow(["isatools", "minimal", i, measure_minimal(i), -1, str(datetime.now())])
@@ -319,7 +321,7 @@ with open('performance_test_results.csv', 'w') as csvfile:
             # Here we have to split it into two because we're measuring memory usage as well
             time_taken = measure_real_world(i)
             gc.collect()
-            writer.writerow(["isatools", "real_world", i, time_taken, max(memory_usage((measure_real_world, (i,)), interval=1)), str(datetime.now())])
+            writer.writerow(["isatools", "real_world", i, time_taken, max(memory_usage((measure_real_world, (i,)), interval=1)) - baseline_memory, str(datetime.now())])
             gc.collect() # also collect GC after each memory measuring run
 
 os.remove("i_investigation.txt")

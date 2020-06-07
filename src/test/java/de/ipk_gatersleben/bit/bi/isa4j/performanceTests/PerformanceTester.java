@@ -324,7 +324,7 @@ public class PerformanceTester {
 	 */
 	private static long getCurrentMemoryUsage(MemoryMXBean bean) {
 		System.gc();
-		return bean.getHeapMemoryUsage().getUsed() + bean.getNonHeapMemoryUsage().getUsed();
+		return bean.getHeapMemoryUsage().getUsed();
 	}
 	
 	/**
@@ -515,14 +515,16 @@ public class PerformanceTester {
 		ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
 		MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 		
-		int numberOfRuns= 20;
-		
-		// Warm up (discarded)
-		measureRealWorld(threadBean, 1000);
+		int numberOfRuns= 15;
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter("isa4J_performance_results.csv"));
 		
-		for(int nRows : List.of(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000,50000)) {
+		// Warm up (discarded)
+		measureRealWorld(threadBean, 1000);
+		System.gc();
+		long memoryBaseline = memoryBean.getHeapMemoryUsage().getUsed();
+		
+		for(int nRows : List.of(1,3,5,10,25,50,100,250,500)) { //,1000,2500,5000,10000,25000)) {
 			System.out.println("nRows = " + nRows);
 			for(int x = 0; x < numberOfRuns; x++) {
 				writer.write("isa4J,minimal,"+nRows+","+measureMinimal(threadBean, nRows)+",-1,"+LocalDateTime.now()+"\n");
@@ -535,7 +537,7 @@ public class PerformanceTester {
 			for(int x = 0; x < numberOfRuns; x++) {
 				long cpuTime = measureRealWorld(threadBean, nRows);
 				int memoryMeasureFrequency = Math.max(10, nRows/1000);
-				writer.write("isa4J,real_world,"+nRows+","+cpuTime+","+measureRealWorldMemory(memoryBean, nRows, memoryMeasureFrequency)/1024.0/1204.0+","+LocalDateTime.now()+"\n");
+				writer.write("isa4J,real_world,"+nRows+","+cpuTime+","+(measureRealWorldMemory(memoryBean, nRows, memoryMeasureFrequency)-memoryBaseline)/1024.0/1204.0+","+LocalDateTime.now()+"\n");
 				System.gc();
 			}
 		}
