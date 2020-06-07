@@ -26,51 +26,55 @@ public class SimpleWorkingExample {
 	public static void main(String[] args) {
 		Investigation myInvestigation = new Investigation("myInvestigationID");
 		myInvestigation.setTitle("A very important Investigation");
-		// Set further attributes, add Contacts, Publications, Ontologies...
+		/* Set further attributes, add Contacts, Publications, Ontologies...*/
 		
 		Study myStudy = new Study("myStudyID", "s_study1.txt");
 		myStudy.setTitle("A very important study");
 		Protocol plantTalking = new Protocol("Plant Talking");
 		myStudy.addProtocol(plantTalking);
-		// Set further Study attributes, add Contacts, Publications...
+		/* Set further Study attributes, add Contacts, Publications... */
 		myInvestigation.addStudy(myStudy);
 		
 		Assay myAssay = new Assay("a_assay.txt");
-		// Set further Assay attributes...
+		/* Set further Assay attributes... */
 		myStudy.addAssay(myAssay);
 		
-		// Write the files
+		/* Write the files */
 		try {
-			// Investigation File
+			/* Investigation File */
 			myInvestigation.writeToFile("i_investigation.txt");
 			
-			// Study File
+			/* Study File */
 			myStudy.openFile();
-			// Instead of looping through useless numbers, here you would loop through your database, CSV etc.
+			/* Here you would loop through your database, CSV, JSON etc. */
 			for(int i = 0; i < 5; i++) {
 				Source source = new Source("Source " + i);
 				Sample sample = new Sample("Sample " + i);
-				Process talkingProcess = new Process(plantTalking); // plantTalking is a Protocol defined above
+				/* plantTalking is a Protocol defined above */
+				Process talkingProcess = new Process(plantTalking); 
 				talkingProcess.setInput(source);
 				talkingProcess.setOutput(sample);
 
-				if(!myStudy.hasWrittenHeaders())
+				if(!myStudy.hasWrittenHeaders()) {
 					myStudy.writeHeadersFromExample(source);
+				}
 				myStudy.writeLine(source);
 			}
 			myStudy.closeFile();
 			
-			// Assay File
+			/* Assay File */
 			myAssay.openFile();
 			for(int i = 0; i < 5; i++) {
 				Sample sample = new Sample("Sample " + i);
-				DataFile sequenceFile = new DataFile("Raw Data File", "seq-"+ i + ".fasta");
-				Process talkingProcess = new Process(plantTalking); // plantTalking is a Protocol defined above
+				DataFile seqFile = new DataFile("Raw Data File", "seq-"+ i + ".fasta");
+				/* plantTalking is a Protocol defined above */
+				Process talkingProcess = new Process(plantTalking); 
 				talkingProcess.setInput(sample);
-				talkingProcess.setOutput(sequenceFile);
+				talkingProcess.setOutput(seqFile);
 
-				if(!myAssay.hasWrittenHeaders())
+				if(!myAssay.hasWrittenHeaders()) {
 					myAssay.writeHeadersFromExample(sample);
+				}
 				myAssay.writeLine(sample);
 			}
 			myAssay.closeFile();
@@ -80,6 +84,5 @@ public class SimpleWorkingExample {
 			e.printStackTrace();
 		}
 	}
-
 }
 ```
