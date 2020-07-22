@@ -19,7 +19,7 @@ repositories {
 	mavenCentral()
 }    
 dependencies {
-	implementation group: 'de.ipk-gatersleben', name:'isa4j', version:'{{site.github.latest_release.name | split: "-" | last}}'
+	implementation group: 'de.ipk-gatersleben', name:'isa4J', version:'{{site.github.latest_release.name | split: "-" | last}}'
 }
 ```
 
