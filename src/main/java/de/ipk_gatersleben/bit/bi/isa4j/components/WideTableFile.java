@@ -34,9 +34,9 @@ public abstract class WideTableFile implements Commentable {
 
 	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
 
-	private OutputStreamWriter outputstreamwriter;
-	
 	private final Logger logger = LoggerFactory.getLogger(WideTableFile.class);
+	
+	private OutputStreamWriter outputstreamwriter;
 	
 	/**
 	 * Constructor, give the filename
@@ -63,14 +63,6 @@ public abstract class WideTableFile implements Commentable {
 		return this.comments;
 	}
 
-	public void directToStream(OutputStream os) {
-		if (this.outputstreamwriter != null) {
-			throw new IllegalStateException(
-					"A file or stream is already being written to. Please close/release it first!");
-		}
-		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
-	}
-
 	/**
 	 * Get filename of study
 	 *
@@ -92,7 +84,7 @@ public abstract class WideTableFile implements Commentable {
 
 	public void openFile() throws FileNotFoundException {
 		logger.debug("{}: Directing output to File '{}'.", this, this.fileName);
-		this.directToStream(new FileOutputStream(this.fileName));
+		this.setOutputStream(new FileOutputStream(this.fileName));
 	}
 
 	public void releaseStream() throws IOException {
@@ -107,6 +99,14 @@ public abstract class WideTableFile implements Commentable {
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = StringUtil.sanitize(Objects.requireNonNull(fileName, "Filename cannot be null"));
+	}
+
+	public void setOutputStream(OutputStream os) {
+		if (this.outputstreamwriter != null) {
+			throw new IllegalStateException(
+					"A file or stream is already being written to. Please close/release it first!");
+		}
+		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 	}
 
 	public void writeHeadersFromExample(StudyOrAssayTableObject example) throws IOException {

@@ -35,11 +35,11 @@ public class WideTableFileTest {
 		OutputStream os = new PipedOutputStream(new PipedInputStream());
 		OutputStream os2 = new ByteArrayOutputStream();
 		// Complain when trying to write to a stream while another is still opened
-		study.directToStream(os);
-		assertThrows(IllegalStateException.class, () -> study.directToStream(os2));
+		study.setOutputStream(os);
+		assertThrows(IllegalStateException.class, () -> study.setOutputStream(os2));
 		// Make it work fine when the first is released
 		study.releaseStream();
-		study.directToStream(os2);
+		study.setOutputStream(os2);
 		// Make sure the first stream is still writable (i.e. it wasn't closed)
 		String output = "Hello";
 		os.write(output.getBytes());
@@ -62,7 +62,7 @@ public class WideTableFileTest {
 		assertThrows(IllegalStateException.class, () -> study.writeHeadersFromExample(source));
 		
 		OutputStream os = new ByteArrayOutputStream();
-		study.directToStream(os);
+		study.setOutputStream(os);
 		study.writeHeadersFromExample(source);
 		study.releaseStream();
 		
@@ -89,7 +89,7 @@ public class WideTableFileTest {
 		assertThrows(IllegalStateException.class, () -> study.writeLine(source1));
 		
 		ByteArrayOutputStream os1   = new ByteArrayOutputStream();
-    	this.study.directToStream(os1);
+    	this.study.setOutputStream(os1);
     	// Complain if headers were not written yet
     	assertThrows(IllegalStateException.class, () -> study.writeLine(source1));
     	

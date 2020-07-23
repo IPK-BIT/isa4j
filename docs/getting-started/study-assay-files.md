@@ -131,13 +131,13 @@ study1.closeFile();
 Like the Investigation File, you can also write Study Files to a stream instead of a file.
 
 ```java
-study1.directToStream(os); // os = some OutputStream, instead of study1.openFile()
+study1.setOutputStream(os); // os = some OutputStream, instead of study1.openFile()
 // Write your lines here
 study1.releaseStream(); // instead of study1.closeFile()
 ```
 
 ## What about Assays?
-Assays work in the exact same way that Studies do, they also have `openFile, writeHeadersFromExample, writeLine, closeFile` as well as `directToStream` and `releaseStream` methods.
+Assays work in the exact same way that Studies do, they also have `openFile, writeHeadersFromExample, writeLine, closeFile` as well as `setOutputStream` and `releaseStream` methods.
 In addition to Sources and Samples, you may want to make use of the `Material` and `DataFile` classes when writing Assay Files (although you **can** also use them in the Study File).
 
 ```java
