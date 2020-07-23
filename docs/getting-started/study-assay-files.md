@@ -97,7 +97,7 @@ sample.addFactorValue(new FactorValue(
 
 Process process = new Process(plantTalking);
 process.addParameterValue(
-	new ProtocolParameter(toneOfVoice, "soft") // similar to FactorValue: can have double/string/OntologyAnnotation values and an optional unit
+	new ParameterValue(toneOfVoice, "soft") // similar to FactorValue: can have double/string/OntologyAnnotation values and an optional unit
 ); 
 
 // Comments work the same way as before
