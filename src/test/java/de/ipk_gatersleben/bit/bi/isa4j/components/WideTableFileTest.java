@@ -90,8 +90,6 @@ public class WideTableFileTest {
 		
 		ByteArrayOutputStream os1   = new ByteArrayOutputStream();
     	this.study.setOutputStream(os1);
-    	// Complain if headers were not written yet
-    	assertThrows(IllegalStateException.class, () -> study.writeLine(source1));
     	
     	this.study.writeHeadersFromExample(source1);
     	

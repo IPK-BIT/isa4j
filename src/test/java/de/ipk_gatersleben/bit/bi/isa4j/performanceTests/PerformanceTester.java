@@ -63,8 +63,6 @@ public class PerformanceTester {
 			process.setInput(source);
 			process.setOutput(sample);
 			
-			if(!study.hasWrittenHeaders())
-				study.writeHeadersFromExample(source);
 			study.writeLine(source);
 		}
 		study.closeFile();
@@ -82,8 +80,6 @@ public class PerformanceTester {
 			process.setInput(sample);
 			process.setOutput(dataFile);
 			
-			if(!assay.hasWrittenHeaders())
-				assay.writeHeadersFromExample(sample);
 			assay.writeLine(sample);
 		}
 		assay.closeFile();
@@ -117,8 +113,6 @@ public class PerformanceTester {
 			process.setInput(source);
 			process.setOutput(sample);
 			
-			if(!study.hasWrittenHeaders())
-				study.writeHeadersFromExample(source);
 			study.writeLine(source);
 		}
 		study.closeFile();
@@ -142,8 +136,6 @@ public class PerformanceTester {
 			sequencing.setInput(extract);
 			sequencing.setOutput(dataFile);
 			
-			if(!assay.hasWrittenHeaders())
-				assay.writeHeadersFromExample(sample);
 			assay.writeLine(sample);
 		}
 		assay.closeFile();
@@ -251,8 +243,6 @@ public class PerformanceTester {
 	        else
 	        	sample.setFactorValues(List.of(favUncovered, favStationary));
 			
-			if(!study.hasWrittenHeaders())
-				study.writeHeadersFromExample(source);
 			study.writeLine(source);
 		}
 		study.closeFile();
@@ -303,8 +293,6 @@ public class PerformanceTester {
 	    	    new ParameterValue(wateringParameters.get("Volume"), 80.4, new OntologyAnnotation("g", "http://purl.obolibrary.org/obo/UO_0000021", ontologies.get("UO")))
 			));
 			
-			if(!assay.hasWrittenHeaders())
-				assay.writeHeadersFromExample(sample);
 			assay.writeLine(sample);
 		}
 		assay.closeFile();
@@ -441,8 +429,6 @@ public class PerformanceTester {
 			if(i % memoryMeasureFrequency == 0)
 				memorySnapshots.add(getCurrentMemoryUsage(bean));
 			
-			if(!study.hasWrittenHeaders())
-				study.writeHeadersFromExample(source);
 			study.writeLine(source);
 		}
 		study.closeFile();
@@ -498,8 +484,6 @@ public class PerformanceTester {
 			if(i % memoryMeasureFrequency == 0)
 				memorySnapshots.add(getCurrentMemoryUsage(bean));
 			
-			if(!assay.hasWrittenHeaders())
-				assay.writeHeadersFromExample(sample);
 			assay.writeLine(sample);
 		}
 		assay.closeFile();

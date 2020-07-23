@@ -140,8 +140,12 @@ public abstract class WideTableFile implements Commentable {
 	public void writeLine(StudyOrAssayTableObject initiator) throws IOException {
 		if (this.outputstreamwriter == null)
 			throw new IllegalStateException("No file or stream open for writing");
-		if (this.headers == null)
-			throw new IllegalStateException("Headers were not written yet");
+		
+		// If headers have not been written yet, write them from this row.
+		// This would happen with the first row or if the user has manually called "writeHeadersFromExample"
+		if(this.headers == null) {
+			this.writeHeadersFromExample(initiator);
+		}
 
 		StringBuilder sb = new StringBuilder();
 		StudyOrAssayTableObject currentObject = initiator;
@@ -169,7 +173,7 @@ public abstract class WideTableFile implements Commentable {
 					throw new IllegalStateException("Object has "
 							+ (currentHeaderGroup.get(o).length > fields.get(o).length ? "fewer" : "more")
 							+ "columns than header for " + o
-							+ "\n Please make sure that every object contains the same information as the examplary objects that were passed to writeHeadersFromExample."
+							+ "\n Please make sure that every object contains the same information as the first line (or the examplary objects that were manually passed to writeHeadersFromExample)."
 							+ "This error mostly occurs when only some objects of the same column (e.g. a specific Process ParameterValue) have Term Source Refs and Term Accession numbers.");
 				String partOfLine = String.join(Symbol.TAB.toString(), fields.get(o));
 				// Now we delete the entry from fields so that we know when there's any left in

@@ -52,9 +52,6 @@ public class SimpleWorkingExample {
 				talkingProcess.setInput(source);
 				talkingProcess.setOutput(sample);
 
-				if(!myStudy.hasWrittenHeaders()) {
-					myStudy.writeHeadersFromExample(source);
-				}
 				myStudy.writeLine(source);
 			}
 			myStudy.closeFile();
@@ -69,9 +66,6 @@ public class SimpleWorkingExample {
 				talkingProcess.setInput(sample);
 				talkingProcess.setOutput(seqFile);
 
-				if(!myAssay.hasWrittenHeaders()) {
-					myAssay.writeHeadersFromExample(sample);
-				}
 				myAssay.writeLine(sample);
 			}
 			myAssay.closeFile();

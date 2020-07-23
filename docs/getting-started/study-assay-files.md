@@ -33,44 +33,17 @@ for(int i = 0; i < 5; i++) {
 	talkingProcess.setInput(source);
 	talkingProcess.setOutput(sample);
 
-	// WRITE TO FILE HERE (see below)
+	study1.writeLine(source);
 }
 ```
 
 The method to write a line to the Study File is `writeLine(initiator)`, `initiator` being the first object in the line that is then connected via a chain of processes and samples/materials etc. to the last (that's why you did `talkingProcess.setInput` and `talkingProcess.setOutput`).
 In our case that initator would be `source`.
-But if you fill in `study1.writeLine(source)` at the marked location above, you will be met with an error:
-
-```
-Exception in thread "main" java.lang.IllegalStateException: Headers were not written yet
-```
-
-The reason is that, as mentioned before, isa4J doesn't know anything about the structure of the rows before or after the current one.
-So if, for example, a Source in a later line has a Characteristic attached to it, that needs to be accounted for by having a corresponding entry in the file header and keeping an empty column for all the Sources that do not have this Characteristic.
-That is why you have to explicitly tell isa4J what headers you need by passing an examplary initiator (e.g. Source) connected to a Process/Sample/Material/Datafile chain *that contains every field any of your future rows will need*:
-
-```java
-study1.writeHeadersFromExample(source);
-```
-
-So you need to figure out what your Study File should look like before you start to write it.
-If all lines are of homogenous structure, you can go the easy way and simply include it in the loop:
-
-```java
-for(int i = 0; i < 5; i++) {
-	Source source = new Source("Source Name");
-	Sample sample = new Sample("Sample Name");
-	Process talkingProcess = new Process(plantTalking); // plantTalking is a Protocol defined above
-	talkingProcess.setInput(source);
-	talkingProcess.setOutput(sample);
-
-	if(!study1.hasWrittenHeaders())
-		study1.writeHeadersFromExample(source);
-	study1.writeLine(source);
-}
-```
-
-Alternatively you could create one dummy or mock object set before the loop and write the headers from that, but in many situations this will be the easiest way and worth the small performance cost of checking for headers at each iteration.
+It is very important that all lines in your loop have the same structure since headers will be based on the first line you write.
+So if a Source in a later line has a Characteristic attached to it which the first one didn't have, there will be no corresponding header in the output and isa4j will complain.
+Therefore make sure to always create and attach the same Comments, Characteristics etc. in every line.
+If some Source simply doesn't have a certain Characteristic, still do create and attach it but simply give it an empty String or null value.
+This is an inconvinience which we plan to improve on in future versions of isa4j, it just requires some more thinking and coding on our part.
 
 After you have written everything you want to write, you can close the file with
 

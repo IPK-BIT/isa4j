@@ -71,8 +71,6 @@ public class StudyTest {
     		process2.setInput(sample);
     		process2.setOutput(sample2);
     		
-    		if(!study.hasWrittenHeaders())
-    			study.writeHeadersFromExample(source);
     		study.writeLine(source);
     	}
     	

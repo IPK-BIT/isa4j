@@ -61,8 +61,6 @@ public class AssayTest {
     		sequencingProcess.setInput(material);
     		sequencingProcess.setOutput(datafile);
     		
-    		if(!assay.hasWrittenHeaders())
-    			assay.writeHeadersFromExample(sample);
     		assay.writeLine(sample);
     	}
     	
@@ -187,8 +185,6 @@ public class AssayTest {
 	    	    new ParameterValue(wateringParameters.get("Volume"), 80.4, new OntologyAnnotation("g", "http://purl.obolibrary.org/obo/UO_0000021", ontologies.get("UO")))
 			));
 			
-			if(!assay.hasWrittenHeaders())
-				assay.writeHeadersFromExample(sample);
 			assay.writeLine(sample);
 		}
 		assay.closeFile();
