@@ -136,8 +136,8 @@ uploadArchives {
 	
 		        licenses {
 		          	license {
-		            	name 'GNU GPLv3 license'
-		            	url 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+		            	name 'MIT License'
+		            	url 'https://spdx.org/licenses/MIT.html'
 		          	}
 		        }
 	
@@ -155,6 +155,12 @@ uploadArchives {
 			            organizationUrl 'http://www.ipk.gatersleben.de'
 			          }
 		        }
+				distributionManagement{
+					relocation{
+						groupId 'de.ipk-gatersleben'
+						artifactId 'isa4j'
+					}
+				}
 	      	}
 			}
 		}	

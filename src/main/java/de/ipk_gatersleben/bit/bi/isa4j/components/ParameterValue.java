@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2020 Leibniz Institute of Plant Genetics and Crop Plant Research (IPK), Gatersleben, Germany.
- * All rights reserved. This program and the accompanying materials are made available under the terms of the GNU GPLv3 license (https://www.gnu.org/licenses/gpl-3.0.en.html)
+ * All rights reserved. This program and the accompanying materials are made available under the terms of the MIT License (https://spdx.org/licenses/MIT.html)
  *
  * Contributors:
  *      Leibniz Institute of Plant Genetics and Crop Plant Research (IPK), Gatersleben, Germany
