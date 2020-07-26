@@ -22,3 +22,6 @@ parent: Getting Started
 isa4J does not provide export functions to the ISA JSON format.
 If you need ISA JSON files, you can create ISATab files with isa4J and then [convert them with the python API](https://isatools.readthedocs.io/en/latest/conversions.html).
 The conversion is very straightforward and easy to do even if you have no experience working in python.
+
+## Why is my Study/Assay File empty?
+Perhaps you forgot to close it? isa4J uses an OutputStreamWriter under the hood so if you don't close your file (or don't release your stream) your ISA-Tab contents might just still be in the internal buffer.

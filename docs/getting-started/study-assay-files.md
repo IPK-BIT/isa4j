@@ -45,7 +45,7 @@ Therefore make sure to always create and attach the same Comments, Characteristi
 If some Source simply doesn't have a certain Characteristic, still do create and attach it but simply give it an empty String or null value.
 This is an inconvinience which we plan to improve on in future versions of isa4j, it just requires some more thinking and coding on our part.
 
-After you have written everything you want to write, you can close the file with
+After you have written everything you want to write, you can (and should) close the file with
 
 ```java
 study1.closeFile();
