@@ -78,6 +78,20 @@ task sourcesJar(type: Jar) {
 	 classifier = 'sources'
 	 from sourceSets.main.allSource
 }
+
+
+/*  Custom task to create a fat-jar containing all main and test
+    sources as compiled class files and all necessary dependencies.
+    The resulting fat-jar is necessary for running the PerformanceTester-Class 
+    on the Linux shell where one can not use a developement environment like Eclipse.
+*/
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+task sourcesAndTestsJar(type: ShadowJar) {
+    classifier = 'jar-with-tests-and-all-depedencies'
+    project.configurations.implementation.canBeResolved = true
+    configurations = [project.configurations.implementation]
+    from sourceSets.main.output+sourceSets.test.allSource+sourceSets.test.output
+}
 	
 shadowJar {
 	classifier = 'jar-with-dependencies'
