@@ -14,8 +14,8 @@ parent: Getting Started
 
 ---
 
-isa4J is designed to work with study and assay files that are too large to fit in memory, so instead of populating a study object with all sources and samples and then writing everything in one go, you build and flush out the file iteratively.
-First you tell isa4J to open the file for writing:
+isa4j is designed to work with study and assay files that are too large to fit in memory, so instead of populating a study object with all sources and samples and then writing everything in one go, you build and flush out the file iteratively.
+First you tell isa4j to open the file for writing:
 
 ```java
 study1.openFile(); // study1 is defined above and should be attached to an Investigation

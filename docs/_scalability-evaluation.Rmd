@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 1. TOC
 {:toc}
 
-Scalability of isa4J was assessed and compared to the python isatools API in two dimensions: number of entries and complexity of entries.
+Scalability of isa4j was assessed and compared to the python isatools API in two dimensions: number of entries and complexity of entries.
 
 At the simplest complexity (*minimum*) rows consisted only of a Source connected to a Sample through a Process in the Study File, and that Sample connected to a DataFile through another Process in the Assay File, with no Characteristics, Comments, or other additional Information.
 At the second level of complexity (*reduced*), a Characteristic was added to the Sample in the Study File, and the Assay File was expanded to Sample->Process->Material->Process->DataFile.
@@ -26,21 +26,21 @@ The third and final level of complexity (*real world*) was modelled after the re
 Examplary ISA-Tab output for each of the three complexity levels can be found in the following section.
 
 For each complexity level, CPU execution time was measured for writing a number of $n$ rows in Study and Assay File each, starting at 1 row and increasing stepwise up to 25,000 rows.
-Every combination of complexity level and $n$ was measured for 5 consecutive runs (15 for isa4J because results varied more) after a warm-up of writing 100 rows.
+Every combination of complexity level and $n$ was measured for 5 consecutive runs (15 for isa4j because results varied more) after a warm-up of writing 100 rows.
 Additionally, memory usage was measured for realistic complexity in 5 separate runs after CPU execution time measurements.
 
 Performance evaluation was carried out on a Macbook Pro 2017 (2.3 GHz Dual-Core Intel Core i5 Processor, 16 GB 2133 MHz LPDDR3 RAM) with macOS Catalina (Version 10.15.2).
 isatools was evaluated under Python 3.7.3 [Clang 11.0.0 (clang-1100.0.33.16)] using isatools version 0.11 and memory-profiler version 0.57 for measuring RAM usage. CPU execution time was measured with `time.process_time_ns`. 
-isa4J was evaluated under AdoptOpenJDK 11.0.5 using `ThreadMXBean.getCurrentThreadCpuTime()` and `MemoryMXBean.getHeapMemory().getUsed()`.
+isa4j was evaluated under AdoptOpenJDK 11.0.5 using `ThreadMXBean.getCurrentThreadCpuTime()` and `MemoryMXBean.getHeapMemory().getUsed()`.
 For both platform, memory consumption baseline was calculated after the warm-up runs and an additional GC invocation.
 This baseline consumption was subtracted from all subsequent memory consumption values (we wanted to measure purely the memory consumed by the ISA-Tab content, not libraries and other periphery).
 
-The actual code generating the files and measuring time and memory usage can be found [here](https://github.com/IPK-BIT/isa4J/blob/master/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/isatools_performance_test.py) for python isatools and [here](https://github.com/IPK-BIT/isa4J/blob/master/src/test/java/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/PerformanceTester.java) for isa4J
+The actual code generating the files and measuring time and memory usage can be found [here](https://github.com/IPK-BIT/isa4j/blob/master/src/test/resources/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/isatools_performance_test.py) for python isatools and [here](https://github.com/IPK-BIT/isa4j/blob/master/src/test/java/de/ipk_gatersleben/bit/bi/isa4j/performanceTests/PerformanceTester.java) for isa4j
 
 ## Complexity Levels
 
 Here you can see what the output generated for the different complexity level looks like.
-It is identical between isa4J and python isatools.
+It is identical between isa4j and python isatools.
 
 ### Minimal
 
@@ -86,7 +86,7 @@ knitr::kable(example, format="markdown")
 
 ## Results
 
-The raw results can be found [here](https://ipk-bit.github.io/isa4J/performance_data.csv) if you want to perform your own analyses.
+The raw results can be found [here](https://ipk-bit.github.io/isa4j/performance_data.csv) if you want to perform your own analyses.
 
 ```{r}
 data = read.csv("performance_data.csv")
@@ -116,7 +116,7 @@ axis(2, las=2, at=c(seq(-3,2), log(600,10)), labels=c("1 ms","10 ms", "100 ms", 
 
 text(0, 2, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1.5, family="sans")
 mtext("isatools", side=2, at=-1, line=-1, cex=0.7)
-mtext("isa4J", side=2, at=-3, line=-1, cex=0.7)
+mtext("isa4j", side=2, at=-3, line=-1, cex=0.7)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "reduced",]$time.in.ns.log), col="#0072b2", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "minimal",]$time.in.ns.log), col="#61BEF3", cex=0.5)
@@ -166,7 +166,7 @@ text(0.01, -1, expression("Memory Usage for Real World Complexity (log"[10]~"Sca
 #text(0, 0.4, "isa4J", pos=2, xpd=NA, col=col.gray, cex=0.8)
 #text(0, -1.6, "isatools", pos=2, xpd=NA, col=col.gray, cex=0.8)
 
-text(log(24000,10), 0.3, paste("isa4J \n  ",round(min(memSub.isa4J$memory.usage.in.mb), 1), "-", round(max(memSub.isa4J$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
+text(log(24000,10), 0.3, paste("isa4j \n  ",round(min(memSub.isa4J$memory.usage.in.mb), 1), "-", round(max(memSub.isa4J$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
 text(log(24000,10), -1.6, paste("isatools \n  ", round(min(memSub.isatools$memory.usage.in.mb), 1), "-", round(max(memSub.isatools$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
@@ -196,9 +196,9 @@ Looks pretty good! What can we learn from it?
 - Increasing the number of rows 10-fold will increase the required CPU execution time $10^{`r model.isatools$coefficients[2]`} = `r 10^model.isatools$coefficients[2]`$ -fold
 - Increasing the complexity from minimal to reduced increases execution time $10^{`r model.isatools$coefficients[4]`} = `r 10^model.isatools$coefficients[4]`$ -fold and increasing the complexity from minimal to real world increases it $10^{`r model.isatools$coefficients[3]`} = `r 10^model.isatools$coefficients[3]`$ -fold
 
-#### isa4J
+#### isa4j
 
-Now let's repeat the same analyses for the isa4J performance data.
+Now let's repeat the same analyses for the isa4j performance data.
 We will again assume linearity and parallel lines for more than 100 rows.
 
 ```{r, warning=F}
@@ -219,7 +219,7 @@ So, same calculations like above:
 - Increasing the number of rows 10-fold will increase the required CPU execution time $10^{`r model.isa4J$coefficients[2]`} = `r 10^model.isa4J$coefficients[2]`$ -fold
 - Increasing the complexity from minimal to reduced increases execution time $10^{`r model.isa4J$coefficients[4]`} = `r 10^model.isa4J$coefficients[4]`$ -fold and increasing the complexity from minimal to real world increases it $10^{`r model.isa4J$coefficients[3]`} = `r 10^model.isa4J$coefficients[3]`$ -fold
 
-We can see that isa4J scales slightly better with number of rows and significantly better at increasing complexity of rows.
+We can see that isa4j scales slightly better with number of rows and significantly better at increasing complexity of rows.
 
 #### Direct Comparison
 
@@ -236,14 +236,14 @@ summary(model.both)
 ```
 
 OK, the models look good enough, now we can make actual comparisons.
-Since the slopes of the lines are different, isa4J is going to become relatively faster the more rows we write:
+Since the slopes of the lines are different, isa4j is going to become relatively faster the more rows we write:
 
-- When writing 100 lines isa4J is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(100)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))`$ faster
-- When writing 25000 lines isa4J is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(25000)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))`$ faster
+- When writing 100 lines isa4j is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(100)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))`$ faster
+- When writing 25000 lines isa4j is $10^{`r model.both$coefficients[3]` + `r model.both$coefficients[4]` * log_{10}(25000)} = `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))`$ faster
 
 ## Conclusion
 
 There are two take-aways from this:
 
-1. isa4J scales significantly better when complexity of rows increases (`r 10^model.isa4J$coefficients[4]` and `r 10^model.isa4J$coefficients[3]`-fold increase for isa4J compared to `r 10^model.isatools$coefficients[4]` and `r 10^model.isatools$coefficients[3]`-fold for isatools).
-2. The more lines are written, the faster isa4J becomes compared to isatools (`r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))` faster for 100 lines, `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))` faster for 25,00 lines).
+1. isa4j scales significantly better when complexity of rows increases (`r 10^model.isa4J$coefficients[4]` and `r 10^model.isa4J$coefficients[3]`-fold increase for isa4j compared to `r 10^model.isatools$coefficients[4]` and `r 10^model.isatools$coefficients[3]`-fold for isatools).
+2. The more lines are written, the faster isa4j becomes compared to isatools (`r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))` faster for 100 lines, `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))` faster for 25,00 lines).

@@ -35,6 +35,7 @@ dependencies {
 </dependency>
 ```
 
+If you're using one of the above snippets, please don't forget to fill in the current version number of isa4j.
 If you don't use Gradle or Maven, please see the [Installation page](https://ipk-bit.github.io/isa4j/installation.html) in the documentation for further instructions.
 
 ### Simple Working Example
