@@ -14,8 +14,28 @@ The software provided as-is and made available under the terms of the MIT licens
 
 ### Installation
 
-isa4j is available from the mavenCentral repository and can be installed via Gradle, Maven, and many other build management tools.
-Please see the [Installation page](https://ipk-bit.github.io/isa4j/installation.html) in the documentation for further instructions.
+#### Gradle
+
+```
+repositories {
+	mavenCentral()
+}    
+dependencies {
+	implementation group: 'de.ipk-gatersleben', name:'isa4J', version:'###REPLACE-WITH-VERSION-NUMBER###'
+}
+```
+
+#### Maven
+
+```
+<dependency>
+  <groupId>de.ipk-gatersleben</groupId>
+  <artifactId>isa4J</artifactId>
+  <version>###REPLACE-WITH-VERSION-NUMBER###</version>
+</dependency>
+```
+
+If you don't use Gradle or Maven, please see the [Installation page](https://ipk-bit.github.io/isa4j/installation.html) in the documentation for further instructions.
 
 ### Simple Working Example
 
