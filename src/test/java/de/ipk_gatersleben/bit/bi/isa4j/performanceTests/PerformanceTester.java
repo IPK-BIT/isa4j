@@ -508,16 +508,26 @@ public class PerformanceTester {
 		System.gc();
 		long memoryBaseline = memoryBean.getHeapMemoryUsage().getUsed();
 		
-		for(int nRows : List.of(1,3,5,10,25,50,100,250,500)) { //,1000,2500,5000,10000,25000)) {
-			System.out.println("nRows = " + nRows);
+        List<Integer> rows = List.of(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000);
+		
+		for(int nRows : rows) {
+			System.out.println("minimal; nRows = " + nRows);
 			for(int x = 0; x < numberOfRuns; x++) {
 				writer.write("isa4J,minimal,"+nRows+","+measureMinimal(threadBean, nRows)+",-1,"+LocalDateTime.now()+"\n");
 				System.gc();
-			}
+            }
+        }
+        
+        for(int nRows : rows) {
+            System.out.println("reduced; nRows = " + nRows);
 			for(int x = 0; x < numberOfRuns; x++) {
 				writer.write("isa4J,reduced,"+nRows+","+measureReduced(threadBean, nRows)+",-1,"+LocalDateTime.now()+"\n");
 				System.gc();
-			}
+            }
+        }
+        
+        for(int nRows : rows) {
+            System.out.println("real_world; nRows = " + nRows);
 			for(int x = 0; x < numberOfRuns; x++) {
 				long cpuTime = measureRealWorld(threadBean, nRows);
 				int memoryMeasureFrequency = Math.max(10, nRows/1000);
