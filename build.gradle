@@ -143,9 +143,9 @@ uploadArchives {
 		        url = projecturl
 	
 		        scm {
-		          	connection 'scm:git:https://github.com/IPK-BIT/isa4J.git'
-		          	developerConnection 'scm:git:https://github.com/IPK-BIT/isa4J.git'
-		          	url 'https://github.com/IPK-BIT/isa4J.git'
+		          	connection 'scm:git:https://github.com/IPK-BIT/isa4j.git'
+		          	developerConnection 'scm:git:https://github.com/IPK-BIT/isa4j.git'
+		          	url 'https://github.com/IPK-BIT/isa4j.git'
 		        }
 	
 		        licenses {
@@ -169,12 +169,6 @@ uploadArchives {
 			            organizationUrl 'http://www.ipk.gatersleben.de'
 			          }
 		        }
-				distributionManagement{
-					relocation{
-						groupId 'de.ipk-gatersleben'
-						artifactId 'isa4j'
-					}
-				}
 	      	}
 			}
 		}	
@@ -183,7 +177,7 @@ uploadArchives.dependsOn test
 
 nexusStaging {
 	if(project.hasProperty('nexusUsername') && project.hasProperty('nexusPassword')){
-		stagingProfileId  = "isa4J_ipk_gatersleben_de"	
+		stagingProfileId  = "isa4j_ipk_gatersleben_de"	
 		username = nexusUsername
 		password = nexusPassword
 	}
@@ -202,7 +196,7 @@ release {
     tagCommitMessage = '[gradle-release-plugin] - creating tag: '
     newVersionCommitMessage = '[gradle-release-plugin] - prepare for next development iteration '
     
-    tagTemplate = "isa4J-"+'$version'
+    tagTemplate = "isa4j-"+'$version'
     versionPropertyFile = 'gradle.properties'
     versionProperties = []
     buildTasks = []
@@ -233,15 +227,15 @@ githubRelease {
     	token githubtoken
     }
     owner "IPK-BIT" 			
-    repo "isa4J" 						
-    tagName "isa4J-"+ "${project.version}" 		
+    repo "isa4j" 						
+    tagName "isa4j-"+ "${project.version}" 		
     targetCommitish "master" 			
-    releaseName "isa4J-"+ "${project.version}"				
+    releaseName "isa4j-"+ "${project.version}"				
     body "" 							
     draft false 						
     prerelease false 					
   	// releaseAssets jar.destinationDir 		// this points to which files you want to upload as assets with your release
-   	releaseAssets.from("build/libs/isa4J-${project.version}-jar-with-dependencies.jar","build/libs/isa4J-${project.version}.jar","build/libs/isa4J-${project.version}-sources.jar","build/libs/isa4J-${project.version}-javadoc.jar")
+   	releaseAssets.from("build/libs/isa4j-${project.version}-jar-with-dependencies.jar","build/libs/isa4j-${project.version}.jar","build/libs/isa4j-${project.version}-sources.jar","build/libs/isa4j-${project.version}-javadoc.jar")
     overwrite false
     dryRun false
     apiEndpoint "https://api.github.com" 			
