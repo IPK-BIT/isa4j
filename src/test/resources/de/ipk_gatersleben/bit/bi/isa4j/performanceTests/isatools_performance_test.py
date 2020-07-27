@@ -310,13 +310,16 @@ with open('isatools_performance_test_results.csv', 'w') as csvfile:
     measure_real_world(100)
     gc.collect()
     baseline_memory = memory_usage()[0]
-    for i in [1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000]:
+    nrows = [1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000]
+    for i in nrows:
         for r in range(0, 5):
             writer.writerow(["isatools", "minimal", i, measure_minimal(i), -1, str(datetime.now())])
             gc.collect() # do this now so it doesn't interfere with the running time
+    for i in nrows:
         for r in range(0, 5):
             writer.writerow(["isatools", "reduced", i, measure_reduced(i), -1, str(datetime.now())])
             gc.collect()
+    for i in nrows:
         for r in range(0, 5):
             # Here we have to split it into two because we're measuring memory usage as well
             time_taken = measure_real_world(i)
