@@ -1,12 +1,12 @@
-[![Maven Central](https://img.shields.io/maven-central/v/de.ipk-gatersleben/isa4J.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22de.ipk-gatersleben%22%20AND%20a:%22isa4J%22)
+[![Maven Central](https://img.shields.io/maven-central/v/de.ipk-gatersleben/isa4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22de.ipk-gatersleben%22%20AND%20a:%22isa4j%22)
 
 ## Welcome
-isa4J is a comprehensive and scalable Java Library for the programmatic generation of experimental metadata descriptions using the ISATab container format.
+isa4j is a comprehensive and scalable Java Library for the programmatic generation of experimental metadata descriptions using the ISATab container format.
 We're assuming you're familiar with the ISA-Tab framework in the remainder of the manual; if you're not, please [read up about it first](https://isa-specs.readthedocs.io/en/latest/).
 
 ## License and Citation
-The software provided as-is and made available under the terms of the MIT license (https://spdx.org/licenses/MIT.html), granting you the freedom to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software as long as you include the license and copyright notice in all copies or substantial portions of isa4J ([details](https://en.wikipedia.org/wiki/MIT_License)).
-<!-- If you're referring to isa4J in a scientific publication, we'd be grateful if you could cite our paper: -->
+The software provided as-is and made available under the terms of the MIT license (https://spdx.org/licenses/MIT.html), granting you the freedom to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software as long as you include the license and copyright notice in all copies or substantial portions of isa4j ([details](https://en.wikipedia.org/wiki/MIT_License)).
+<!-- If you're referring to isa4j in a scientific publication, we'd be grateful if you could cite our paper: -->
 
 <!-- > Citation forthcoming -->
 
@@ -14,34 +14,14 @@ The software provided as-is and made available under the terms of the MIT licens
 
 ### Installation
 
-#### Gradle
-
-```
-repositories {
-	mavenCentral()
-}    
-dependencies {
-	implementation group: 'de.ipk-gatersleben', name:'isa4J', version:'1.0.0'
-}
-```
-
-#### Maven
-
-```
-<dependency>
-  <groupId>de.ipk-gatersleben</groupId>
-  <artifactId>isa4J</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
-
-If you don't use Gradle or Maven, please see the [Installation page](https://ipk-bit.github.io/isa4J/installation.html) in the documentation for further instructions.
+isa4j is available from the mavenCentral repository and can be installed via Gradle, Maven, and many other build management tools.
+Please see the [Installation page](https://ipk-bit.github.io/isa4j/installation.html) in the documentation for further instructions.
 
 ### Simple Working Example
 
 Here is a simple complete working example that you can just copy and paste into your favorite IDE and run.
 You can play with it and use it as a template to extend to your use case.
-More info on how to use isa4J can be found on the [documentation website](https://ipk-bit.github.io/isa4J/).
+More info on how to use isa4j can be found on the [documentation website](https://ipk-bit.github.io/isa4j/).
 
 ```java
 
@@ -118,4 +98,4 @@ public class SimpleWorkingExample {
 
 
 ## Documentation
-Please see our [GitHub Page](https://ipk-bit.github.io/isa4J) for detailed documentation as well as an evaluation of isa4J's scalability.
+Please see our [GitHub Page](https://ipk-bit.github.io/isa4j) for detailed documentation as well as an evaluation of isa4j's scalability.
