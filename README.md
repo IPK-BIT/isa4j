@@ -21,7 +21,7 @@ repositories {
 	mavenCentral()
 }    
 dependencies {
-	implementation group: 'de.ipk-gatersleben', name:'isa4J', version:'###REPLACE-WITH-VERSION-NUMBER###'
+	implementation group: 'de.ipk-gatersleben', name:'isa4j', version:'###REPLACE-WITH-VERSION-NUMBER###'
 }
 ```
 
@@ -30,7 +30,7 @@ dependencies {
 ```
 <dependency>
   <groupId>de.ipk-gatersleben</groupId>
-  <artifactId>isa4J</artifactId>
+  <artifactId>isa4j</artifactId>
   <version>###REPLACE-WITH-VERSION-NUMBER###</version>
 </dependency>
 ```
