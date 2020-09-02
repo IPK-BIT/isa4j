@@ -93,7 +93,7 @@ data = read.csv("performance_data.csv")
 data[data$memory.usage.in.mb == -1,]$memory.usage.in.mb = NA # Where RAM usage was not measured it was set to -1
 data$time.in.ns.log = log(data$time.in.ns/1e+9, 10)
 data$n.rows.log     = log(data$n.rows, 10)
-data$memory.usage.in.mb.log = log(data$memory.usage.in.mb, 10)
+data$memory.usage.in.kb.log = log(data$memory.usage.in.mb*1024, 10) # convert to KB so all transformed values are above 0
 ```
 
 This is the visualization that is also part of the paper:
@@ -107,16 +107,16 @@ col.gray = "gray52"
 col.green.dark = "#B8CDC8" #DBF3ED 
 col.green.light = "#E7F1EF" #EEF8F6 
 
-#pdf("figure.pdf", 6.92913, 3.3, colormodel="srgb")
+#pdf("figure.pdf", 6.92913, 3.4, colormodel="srgb")
 par(family="serif", cex=0.7, mar=c(4.5,3.8,0,0), fig=c(0,1,0.2,1))
-xlim = c(0, 4.6)
+xlim = c(0, 6.4)
 plot(data$time.in.ns.log ~ data$n.rows.log, xlim=xlim, col=data$color, axes=F, xlab=expression("Number of Rows (log"[10]~"Scale)"), ylab="", col.lab=col.gray)
-axis(1, col=F, col.tick=col.gray, at=log(c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), 10), labels=c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000), col.axis=col.gray)
-axis(2, las=2, at=c(seq(-3,2), log(600,10)), labels=c("1 ms","10 ms", "100 ms", "1 s", "10 s", "100 s", "10 m"), col=F, col.axis=col.gray)
+axis(1, col=F, col.tick=col.gray, at=log(c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000), 10), labels=c(1,3,5,10,25,50,100,250,500,"1k","2.5k","5k","10k","25k","50k","100k","250k","500k","1 Mio"), col.axis=col.gray)
+axis(2, las=2, at=c(seq(-3,2), log(600,10), log(3600,10), log(28800,10)), labels=c("1 ms","10 ms", "100 ms", "1 s", "10 s", "100 s", "10 m", "1 h", "8 h"), col=F, col.axis=col.gray)
 
-text(0, 2, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1.5, family="sans")
-mtext("isatools", side=2, at=-1, line=-1, cex=0.7)
-mtext("isa4j", side=2, at=-3, line=-1, cex=0.7)
+text(0, 4, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1.5, family="sans")
+mtext("isatools", side=2, at=-0.7, line=-1, cex=0.7)
+mtext("isa4j", side=2, at=-2.5, line=-1, cex=0.7)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "reduced",]$time.in.ns.log), col="#0072b2", cex=0.5)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "minimal",]$time.in.ns.log), col="#61BEF3", cex=0.5)
@@ -128,7 +128,7 @@ sub = data[data$row.complexity == "real_world" & data$platform == "isatools",]
 t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
 lines(as.numeric(names(t)), t, col="#e69f00", type="b")
 text(max(sub$n.rows.log), max(sub$time.in.ns.log), "Real World", pos=4, col="#e69f00", cex=0.7)
-text(max(sub$n.rows.log), max(sub$time.in.ns.log)-0.2, "Complexity", pos=4, col="#e69f00", cex=0.7)
+text(max(sub$n.rows.log), max(sub$time.in.ns.log)-0.23, "Complexity", pos=4, col="#e69f00", cex=0.7)
 
 sub = data[data$row.complexity == "reduced" & data$platform == "isatools",]
 t = tapply(sub$time.in.ns.log, sub$n.rows.log, FUN=median)
@@ -155,20 +155,34 @@ lines(as.numeric(names(t)), t, col="#61BEF3", type="b")
 # Memory Plot
 par(fig=c(0,1,0,0.2), mar=c(0.2,3.8,0,0), new=T)
 memSub = data[data$row.complexity == "real_world",]
-plot(-memSub$memory.usage.in.mb.log ~ memSub$n.rows.log, type="n", axes=F, xlim=xlim, xlab="", ylab="")
+
 memSub.isatools = memSub[memSub$platform == "isatools",]
 memSub.isa4J = memSub[memSub$platform == "isa4J",]
-polygon(c(memSub.isatools$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isatools$memory.usage.in.mb.log, min(memSub$memory.usage.in.mb.log), min(memSub$memory.usage.in.mb.log) ), col=col.green.light, border=NA) #DBF3ED
-polygon(c(memSub.isa4J$n.rows.log, max(memSub$n.rows.log), min(memSub$n.rows.log)),  -c(memSub.isa4J$memory.usage.in.mb.log, min(memSub$memory.usage.in.mb.log), min(memSub$memory.usage.in.mb.log) ), col=col.green.dark, border=NA) #A1D7CA
 
-text(0.01, -1, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col=col.gray)
+memSub.isatools.medians = aggregate(memSub.isatools$memory.usage.in.kb.log, by=list(memSub.isatools$n.rows), FUN=median)
+memSub.isa4J.medians = aggregate(memSub.isa4J$memory.usage.in.kb.log, by=list(memSub.isa4J$n.rows), FUN=median)
+
+plot(-memSub$memory.usage.in.kb.log ~ memSub$n.rows.log, type="n", axes=F, xlim=xlim, xlab="", ylab="")
+
+
+polygon(
+  c(log(memSub.isatools.medians$Group.1, 10), max(log(memSub.isatools.medians$Group.1, 10)), min(log(memSub.isatools.medians$Group.1, 10))),
+  -c(memSub.isatools.medians$x, min(memSub$memory.usage.in.kb.log), min(memSub$memory.usage.in.kb.log) ),
+  col=col.green.light, border=NA) #DBF3ED
+
+polygon(
+  c(log(memSub.isa4J.medians$Group.1, 10), max(log(memSub.isa4J.medians$Group.1, 10)), min(log(memSub.isa4J.medians$Group.1, 10))),
+  -c(memSub.isa4J.medians$x, min(memSub$memory.usage.in.kb.log), min(memSub$memory.usage.in.kb.log) ),
+  col=col.green.dark, border=NA) #A1D7CA
+
+text(0.01, -5.3, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col=col.gray)
 
 #text(0, 0.4, "isa4J", pos=2, xpd=NA, col=col.gray, cex=0.8)
 #text(0, -1.6, "isatools", pos=2, xpd=NA, col=col.gray, cex=0.8)
 
-text(log(24000,10), 0.3, paste("isa4j \n  ",round(min(memSub.isa4J$memory.usage.in.mb), 1), "-", round(max(memSub.isa4J$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
+text(log(1000000,10), -2.5, paste("isa4j \n  ",round(10^min(memSub.isa4J.medians$x)/1024, 1), "-", round(10^max(memSub.isa4J.medians$x)/1024, 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
-text(log(24000,10), -1.6, paste("isatools \n  ", round(min(memSub.isatools$memory.usage.in.mb), 1), "-", round(max(memSub.isatools$memory.usage.in.mb), 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
+text(log(1000000,10), -5.3, paste("isatools \n  ", round(10^min(memSub.isatools.medians$x)/1024, 1), " MB -\n  ", round(10^max(memSub.isatools.medians$x)/1024/1024, 1),"GB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
 #dev.off()
 ```
