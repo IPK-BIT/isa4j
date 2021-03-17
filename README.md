@@ -1,4 +1,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/de.ipk-gatersleben/isa4j.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22de.ipk-gatersleben%22%20AND%20a:%22isa4j%22)
+![Unit Tests](https://github.com/IPK-BIT/isa4j/actions/workflows/UnitTests.yml/badge.svg)
+
 
 ## Welcome
 isa4j is a comprehensive and scalable Java Library for the programmatic generation of experimental metadata descriptions using the ISATab container format.
