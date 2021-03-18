@@ -11,7 +11,7 @@ The software provided as-is and made available under the terms of the MIT licens
 
 If you're referring to isa4j in a scientific publication, we'd be grateful if you could cite our paper:
 
-> Psaroudakis D, Liu F, König P et al. isa4j: a scalable Java library for creating ISA-Tab metadata [version 1; peer review: awaiting peer review]. *F1000Research* 2020, 9(ELIXIR):1388 (https://doi.org/10.12688/f1000research.27188.1)
+> Psaroudakis D, Liu F, König P et al. isa4j: a scalable Java library for creating ISA-Tab metadata [version 1; peer review: 2 approved]. *F1000Research* 2020, 9(ELIXIR):1388 (https://doi.org/10.12688/f1000research.27188.1)
 
 <!-- > Citation forthcoming -->
 
@@ -42,6 +42,8 @@ dependencies {
 
 If you're using one of the above snippets, please don't forget to fill in the current version number of isa4j.
 If you don't use Gradle or Maven, please see the [Installation page](https://ipk-bit.github.io/isa4j/installation.html) in the documentation for further instructions.
+
+Please note that if you want to make use of isa4j's logging features you will have to include an [SLF4J logging implementation](http://www.slf4j.org/) in your classpath as well.
 
 ### Simple Working Example
 

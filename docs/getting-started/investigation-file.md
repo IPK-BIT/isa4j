@@ -91,13 +91,13 @@ investigation.addContact(agatha);
 ```
 
 ## Comments
-Various components of the data model can be enriched with comments. Their `CommentCollection` is accessible through the `.comments()` method and provides the methods `add(Comment)`, `getAll`, and `findByName(String)`.
+Various components of the data model can be enriched with comments. Their `CommentCollection` is accessible through the `.comments()` method and provides the methods `add(Comment)`, `getAll`, and `getByName(String)`.
 
 ```java
 schlomo.comments().add(new Comment("method name", "MyMethod"));
 schlomo.comments().add(new Comment("analysis software", "Analyzer Pro"));
-schlomo.comments().getAll() // Returns a List<Comment>
-schlomo.comments().findByName("method name") // Returns an Optional<Comment>
+schlomo.comments().getAll(); // Returns a List<Comment>
+schlomo.comments().getByName("method name"); // Returns an Optional<Comment>
 investigation.comments().add(new Comment("Usability", "high"));
 ```
 
