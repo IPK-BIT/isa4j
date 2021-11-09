@@ -14,7 +14,7 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
  * @author psaroudakis, arendd
  *
  */
-interface Commentable {
+public interface Commentable {
 
 	public CommentCollection comments();
 

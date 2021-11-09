@@ -88,7 +88,7 @@ public class Playground {
 		schlomo.comments().add(new Comment("Person ID", "aösldfj"));
 		investigation.comments().add(new Comment("Usability", "None"));
 		
-		Comment c1 = new Comment(MIAPPEv1x1.InvestigationFile.INVESTIGATION_LICENSE, "1.1");
+		Comment c1 = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
 		investigation.comments().add(c1);
 		
 		System.out.println(schlomo.comments());
