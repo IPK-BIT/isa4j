@@ -37,6 +37,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
+import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
 
 public class Playground {
 
@@ -84,7 +85,11 @@ public class Playground {
 		// Many objects can take comments. They all implement the Commentable interface
 		schlomo.comments().add(new Comment("Smell", "Very bad"));
 		schlomo.comments().add(new Comment("Hair", "Fabolous"));
+		schlomo.comments().add(new Comment("Person ID", "aösldfj"));
 		investigation.comments().add(new Comment("Usability", "None"));
+		
+		Comment c1 = new Comment(MIAPPEv1x1.InvestigationFile.INVESTIGATION_LICENSE, "1.1");
+		investigation.comments().add(c1);
 		
 		System.out.println(schlomo.comments());
 		
