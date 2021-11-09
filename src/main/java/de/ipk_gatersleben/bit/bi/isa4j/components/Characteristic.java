@@ -9,6 +9,7 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.configurations.WideTableConfigEnum;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 public class Characteristic {
@@ -17,8 +18,13 @@ public class Characteristic {
 	private OntologyAnnotation value;
 	
 	public Characteristic(String category, OntologyAnnotation value) {
-		this.category = category;
-		this.value = value;
+		setCategory(category);
+		setValue(value);
+	}
+	
+	public Characteristic(WideTableConfigEnum category, OntologyAnnotation value) {
+		setCategory(category.getFieldName());
+		setValue(value);
 	}
 
 	/**

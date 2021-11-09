@@ -1,5 +1,7 @@
 package de.ipk_gatersleben.bit.bi.isa4j.configurations;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -17,7 +19,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
  *
  */
 public class MIAPPEv1x1 {
-	public enum InvestigationFile implements ConfigEnum {
+	public enum InvestigationFile implements InvestigationConfigEnum {
 
 	    /**
 	     * (MIAPPE: License) License for the reuse of the data associated with this investigation. The Creative Commons licenses cover most use cases and are recommended.             e.g. CC BY-SA 4.0         
@@ -173,6 +175,33 @@ public class MIAPPEv1x1 {
 		}
 	}
 	
+	public enum StudyFile implements WideTableConfigEnum {
+		ORGANISM("Organism", true, 0),
+		GENUS("Genus", false, 0);
+		
+		private String fieldName;
+		private boolean required;
+		private int groupIndex; // the how many n-th object does this characteristic belong to? (i.e the first group is usually the source, second the process, third the sample)
+		
+		private StudyFile(String fieldName, boolean required, int groupIndex) {
+			this.fieldName = fieldName;
+			this.required = required;
+			this.groupIndex = groupIndex;
+		}
+		
+		public String getFieldName() {
+			return this.fieldName;
+		}
+		
+		public boolean isRequired() {
+			return this.required;
+		}
+		
+		public int getGroupIndex() {
+			return this.groupIndex;
+		}
+	}
+	
 	private static void validateInvestigationBlockComments(List<? extends Commentable> commentable, InvestigationAttribute block) {
 		commentable.stream().forEach( unit -> {
 			CommentCollection comments = unit.comments();
@@ -185,7 +214,7 @@ public class MIAPPEv1x1 {
 		});
 	}
 	
-	public static boolean validateInvestigation(Investigation investigation) {
+	public static boolean validateInvestigationFile(Investigation investigation) {
 		// Check if all required investigation comments are present
 		CommentCollection comments = investigation.comments();
 		Stream.of(InvestigationFile.values())
@@ -208,6 +237,16 @@ public class MIAPPEv1x1 {
 			validateInvestigationBlockComments(s.getProtocols(), InvestigationAttribute.STUDY_PROTOCOLS);
 		}
 			
+		return true;
+	}
+	
+	public static boolean validateStudyHeaders(ArrayList<LinkedHashMap<String, String[]>> headers) {
+		Stream.of(StudyFile.values())
+			.filter(c -> c.isRequired())
+			.forEach(c -> {
+				if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
+					throw new MissingFieldException("Missing Characteristic header in Study file: " + c.getFieldName());
+			});
 		return true;
 	}
 }
