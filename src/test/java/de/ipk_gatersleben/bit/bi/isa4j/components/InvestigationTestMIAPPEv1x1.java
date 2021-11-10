@@ -7,17 +7,19 @@ import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
 
 /**
- * Collection of simple unit test to check the implementation of Investigation
- * File for the MIAPPE 1.1 configuration
+ * Collection of simple unit test to check the implementation of the
+ * Investigation file for the MIAPPE 1.1 configuration
  * 
- * @author arendd
+ * @author psaroudakis, arendd
  *
  */
 
 public class InvestigationTestMIAPPEv1x1 {
 
 	/**
-	 * 
+	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the
+	 * investigation file. MIAPPE_VERSION is required, INVESTIGATION_LICENSE is not
+	 * required
 	 */
 	@Test
 	void testInvestigationCommentMiappeVersion() {
@@ -44,5 +46,3 @@ public class InvestigationTestMIAPPEv1x1 {
 
 	}
 }
-
-
