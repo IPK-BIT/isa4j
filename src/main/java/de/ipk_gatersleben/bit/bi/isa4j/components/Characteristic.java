@@ -26,6 +26,16 @@ public class Characteristic {
 		setCategory(category.getFieldName());
 		setValue(value);
 	}
+	
+	public Characteristic(String category, String value) {
+		setCategory(category);
+		setValue(new OntologyAnnotation(value));
+	}
+	
+	public Characteristic(WideTableConfigEnum category, String value) {
+		setCategory(category.getFieldName());
+		setValue(new OntologyAnnotation(value));
+	}
 
 	/**
 	 * @return the category

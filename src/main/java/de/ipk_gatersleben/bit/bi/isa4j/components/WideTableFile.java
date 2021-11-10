@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Props;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.Symbol;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
