@@ -37,7 +37,6 @@ import de.ipk_gatersleben.bit.bi.isa4j.components.Publication;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Sample;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Source;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
-import de.ipk_gatersleben.bit.bi.isa4j.configurations.ISAConfigurations;
 import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 
@@ -80,10 +79,10 @@ public class Playground {
 			
 			s1.writeLine(source);
 		}
-		MIAPPEv1x1.validateStudyHeaders(s1.getHeaders());
+		MIAPPEv1x1.StudyFile.validate(s1);
 		//MIAPPEv1x1.validateStudyHeaders(headers)
 		
-		MIAPPEv1x1.validateInvestigationFile(investigation);
+		MIAPPEv1x1.InvestigationFile.validate(investigation);
 		
 		//MIAPPEv1x1.validateInvestigation(investigation);	
 	}
