@@ -173,6 +173,44 @@ public class MIAPPEv1x1 {
 		public InvestigationAttribute getSection() {
 			return this.section;
 		}
+		
+		private static void validateInvestigationBlockComments(List<? extends Commentable> commentable, InvestigationAttribute block) {
+			commentable.stream().forEach( unit -> {
+				CommentCollection comments = unit.comments();
+				Stream.of(InvestigationFile.values())
+				.filter(c -> c.isRequired() && c.getSection() == block)
+				.forEach(c -> {
+					if(comments.getByName(c.getFieldName()).isEmpty())
+						throw new MissingFieldException("Missing comment in block " + block.toString() + " for " + unit.toString() + ": " + c.getFieldName());
+				});
+			});
+		}
+		
+		public static boolean validate(Investigation investigation) {
+			// Check if all required investigation comments are present
+			CommentCollection comments = investigation.comments();
+			Stream.of(InvestigationFile.values())
+				.filter(c -> c.isRequired() && c.getSection() == InvestigationAttribute.INVESTIGATION)
+				.forEach(c -> {
+					if(comments.getByName(c.getFieldName()).isEmpty())
+						throw new MissingFieldException("Missing comment in block " + InvestigationAttribute.INVESTIGATION.toString() + ": " + c.getFieldName());
+				});
+			
+			validateInvestigationBlockComments(investigation.getPublications(), InvestigationAttribute.INVESTIGATION_PUBLICATIONS);
+			validateInvestigationBlockComments(investigation.getContacts(), InvestigationAttribute.INVESTIGATION_CONTACTS);
+			
+			validateInvestigationBlockComments(investigation.getStudies(), InvestigationAttribute.STUDY);
+			for(Study s : investigation.getStudies()) {
+				validateInvestigationBlockComments(s.getPublications(), InvestigationAttribute.STUDY_PUBLICATIONS);
+				validateInvestigationBlockComments(s.getContacts(), InvestigationAttribute.STUDY_CONTACTS);
+				validateInvestigationBlockComments(s.getDesignDescriptors(), InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS);
+				validateInvestigationBlockComments(s.getFactors(), InvestigationAttribute.STUDY_FACTORS);
+				validateInvestigationBlockComments(s.getAssays(), InvestigationAttribute.STUDY_ASSAYS);
+				validateInvestigationBlockComments(s.getProtocols(), InvestigationAttribute.STUDY_PROTOCOLS);
+			}
+				
+			return true;
+		}
 	}
 	
 	public enum StudyFile implements WideTableConfigEnum {
@@ -200,53 +238,16 @@ public class MIAPPEv1x1 {
 		public int getGroupIndex() {
 			return this.groupIndex;
 		}
-	}
-	
-	private static void validateInvestigationBlockComments(List<? extends Commentable> commentable, InvestigationAttribute block) {
-		commentable.stream().forEach( unit -> {
-			CommentCollection comments = unit.comments();
-			Stream.of(InvestigationFile.values())
-			.filter(c -> c.isRequired() && c.getSection() == block)
-			.forEach(c -> {
-				if(comments.getByName(c.getFieldName()).isEmpty())
-					throw new MissingFieldException("Missing comment in block " + block.toString() + " for " + unit.toString() + ": " + c.getFieldName());
-			});
-		});
-	}
-	
-	public static boolean validateInvestigationFile(Investigation investigation) {
-		// Check if all required investigation comments are present
-		CommentCollection comments = investigation.comments();
-		Stream.of(InvestigationFile.values())
-			.filter(c -> c.isRequired() && c.getSection() == InvestigationAttribute.INVESTIGATION)
-			.forEach(c -> {
-				if(comments.getByName(c.getFieldName()).isEmpty())
-					throw new MissingFieldException("Missing comment in block " + InvestigationAttribute.INVESTIGATION.toString() + ": " + c.getFieldName());
-			});
 		
-		validateInvestigationBlockComments(investigation.getPublications(), InvestigationAttribute.INVESTIGATION_PUBLICATIONS);
-		validateInvestigationBlockComments(investigation.getContacts(), InvestigationAttribute.INVESTIGATION_CONTACTS);
-		
-		validateInvestigationBlockComments(investigation.getStudies(), InvestigationAttribute.STUDY);
-		for(Study s : investigation.getStudies()) {
-			validateInvestigationBlockComments(s.getPublications(), InvestigationAttribute.STUDY_PUBLICATIONS);
-			validateInvestigationBlockComments(s.getContacts(), InvestigationAttribute.STUDY_CONTACTS);
-			validateInvestigationBlockComments(s.getDesignDescriptors(), InvestigationAttribute.STUDY_DESIGN_DESCRIPTORS);
-			validateInvestigationBlockComments(s.getFactors(), InvestigationAttribute.STUDY_FACTORS);
-			validateInvestigationBlockComments(s.getAssays(), InvestigationAttribute.STUDY_ASSAYS);
-			validateInvestigationBlockComments(s.getProtocols(), InvestigationAttribute.STUDY_PROTOCOLS);
+		public static boolean validate(Study study) {
+			ArrayList<LinkedHashMap<String, String[]>> headers = study.getHeaders();
+			Stream.of(StudyFile.values())
+				.filter(c -> c.isRequired())
+				.forEach(c -> {
+					if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
+						throw new MissingFieldException("Missing Characteristic header in Study file: " + c.getFieldName());
+				});
+			return true;
 		}
-			
-		return true;
-	}
-	
-	public static boolean validateStudyHeaders(ArrayList<LinkedHashMap<String, String[]>> headers) {
-		Stream.of(StudyFile.values())
-			.filter(c -> c.isRequired())
-			.forEach(c -> {
-				if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
-					throw new MissingFieldException("Missing Characteristic header in Study file: " + c.getFieldName());
-			});
-		return true;
 	}
 }

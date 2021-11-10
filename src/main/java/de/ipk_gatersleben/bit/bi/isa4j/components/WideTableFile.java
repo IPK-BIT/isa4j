@@ -132,8 +132,6 @@ public abstract class WideTableFile implements Commentable {
 				sb.append(Symbol.TAB.toString());
 		}
 		
-		MIAPPEv1x1.validateStudyHeaders(headers);
-		
 		logger.debug("{}: Writing these headers to output: [{}]", this,
 			this.headers.stream().map(
 				t -> "{" + t.keySet().stream().map(

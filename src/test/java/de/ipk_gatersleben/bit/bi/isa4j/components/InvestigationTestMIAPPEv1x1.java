@@ -32,7 +32,7 @@ public class InvestigationTestMIAPPEv1x1 {
 		investigationOne.comments().add(commentLicense);
 
 		try {
-			MIAPPEv1x1.validateInvestigation(investigationOne);
+			MIAPPEv1x1.InvestigationFile.validate(investigationOne);
 			Assertions.assertFalse(true);
 		} catch (MissingFieldException exp) {
 			Assertions.assertTrue(true);
@@ -40,7 +40,7 @@ public class InvestigationTestMIAPPEv1x1 {
 
 		investigationTwo.comments().add(commentVersion);
 
-		Assertions.assertTrue(MIAPPEv1x1.validateInvestigation(investigationTwo));
+		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(investigationTwo));
 
 	}
 }
