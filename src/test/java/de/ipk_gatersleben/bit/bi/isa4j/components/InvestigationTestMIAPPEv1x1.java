@@ -22,7 +22,7 @@ public class InvestigationTestMIAPPEv1x1 {
 	 * required
 	 */
 	@Test
-	void testInvestigationCommentMiappeVersion() {
+	void testInvestigationRequiedFields() {
 
 		Comment commentLicense = new Comment(MIAPPEv1x1.InvestigationFile.INVESTIGATION_LICENSE, "CC-BY 4.0");
 		Comment commentVersion = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
@@ -45,4 +45,32 @@ public class InvestigationTestMIAPPEv1x1 {
 		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(investigationTwo));
 
 	}
+	/**
+	 * Test Investigation <-> Study association
+	 */
+	@Test
+	void testInvestigationStudy() {
+		
+//		Investigation investigation = new Investigation("Investigation Without_MIAPPE_Version");
+//		Comment commentVersion = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
+//		
+//		investigation.comments().add(commentVersion);
+//
+//		Assertions.assertFalse(MIAPPEv1x1.InvestigationFile.validate(investigation));
+
+	}
+	@Test
+	void testStudy() {
+		
+		Study study = new Study("myStudy");
+		
+		Source studySource = new Source("Plant_1");
+		studySource.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.ORGANISM, "barley"));
+
+		Assertions.assertTrue(MIAPPEv1x1.StudyFile.validate(study));
+
+		
+	}
+	
+	
 }

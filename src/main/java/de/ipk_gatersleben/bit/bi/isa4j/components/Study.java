@@ -65,7 +65,7 @@ public class Study extends WideTableFile implements Commentable {
 	private List<Protocol> protocols = new ArrayList<>();
 
 	/**
-	 * {@link Publication} of study
+	 * The list of {@link Publication} associated with the study
 	 */
 	private List<Publication> publications = new ArrayList<>(2);
 
@@ -97,8 +97,10 @@ public class Study extends WideTableFile implements Commentable {
 	/**
 	 * Constructor, give the identifier and filename
 	 *
-	 * @param identifier the id of the {@link Study}
-	 * @param fileName   the name of the {@link Study} file
+	 * @param identifier the identifier of the {@link Study}
+	 * @param fileName   the name of the {@link Study} which will be later linked in
+	 *                   the {@link Investigation} file and used when writing the
+	 *                   {@link Study} into a file
 	 */
 	public Study(String identifier, String fileName) {
 		super(fileName);

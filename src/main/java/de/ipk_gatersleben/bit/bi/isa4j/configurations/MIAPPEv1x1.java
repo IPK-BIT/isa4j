@@ -189,7 +189,10 @@ public class MIAPPEv1x1 {
 	public enum StudyFile implements WideTableConfigEnum {
     
     /**
-     * [required](MIAPPE: Organism) An identifier for the organism at the species level. Use of the NCBI taxon ID is recommended.             e.g. NCBITAXON:4577         
+     * (MIAPPE: Organism) An identifier for the organism at the species level. Use of the NCBI taxon ID is recommended.             e.g. NCBITAXON:4577   
+     * <br><br>
+     * <b>[required]</b>
+     *       
      */
     ORGANISM("Organism", true, 0),
     /**
@@ -293,7 +296,7 @@ public class MIAPPEv1x1 {
 		public static boolean validate(Study study) {
 			if(!study.hasWrittenHeaders()) {
 				throw new IllegalStateException("Study file for " + study.toString() + "can only be validated after headers are written." +
-						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written.");
+						"Please write headers with '.writeHeadersFromExample' or call validate after at least one line has been written.");
 			}
 			ArrayList<LinkedHashMap<String, String[]>> headers = study.getHeaders();
 			Stream.of(StudyFile.values())
