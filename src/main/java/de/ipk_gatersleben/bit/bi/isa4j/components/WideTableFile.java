@@ -7,6 +7,7 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,9 +36,9 @@ public abstract class WideTableFile implements Commentable {
 	private ArrayList<LinkedHashMap<String, String[]>> headers = null;
 
 	private final Logger logger = LoggerFactory.getLogger(WideTableFile.class);
-	
+
 	private OutputStreamWriter outputstreamwriter;
-	
+
 	/**
 	 * Constructor, give the filename
 	 *
@@ -71,7 +72,7 @@ public abstract class WideTableFile implements Commentable {
 	public String getFileName() {
 		return fileName;
 	}
-	
+
 	public ArrayList<LinkedHashMap<String, String[]>> getHeaders() {
 		return this.headers;
 	}
@@ -92,7 +93,7 @@ public abstract class WideTableFile implements Commentable {
 	}
 
 	public void releaseStream() throws IOException {
-		logger.debug("{}: Releasing output stream.", this);	
+		logger.debug("{}: Releasing output stream.", this);
 		this.outputstreamwriter.flush();
 		this.outputstreamwriter = null;
 		this.headers = null;
@@ -130,24 +131,36 @@ public abstract class WideTableFile implements Commentable {
 			if (example != null)
 				sb.append(Symbol.TAB.toString());
 		}
-		
-		logger.debug("{}: Writing these headers to output: [{}]", this,
-			this.headers.stream().map(
-				t -> "{" + t.keySet().stream().map(
-					k -> k + " = " + Arrays.toString(t.get(k)) )
-				.collect(Collectors.joining(", ")) + "}")
-			.collect(Collectors.joining(", ")));
-		
+
+		logger.debug("{}: Writing these headers to output: [{}]", this, this.headers.stream().map(t -> "{"
+				+ t.keySet().stream().map(k -> k + " = " + Arrays.toString(t.get(k))).collect(Collectors.joining(", "))
+				+ "}").collect(Collectors.joining(", ")));
+
 		this.outputstreamwriter.write(sb.toString() + Symbol.ENTER);
 	}
 
+	/**
+	 * Write a single line for a {@link Study} or {@link Assay} into the
+	 * corresponding {@link OutputStream} or {@link File}. <br>
+	 * <br>
+	 * <b>NOTE: Do not forget to call '.closeFile()' for the corresponding
+	 * {@link Study} or {@link Assay} to finish writing.</b>
+	 * 
+	 * 
+	 * @param initiator initiator being the first object in the line that is then
+	 *                  connected via a chain of processes and samples/materials
+	 *                  etc. to the last.
+	 * @throws IOException if unable to write the given initiator into the
+	 *                     {@link OutputStream} or {@link File}
+	 */
 	public void writeLine(StudyOrAssayTableObject initiator) throws IOException {
 		if (this.outputstreamwriter == null)
 			throw new IllegalStateException("No file or stream open for writing");
-		
+
 		// If headers have not been written yet, write them from this row.
-		// This would happen with the first row or if the user has manually called "writeHeadersFromExample"
-		if(this.headers == null) {
+		// This would happen with the first row or if the user has manually called
+		// "writeHeadersFromExample"
+		if (this.headers == null) {
 			this.writeHeadersFromExample(initiator);
 		}
 
@@ -186,9 +199,11 @@ public abstract class WideTableFile implements Commentable {
 				return partOfLine;
 			}).collect(Collectors.joining(Symbol.TAB.toString())));
 
-			if(fields.size() > 0)
-				logger.warn("{}: There were fields for Object {} that had no corresponding header. They were ignored: {}", this, currentObject, String.join(", ", fields.keySet()));
-			
+			if (fields.size() > 0)
+				logger.warn(
+						"{}: There were fields for Object {} that had no corresponding header. They were ignored: {}",
+						this, currentObject, String.join(", ", fields.keySet()));
+
 			currentObject = currentObject.getNextStudyOrAssayTableObject();
 			if (currentObject != null)
 				sb.append(Symbol.TAB.toString());
