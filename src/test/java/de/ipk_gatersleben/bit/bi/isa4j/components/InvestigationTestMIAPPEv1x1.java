@@ -26,7 +26,7 @@ public class InvestigationTestMIAPPEv1x1 {
 	 * required
 	 */
 	@Test
-	void testInvestigationRequiedFields() {
+	void testInvestigationForRequiedFields() {
 
 		Comment commentLicense = new Comment(MIAPPEv1x1.InvestigationFile.INVESTIGATION_LICENSE, "CC-BY 4.0");
 		Comment commentVersion = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
@@ -70,10 +70,10 @@ public class InvestigationTestMIAPPEv1x1 {
 	 * file, e.g. 'Charateristics[Organism]' is required.
 	 */
 	@Test
-	void testStudy() throws IOException {
+	void testStudyForRequiredFields() throws IOException {
 
 		// create simple Study //
-		Study study = new Study("myStudyID", "s_study1.txt");
+		Study study = new Study("myStudyID");
 
 		// just write the study into memory without saving into a file //
 		study.setOutputStream(new ByteArrayOutputStream());
@@ -97,6 +97,37 @@ public class InvestigationTestMIAPPEv1x1 {
 			Assertions.assertTrue(true);
 		}
 		study.closeFile();
+
+	}
+
+	/**
+	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the assay
+	 * file -> no specific field is required.
+	 */
+	@Test
+	void testAssayForRequiredFields() throws IOException {
+
+		// create simple Assay //
+		Assay assay = new Assay("myAssayID");
+
+		// just write the assay into memory without saving into a file //
+		assay.setOutputStream(new ByteArrayOutputStream());
+
+		Protocol growing = new Protocol("Growing");
+
+		for (int i = 0; i < 5; i++) {
+			Source source = new Source("Plant " + i);
+			Sample sample = new Sample("Sample " + i);
+			Process growthProcess = new Process(growing);
+			growthProcess.setInput(source);
+			growthProcess.setOutput(sample);
+
+			assay.writeLine(source);
+		}
+
+		Assertions.assertTrue(MIAPPEv1x1.AssayFile.validate(assay));
+
+		assay.closeFile();
 
 	}
 
