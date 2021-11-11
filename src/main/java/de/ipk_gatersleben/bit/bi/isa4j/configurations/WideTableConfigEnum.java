@@ -7,8 +7,38 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.configurations;
 
+import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
+
+/**
+ * 
+ * Interface for providing functions for the specific {@link Study} and
+ * {@link Assay} fields of an ISA configuration
+ * 
+ * @author psaroudakis, arendd
+ *
+ */
 public interface WideTableConfigEnum {
+	/**
+	 * Provide the name of the field.
+	 * 
+	 * @return name
+	 */
 	public String getFieldName();
+
+	/**
+	 * Check if the specific field is required in the corresponding configuration
+	 * 
+	 * @return <code>true</code> if the field is required
+	 */
 	public boolean isRequired();
+
+	/**
+	 * Provide the position of the field within the {@link Study} or {@link Assay}
+	 * File
+	 * 
+	 * @return index
+	 */
 	public int getGroupIndex();
 }
