@@ -112,9 +112,20 @@ public class MIAPPEv1x1Test {
 	@Test
 	void testStudyForRequiredFields() throws IOException {
 
+		Investigation investigation = new Investigation("Investigation");
+
+		investigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
+
 		// create simple Study //
 		Study study = new Study("myStudy");
-
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
+		study.comments().add(
+				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));		
+		
 		// just write the study into memory without saving into a file //
 		study.setOutputStream(new ByteArrayOutputStream());
 
@@ -145,6 +156,19 @@ public class MIAPPEv1x1Test {
 	@Test
 	void testAssayForRequiredFields() throws IOException {
 
+		Investigation investigation = new Investigation("Investigation");
+
+		investigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
+
+		Study study = new Study("myStudy");
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
+		study.comments().add(
+				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));		
+		
 		// create simple Assay //
 		Assay assay = new Assay("myAssay");
 
@@ -163,6 +187,10 @@ public class MIAPPEv1x1Test {
 			assay.writeLine(source);
 		}
 
+		investigation.addStudy(study);
+		
+		study.addAssay(assay);
+		
 		Assertions.assertTrue(MIAPPEv1x1.AssayFile.validate(assay));
 
 		assay.closeFile();
