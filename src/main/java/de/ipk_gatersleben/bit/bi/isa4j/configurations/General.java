@@ -7,15 +7,13 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.configurations;
 
-import java.util.Objects;
-
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 
 public class General {
 	
-	protected static void validateInvestigationFile(Investigation investigation) {
+	public static void validateInvestigationFile(Investigation investigation) {
     	//Make sure the investigation has at least one study and every study has at least one assay
     	if(investigation.getStudies().isEmpty())
     		throw new IllegalStateException(investigation.toString() + " has no studies attached to it.");
@@ -24,12 +22,14 @@ public class General {
     			throw new IllegalStateException(study.toString() + " has no assays attached to it.");	
 	}
 	
-	protected static void validateStudyFile(Study study) {
-		Objects.requireNonNull(study.getInvestigation(), study.toString() + " is not connected to an Investigation object.");
+	public static void validateStudyFile(Study study) {
+		if(study.getInvestigation() == null)
+			throw new IllegalStateException(study.toString() + " is not connected to an Investigation object.");
 	}
 	
-	protected static void validateAssayFile(Assay assay) {
-		Objects.requireNonNull(assay.getStudy(), assay.toString() + " is not connected to a Study object.");
+	public static void validateAssayFile(Assay assay) {
+		if(assay.getStudy() == null)
+			throw new IllegalStateException(assay.toString() + " is not connected to a Study object.");
 	}
 
 }

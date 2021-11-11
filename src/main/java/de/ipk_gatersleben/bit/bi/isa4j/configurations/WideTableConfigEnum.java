@@ -8,7 +8,6 @@
 package de.ipk_gatersleben.bit.bi.isa4j.configurations;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
-import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 
 /**
