@@ -1,9 +1,9 @@
 ---
-title: Installation
+title: MIAPPE v1.1 Validation
 nav_order: 5
 ---
 
-# MIAPPEv1.1 Validation
+# MIAPPE v1.1 Validation
 isa4j is able to validate given investigation, study, or assay object against the Minimum Information About A Plant Phenotyping Standard ([https://www.miappe.org/](MIAPPE)).
 You can also use the constants defined in `MIAPPEv1x1` to make sure you spell the field headers correctly and make sure of you IDE's auto-completion feature.
 Here is a small example showcasing the validation procedure:

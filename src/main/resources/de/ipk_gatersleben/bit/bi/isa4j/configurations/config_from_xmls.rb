@@ -215,8 +215,9 @@ public class #{class_name} {
 		public static boolean validate(Study study) {
 			General.validateStudyFile(study);
 			if(!study.hasWrittenHeaders()) {
-				throw new IllegalStateException("Study file for " + study.toString() + "can only be validated after headers are written." +
-						"Please write headers with '.writeHeadersFromExample' or call validate after at least one line has been written.");
+				throw new IllegalStateException("Study file for " + study.toString() + "can only be validated after headers are written. " +
+						"Please write headers with '.writeHeadersFromExample' or call validate after at least one line has been written. " +
+						"If that is confusing to you, perhaps you have closed the file/released the strem before validating? That resets the headers");
 			}
 			ArrayList<LinkedHashMap<String, String[]>> headers = study.getHeaders();
 			Stream.of(StudyFile.values())
@@ -262,8 +263,9 @@ public class #{class_name} {
 		public static boolean validate(Assay assay) {
 			General.validateAssayFile(assay);
 			if(!assay.hasWrittenHeaders()) {
-				throw new IllegalStateException("Assay file for " + assay.toString() + "can only be validated after headers are written." +
-						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written.");
+				throw new IllegalStateException("Assay file for " + assay.toString() + "can only be validated after headers are written. " +
+						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written. " +
+						"If that is confusing to you, perhaps you have closed the file/released the strem before validating? That resets the headers");
 			}
 			ArrayList<LinkedHashMap<String, String[]>> headers = assay.getHeaders();
 			Stream.of(AssayFile.values())

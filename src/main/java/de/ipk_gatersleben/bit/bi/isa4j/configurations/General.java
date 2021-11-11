@@ -7,6 +7,8 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.configurations;
 
+import java.util.Objects;
+
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
@@ -23,11 +25,11 @@ public class General {
 	}
 	
 	protected static void validateStudyFile(Study study) {
-		
+		Objects.requireNonNull(study.getInvestigation(), study.toString() + " is not connected to an Investigation object.");
 	}
 	
 	protected static void validateAssayFile(Assay assay) {
-		
+		Objects.requireNonNull(assay.getStudy(), assay.toString() + " is not connected to a Study object.");
 	}
 
 }
