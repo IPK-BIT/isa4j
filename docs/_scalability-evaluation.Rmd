@@ -114,7 +114,7 @@ plot(data$time.in.ns.log ~ data$n.rows.log, xlim=xlim, col=data$color, axes=F, x
 axis(1, col=F, col.tick=col.gray, at=log(c(1,3,5,10,25,50,100,250,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000), 10), labels=c(1,3,5,10,25,50,100,250,500,"1k","2.5k","5k","10k","25k","50k","100k","250k","500k","1 Mio"), col.axis=col.gray)
 axis(2, las=2, at=c(seq(-3,2), log(600,10), log(3600,10), log(28800,10)), labels=c("1 ms","10 ms", "100 ms", "1 s", "10 s", "100 s", "10 m", "1 h", "8 h"), col=F, col.axis=col.gray)
 
-text(0, 4, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1.5, family="sans")
+text(-0.2, 4, expression("CPU Execution Time (log"[10]~"Scale)"), pos=4, cex=1, col=col.gray)
 mtext("isatools", side=2, at=-0.7, line=-1, cex=0.7)
 mtext("isa4j", side=2, at=-2.5, line=-1, cex=0.7)
 mtext("|", side=2, at=max(data[data$platform == "isatools" & data$row.complexity == "real_world",]$time.in.ns.log), col="#e69f00", cex=0.5)
@@ -157,10 +157,10 @@ par(fig=c(0,1,0,0.2), mar=c(0.2,3.8,0,0), new=T)
 memSub = data[data$row.complexity == "real_world",]
 
 memSub.isatools = memSub[memSub$platform == "isatools",]
-memSub.isa4J = memSub[memSub$platform == "isa4J",]
+memSub.isa4j = memSub[memSub$platform == "isa4J",]
 
 memSub.isatools.medians = aggregate(memSub.isatools$memory.usage.in.kb.log, by=list(memSub.isatools$n.rows), FUN=median)
-memSub.isa4J.medians = aggregate(memSub.isa4J$memory.usage.in.kb.log, by=list(memSub.isa4J$n.rows), FUN=median)
+memSub.isa4j.medians = aggregate(memSub.isa4j$memory.usage.in.kb.log, by=list(memSub.isa4j$n.rows), FUN=median)
 
 plot(-memSub$memory.usage.in.kb.log ~ memSub$n.rows.log, type="n", axes=F, xlim=xlim, xlab="", ylab="")
 
@@ -171,16 +171,16 @@ polygon(
   col=col.green.light, border=NA) #DBF3ED
 
 polygon(
-  c(log(memSub.isa4J.medians$Group.1, 10), max(log(memSub.isa4J.medians$Group.1, 10)), min(log(memSub.isa4J.medians$Group.1, 10))),
-  -c(memSub.isa4J.medians$x, min(memSub$memory.usage.in.kb.log), min(memSub$memory.usage.in.kb.log) ),
+  c(log(memSub.isa4j.medians$Group.1, 10), max(log(memSub.isa4j.medians$Group.1, 10)), min(log(memSub.isa4j.medians$Group.1, 10))),
+  -c(memSub.isa4j.medians$x, min(memSub$memory.usage.in.kb.log), min(memSub$memory.usage.in.kb.log) ),
   col=col.green.dark, border=NA) #A1D7CA
 
 text(0.01, -5.3, expression("Memory Usage for Real World Complexity (log"[10]~"Scale)"), pos=4, col=col.gray)
 
-#text(0, 0.4, "isa4J", pos=2, xpd=NA, col=col.gray, cex=0.8)
+#text(0, 0.4, "isa4j", pos=2, xpd=NA, col=col.gray, cex=0.8)
 #text(0, -1.6, "isatools", pos=2, xpd=NA, col=col.gray, cex=0.8)
 
-text(log(1000000,10), -2.5, paste("isa4j \n  ",round(10^min(memSub.isa4J.medians$x)/1024, 1), "-", round(10^max(memSub.isa4J.medians$x)/1024, 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
+text(log(1000000,10), -2.5, paste("isa4j \n  ",round(10^min(memSub.isa4j.medians$x)/1024, 1), "-", round(10^max(memSub.isa4j.medians$x)/1024, 1),"MB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
 text(log(1000000,10), -5.3, paste("isatools \n  ", round(10^min(memSub.isatools.medians$x)/1024, 1), " MB -\n  ", round(10^max(memSub.isatools.medians$x)/1024/1024, 1),"GB"), pos=4, xpd=NA, col=col.gray, cex=0.6)
 
@@ -218,11 +218,11 @@ We will again assume linearity and parallel lines for more than 100 rows.
 ```{r, warning=F}
 sub = data[data$platform == "isa4J" & data$n.rows >= 100,]
 plot(sub$time.in.ns.log ~ sub$n.rows.log, col=sub$row.complexity, xlab=expression("log"[10]("Number of Rows")), ylab=expression("log"[10]("CPU Execution time [s]")))
-model.isa4J = lm(time.in.ns.log ~ n.rows.log + row.complexity, data=sub)
-abline(model.isa4J)
-abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[4], model.isa4J$coefficients[2], col="green")
-abline(model.isa4J$coefficients[1]+model.isa4J$coefficients[3], model.isa4J$coefficients[2], col="red")
-summary(model.isa4J)
+model.isa4j = lm(time.in.ns.log ~ n.rows.log + row.complexity, data=sub)
+abline(model.isa4j)
+abline(model.isa4j$coefficients[1]+model.isa4j$coefficients[4], model.isa4j$coefficients[2], col="green")
+abline(model.isa4j$coefficients[1]+model.isa4j$coefficients[3], model.isa4j$coefficients[2], col="red")
+summary(model.isa4j)
 ```
 
 This model does not fit as well as the isatools one because there is a lot more variation in the data and there appear some points where the curve is not perfectly linear (for example, Java translates JVM code into native machine code after a certain number of repititions).
@@ -230,8 +230,8 @@ For simplicity's sake we will accept the model though and assume it is good enou
 
 So, same calculations like above:
 
-- Increasing the number of rows 10-fold will increase the required CPU execution time $10^{`r model.isa4J$coefficients[2]`} = `r 10^model.isa4J$coefficients[2]`$ -fold
-- Increasing the complexity from minimal to reduced increases execution time $10^{`r model.isa4J$coefficients[4]`} = `r 10^model.isa4J$coefficients[4]`$ -fold and increasing the complexity from minimal to real world increases it $10^{`r model.isa4J$coefficients[3]`} = `r 10^model.isa4J$coefficients[3]`$ -fold
+- Increasing the number of rows 10-fold will increase the required CPU execution time $10^{`r model.isa4j$coefficients[2]`} = `r 10^model.isa4j$coefficients[2]`$ -fold
+- Increasing the complexity from minimal to reduced increases execution time $10^{`r model.isa4j$coefficients[4]`} = `r 10^model.isa4j$coefficients[4]`$ -fold and increasing the complexity from minimal to real world increases it $10^{`r model.isa4j$coefficients[3]`} = `r 10^model.isa4j$coefficients[3]`$ -fold
 
 We can see that isa4j scales slightly better with number of rows and significantly better at increasing complexity of rows.
 
@@ -259,5 +259,5 @@ Since the slopes of the lines are different, isa4j is going to become relatively
 
 There are two take-aways from this:
 
-1. isa4j scales significantly better when complexity of rows increases (`r 10^model.isa4J$coefficients[4]` and `r 10^model.isa4J$coefficients[3]`-fold increase for isa4j compared to `r 10^model.isatools$coefficients[4]` and `r 10^model.isatools$coefficients[3]`-fold for isatools).
+1. isa4j scales significantly better when complexity of rows increases (`r 10^model.isa4j$coefficients[4]` and `r 10^model.isa4j$coefficients[3]`-fold increase for isa4j compared to `r 10^model.isatools$coefficients[4]` and `r 10^model.isatools$coefficients[3]`-fold for isatools).
 2. The more lines are written, the faster isa4j becomes compared to isatools (`r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(100, 10))` faster for 100 lines, `r 10^(model.both$coefficients[3]+model.both$coefficients[4]*log(25000, 10))` faster for 25,00 lines).
