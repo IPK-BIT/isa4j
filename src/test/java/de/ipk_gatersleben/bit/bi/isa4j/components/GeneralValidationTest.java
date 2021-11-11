@@ -13,7 +13,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import de.ipk_gatersleben.bit.bi.isa4j.configurations.General;
+import de.ipk_gatersleben.bit.bi.isa4j.configurations.GeneralValidation;
 import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
 
@@ -41,17 +41,17 @@ public class GeneralValidationTest {
 
 		Assay assay = new Assay("assay");
 
-//		Assertions.assertThrows(IllegalStateException.class, () -> General.validateInvestigationFile(investigation),
-//				"Should not be possible to validate Investigations without Studies");
-//
-//		investigation.addStudy(study);
-//
-//		Assertions.assertThrows(IllegalStateException.class, () -> General.validateInvestigationFile(investigation),
-//				"Should not be possible to validate Investigations with Studies that have no Assays");
-//
-//		study.addAssay(assay);
-//
-//		Assertions.assertTrue(General.validateInvestigationFile(investigation));
+		Assertions.assertThrows(IllegalStateException.class, () -> GeneralValidation.validateInvestigationFile(investigation),
+				"Should not be possible to validate Investigations without Studies");
+
+		investigation.addStudy(study);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> GeneralValidation.validateInvestigationFile(investigation),
+				"Should not be possible to validate Investigations with Studies that have no Assays");
+
+		study.addAssay(assay);
+
+		Assertions.assertTrue(GeneralValidation.validateInvestigationFile(investigation));
 
 	}
 

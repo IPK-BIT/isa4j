@@ -309,7 +309,7 @@ public class MIAPPEv1x1 {
 		}
 		
 		public static boolean validate(Investigation investigation) {
-			General.validateInvestigationFile(investigation);
+			GeneralValidation.validateInvestigationFile(investigation);
 			// Check if all required investigation comments are present
 			CommentCollection comments = investigation.comments();
 			Stream.of(InvestigationFile.values())
@@ -566,7 +566,7 @@ public class MIAPPEv1x1 {
 		}
 		
 		public static boolean validate(Study study) {
-			General.validateStudyFile(study);
+			GeneralValidation.validateStudyFile(study);
 			if(!study.hasWrittenHeaders()) {
 				throw new IllegalStateException("Study file for " + study.toString() + "can only be validated after headers are written. " +
 						"Please write headers with '.writeHeadersFromExample' or call validate after at least one line has been written. " +
@@ -623,7 +623,7 @@ public class MIAPPEv1x1 {
 		}
 		
 		public static boolean validate(Assay assay) {
-			General.validateAssayFile(assay);
+			GeneralValidation.validateAssayFile(assay);
 			if(!assay.hasWrittenHeaders()) {
 				throw new IllegalStateException("Assay file for " + assay.toString() + "can only be validated after headers are written. " +
 						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written. " +
