@@ -1,7 +1,6 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Assertions;
@@ -18,7 +17,7 @@ import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
  *
  */
 
-public class InvestigationTestMIAPPEv1x1 {
+public class MIAPPEv1x1Test {
 
 	/**
 	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the
@@ -37,12 +36,25 @@ public class InvestigationTestMIAPPEv1x1 {
 
 		investigationOne.comments().add(commentLicense);
 
-		try {
-			MIAPPEv1x1.InvestigationFile.validate(investigationOne);
-			Assertions.assertFalse(true);
-		} catch (MissingFieldException exp) {
-			Assertions.assertTrue(true);
-		}
+		Study study = new Study("myStudyID");
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
+		study.comments().add(
+				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));
+
+		Assay assay = new Assay("myAssayID");
+
+		study.addAssay(assay);
+
+		investigationOne.addStudy(study);
+		investigationTwo.addStudy(study);
+
+		Assertions.assertThrows(MissingFieldException.class,
+				() -> MIAPPEv1x1.InvestigationFile.validate(investigationOne),
+				"It should not be allowed to create investigation without 'MIAPPE_VERSION");
 
 		investigationTwo.comments().add(commentVersion);
 
@@ -51,17 +63,38 @@ public class InvestigationTestMIAPPEv1x1 {
 	}
 
 	/**
-	 * Test Investigation <-> Study association
+	 * Test for checking if the validation of the Investigation <-> Study <->
+	 * association is working
 	 */
 	@Test
 	void testInvestigationStudy() {
 
-//		Investigation investigation = new Investigation("Investigation Without_MIAPPE_Version");
-//		Comment commentVersion = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
-//		
-//		investigation.comments().add(commentVersion);
-//
-//		Assertions.assertFalse(MIAPPEv1x1.InvestigationFile.validate(investigation));
+		Investigation investigation = new Investigation("Investigation");
+
+		investigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
+
+		Study study = new Study("myStudy");
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
+		study.comments().add(
+				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
+		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));
+
+		Assay assay = new Assay("myAssay");
+
+		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.InvestigationFile.validate(investigation),
+				"Should not be possible to validate Investigations without Studies");
+
+		investigation.addStudy(study);
+
+		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.InvestigationFile.validate(investigation),
+				"Should not be possible to validate Investigations with Studies that have no Assays");
+
+		study.addAssay(assay);
+
+		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(investigation));
 
 	}
 
@@ -73,7 +106,7 @@ public class InvestigationTestMIAPPEv1x1 {
 	void testStudyForRequiredFields() throws IOException {
 
 		// create simple Study //
-		Study study = new Study("myStudyID");
+		Study study = new Study("myStudy");
 
 		// just write the study into memory without saving into a file //
 		study.setOutputStream(new ByteArrayOutputStream());
@@ -90,12 +123,10 @@ public class InvestigationTestMIAPPEv1x1 {
 
 			study.writeLine(source);
 		}
-		try {
-			MIAPPEv1x1.StudyFile.validate(study);
-			Assertions.assertFalse(true);
-		} catch (MissingFieldException exp) {
-			Assertions.assertTrue(true);
-		}
+
+		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.StudyFile.validate(study),
+				"It should not be possible to write a study without Characteristics[Organism]");
+
 		study.closeFile();
 
 	}
@@ -108,7 +139,7 @@ public class InvestigationTestMIAPPEv1x1 {
 	void testAssayForRequiredFields() throws IOException {
 
 		// create simple Assay //
-		Assay assay = new Assay("myAssayID");
+		Assay assay = new Assay("myAssay");
 
 		// just write the assay into memory without saving into a file //
 		assay.setOutputStream(new ByteArrayOutputStream());
