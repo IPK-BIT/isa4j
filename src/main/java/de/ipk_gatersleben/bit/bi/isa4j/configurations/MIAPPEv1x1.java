@@ -3,12 +3,14 @@ package de.ipk_gatersleben.bit.bi.isa4j.configurations;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import de.ipk_gatersleben.bit.bi.isa4j.components.Assay;
 import de.ipk_gatersleben.bit.bi.isa4j.components.CommentCollection;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Commentable;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Investigation;
+import de.ipk_gatersleben.bit.bi.isa4j.components.Protocol;
 import de.ipk_gatersleben.bit.bi.isa4j.components.Study;
 import de.ipk_gatersleben.bit.bi.isa4j.constants.InvestigationAttribute;
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
@@ -294,8 +296,12 @@ public class MIAPPEv1x1 {
 				});
 			});
 		}
+
+		private static void validateCustomProperties(Investigation investigation) {
+		}
 		
 		public static boolean validate(Investigation investigation) {
+			General.validateInvestigationFile(investigation);
 			// Check if all required investigation comments are present
 			CommentCollection comments = investigation.comments();
 			Stream.of(InvestigationFile.values())
@@ -317,6 +323,8 @@ public class MIAPPEv1x1 {
 				validateInvestigationBlockComments(s.getAssays(), InvestigationAttribute.STUDY_ASSAYS);
 				validateInvestigationBlockComments(s.getProtocols(), InvestigationAttribute.STUDY_PROTOCOLS);
 			}
+
+ 			validateCustomProperties(investigation);
 				
 			return true;
 		}
@@ -493,7 +501,7 @@ public class MIAPPEv1x1 {
      * <b>[required]</b>
      * <br>
      */
-    OBSERVATION_UNIT_TYPE("Observation Unit Type", true, 0),
+    OBSERVATION_UNIT_TYPE("Observation Unit Type", true, 2),
     
     /**
      * Identifier for the observation unit in a persistent repository, comprises the name of the repository and the identifier of the observation unit therein. The EBI Biosamples repository can be used. URI are recommended when possible.
@@ -503,7 +511,7 @@ public class MIAPPEv1x1 {
      * [optional]
      * <br>
      */
-    EXTERNAL_ID("External ID", false, 0),
+    EXTERNAL_ID("External ID", false, 2),
     
     /**
      * provided as a key-value pair of the form type:value. Levels of observation must be consistent with those listed in the Study section.
@@ -513,7 +521,7 @@ public class MIAPPEv1x1 {
      * [optional]
      * <br>
      */
-    SPATIAL_DISTRIBUTION("Spatial Distribution", false, 0);
+    SPATIAL_DISTRIBUTION("Spatial Distribution", false, 2);
 		
 		private String fieldName;
 		private boolean required;
@@ -536,11 +544,21 @@ public class MIAPPEv1x1 {
 		public int getGroupIndex() {
 			return this.groupIndex;
 		}
-		
+
 		private static void validateCustomProperties(Study study) {
+			// Ensure there is a protocol called "Growth"
+			Optional<Protocol> growth = study.getProtocols().stream().filter(p -> p.getName() == "Growth").findFirst();
+			if(growth.isEmpty())
+				throw new IllegalStateException(study.toString() + " has no Protocol called 'Growth'");
+			
+			// Ensure there is a protocol called "Phenotyping"
+			Optional<Protocol> phenotyping = study.getProtocols().stream().filter(p -> p.getName() == "Phenotyping").findFirst();
+			if(phenotyping.isEmpty())
+				throw new IllegalStateException(study.toString() + " has no Protocol called 'Phenotyping'");
 		}
 		
 		public static boolean validate(Study study) {
+			General.validateStudyFile(study);
 			if(!study.hasWrittenHeaders()) {
 				throw new IllegalStateException("Study file for " + study.toString() + "can only be validated after headers are written." +
 						"Please write headers with '.writeHeadersFromExample' or call validate after at least one line has been written.");
@@ -552,7 +570,7 @@ public class MIAPPEv1x1 {
 					if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
 						throw new MissingFieldException("Missing Characteristic header in Study file: " + c.getFieldName());
 				});
-			validateCustomProperties(study);
+ 			validateCustomProperties(study);
 			return true;
 		}
 	}
@@ -591,12 +609,12 @@ public class MIAPPEv1x1 {
 		public int getGroupIndex() {
 			return this.groupIndex;
 		}
-		
+
 		private static void validateCustomProperties(Assay assay) {
-			//@TODO 
 		}
 		
 		public static boolean validate(Assay assay) {
+			General.validateAssayFile(assay);
 			if(!assay.hasWrittenHeaders()) {
 				throw new IllegalStateException("Assay file for " + assay.toString() + "can only be validated after headers are written." +
 						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written.");
@@ -608,7 +626,7 @@ public class MIAPPEv1x1 {
 					if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
 						throw new MissingFieldException("Missing Characteristic header in Assay file: " + c.getFieldName());
 				});
-			validateCustomProperties(assay);
+ 			validateCustomProperties(assay);
 			return true;
 		}
 		

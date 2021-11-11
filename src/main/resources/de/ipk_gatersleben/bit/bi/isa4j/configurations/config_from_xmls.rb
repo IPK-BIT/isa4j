@@ -4,60 +4,88 @@
 require "nokogiri"
 
 class_name = ARGV[0]
-investigation_xml = Nokogiri::XML(File.open(ARGV[1]))
-study_xml = Nokogiri::XML(File.open(ARGV[2]))
-assay_xml = Nokogiri::XML(File.open(ARGV[3]))
+investigation_xml = Nokogiri::XML(File.open(ARGV[1])) { |conf| conf.noblanks }
+study_xml = Nokogiri::XML(File.open(ARGV[2])) { |conf| conf.noblanks }
+assay_xml = Nokogiri::XML(File.open(ARGV[3])) { |conf| conf.noblanks }
+
+def description_from_field(field) 
+  description = field.css("description")[0].content.gsub("\n", " ").lstrip
+  description = description.sub(/^\(MIAPPE: .+\) /, "")
+  if field.css("default-value").length > 0 and not field.css("default-value").first.content.empty?
+    description = description + "\n" + field.css("default-value")[0].content.gsub("\n", " ").lstrip
+  end
+  if field["is-required"] == "true"
+    description = description + "\n" + "<b>[required]</b>"
+  else
+    description = description + "\n" + "[optional]"
+  end
+
+  description_text = "
+    /**"
+  description.lines.each do |l|
+    description_text << "
+     * #{l.chomp}
+     * <br>"
+  end
+  description_text << "
+     */"
+  
+
+  return description_text
+end
 
 investigation_enum = investigation_xml.css("field").map do |field|
   if field["header"].start_with?("Comment[")
     header = field["header"][8..-2]
     name = header.upcase.gsub(" ", "_")
     section = field["section"].gsub(" ", "_")
-    description = field.content.gsub("\n", " ").lstrip
     required = field["is-required"]
-    description = "[required]" + description if(required == "true")
+    description = description_from_field(field)
 
     "
-    /**
-     * #{description}
-     */
+    #{description}
     #{name}(\"#{header}\", InvestigationAttribute.#{section}, #{required})"
   else
     nil
   end
 end.reject(&:nil?).join(",") + ";"
 
-study_enum = study_xml.css("field").map do |field|
-  if field["header"].start_with?("Characteristics[")
-    header = field["header"][16..-2]
+# The block index describes which object in the row the characteristic needs to be assigned to.
+# So in a row for example with Source -> Process -> Sample, characteristics for the Source
+# would belong to block 0, characteristics for the sample to block 2 (block 1 is the process)
+block_index = 0
+study_enum = study_xml.children[0].children[0].children.map do |element|
+  # If we encounter a protocol field (i.e. a process), that means the following fields belong
+  # to the output of that process, i.e. the block index needs to be increased by 2
+  block_index += 2 if element.name == "protocol-field"
+  if element.name == "field" and element["header"].start_with?("Characteristics[")
+    header = element["header"][16..-2]
     name = header.upcase.gsub(" ", "_")
-    description = field.content.gsub("\n", " ").lstrip
-    required = field["is-required"]
-    description = "[required]" + description if(required == "true")
+    required = element["is-required"]
+
+    description = description_from_field(element)
 
     "
-    /**
-     * #{description}
-     */
-    #{name}(\"#{header}\", #{required}, 0)" #@TODO block index currently hard-coded
+    #{description}
+    #{name}(\"#{header}\", #{required}, #{block_index})"
   else
     nil
   end
 end.reject(&:nil?).join(",") + ";"
 
-assay_enum = assay_xml.css("field").map do |field|
-  if field["header"].start_with?("Characteristics[")
-    header = field["header"][16..-2]
+block_index = 0
+assay_enum = assay_xml.children[0].children[0].children.map do |element|
+  block_index += 2 if element.name == "protocol-field"
+  if element.name == "field" and element["header"].start_with?("Characteristics[")
+    header = element["header"][16..-2]
     name = header.upcase.gsub(" ", "_")
-    description = field.content.gsub("\n", " ").lstrip
-    required = field["is-required"]
-    description = "[required]" + description if(required == "true")
+    required = element["is-required"]
+
+    description = description_from_field(element)
 
     "
-    /**
-     * #{description}
-     */
-    #{name}(\"#{header}\", #{required}, 0)" #@TODO block index currently hard-coded
+    #{description}
+    #{name}(\"#{header}\", #{required}, #{block_index})"
   else
     nil
   end
@@ -120,8 +148,13 @@ public class #{class_name} {
 				});
 			});
 		}
+
+		private static void validateCustomProperties(Investigation investigation) {
+			throw new UnsupportedOperationException("Custom validations for Investigation not implemented, implement or remove the method.");
+		}
 		
 		public static boolean validate(Investigation investigation) {
+			General.validateInvestigationFile(investigation);
 			// Check if all required investigation comments are present
 			CommentCollection comments = investigation.comments();
 			Stream.of(InvestigationFile.values())
@@ -143,6 +176,8 @@ public class #{class_name} {
 				validateInvestigationBlockComments(s.getAssays(), InvestigationAttribute.STUDY_ASSAYS);
 				validateInvestigationBlockComments(s.getProtocols(), InvestigationAttribute.STUDY_PROTOCOLS);
 			}
+
+ 			validateCustomProperties(investigation);
 				
 			return true;
 		}
@@ -172,14 +207,16 @@ public class #{class_name} {
 		public int getGroupIndex() {
 			return this.groupIndex;
 		}
-		
+
 		private static void validateCustomProperties(Study study) {
+			throw new UnsupportedOperationException("Custom validations for Study not implemented, implement or remove the method.");
 		}
 		
 		public static boolean validate(Study study) {
+			General.validateStudyFile(study);
 			if(!study.hasWrittenHeaders()) {
 				throw new IllegalStateException("Study file for " + study.toString() + "can only be validated after headers are written." +
-						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written.");
+						"Please write headers with '.writeHeadersFromExample' or call validate after at least one line has been written.");
 			}
 			ArrayList<LinkedHashMap<String, String[]>> headers = study.getHeaders();
 			Stream.of(StudyFile.values())
@@ -188,7 +225,7 @@ public class #{class_name} {
 					if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
 						throw new MissingFieldException("Missing Characteristic header in Study file: " + c.getFieldName());
 				});
-			validateCustomProperties(study);
+ 			validateCustomProperties(study);
 			return true;
 		}
 	}
@@ -217,12 +254,13 @@ public class #{class_name} {
 		public int getGroupIndex() {
 			return this.groupIndex;
 		}
-		
+
 		private static void validateCustomProperties(Assay assay) {
-			//@TODO 
+			throw new UnsupportedOperationException("Custom validations for Assay not implemented, implement or remove the method.");
 		}
 		
 		public static boolean validate(Assay assay) {
+			General.validateAssayFile(assay);
 			if(!assay.hasWrittenHeaders()) {
 				throw new IllegalStateException("Assay file for " + assay.toString() + "can only be validated after headers are written." +
 						"Please write headers with .writeHeadersFromExample or call validate after at least one line has been written.");
@@ -234,7 +272,7 @@ public class #{class_name} {
 					if(!headers.get(c.getGroupIndex()).containsKey("Characteristics[" + c.getFieldName() + "]"))
 						throw new MissingFieldException("Missing Characteristic header in Assay file: " + c.getFieldName());
 				});
-			validateCustomProperties(assay);
+ 			validateCustomProperties(assay);
 			return true;
 		}
 		
