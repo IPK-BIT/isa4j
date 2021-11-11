@@ -1,5 +1,9 @@
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,12 +49,13 @@ public class InvestigationTestMIAPPEv1x1 {
 		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(investigationTwo));
 
 	}
+
 	/**
 	 * Test Investigation <-> Study association
 	 */
 	@Test
 	void testInvestigationStudy() {
-		
+
 //		Investigation investigation = new Investigation("Investigation Without_MIAPPE_Version");
 //		Comment commentVersion = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
 //		
@@ -59,18 +64,40 @@ public class InvestigationTestMIAPPEv1x1 {
 //		Assertions.assertFalse(MIAPPEv1x1.InvestigationFile.validate(investigation));
 
 	}
+
+	/**
+	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the study
+	 * file, e.g. 'Charateristics[Organism]' is required.
+	 */
 	@Test
-	void testStudy() {
-		
-		Study study = new Study("myStudy");
-		
-		Source studySource = new Source("Plant_1");
-		studySource.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.ORGANISM, "barley"));
+	void testStudy() throws IOException {
 
-		Assertions.assertTrue(MIAPPEv1x1.StudyFile.validate(study));
+		// create simple Study //
+		Study study = new Study("myStudyID", "s_study1.txt");
 
-		
+		// just write the study into memory without saving into a file //
+		study.setOutputStream(new ByteArrayOutputStream());
+
+		Protocol growing = new Protocol("Growing");
+
+		for (int i = 0; i < 5; i++) {
+			Source source = new Source("Plant " + i);
+//			source.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.ORGANISM, "barley"));
+			Sample sample = new Sample("Sample " + i);
+			Process growthProcess = new Process(growing);
+			growthProcess.setInput(source);
+			growthProcess.setOutput(sample);
+
+			study.writeLine(source);
+		}
+		try {
+			MIAPPEv1x1.StudyFile.validate(study);
+			Assertions.assertFalse(true);
+		} catch (MissingFieldException exp) {
+			Assertions.assertTrue(true);
+		}
+		study.closeFile();
+
 	}
-	
-	
+
 }

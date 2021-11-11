@@ -109,7 +109,7 @@ public abstract class WideTableFile implements Commentable {
 	public void setOutputStream(OutputStream os) {
 		if (this.outputstreamwriter != null) {
 			throw new IllegalStateException(
-					"A file or stream is already being written to. Please close/release it first!");
+					"A file or stream is already set. Please unset it first.");
 		}
 		this.outputstreamwriter = new OutputStreamWriter(os, Props.DEFAULT_CHARSET);
 	}
