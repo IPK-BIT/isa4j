@@ -12,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.ipk_gatersleben.bit.bi.isa4j.exceptions.RedundantItemException;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
@@ -58,6 +61,8 @@ public class Study extends WideTableFile implements Commentable {
 	 * The investigation that has this study
 	 */
 	private Investigation investigation;
+	
+	private final Logger logger = LoggerFactory.getLogger(Study.class);
 
 	/**
 	 * The list of {@link Protocol} columns
@@ -328,6 +333,11 @@ public class Study extends WideTableFile implements Commentable {
 	 * @param investigation the investigation that study belongs to
 	 */
 	protected void setInvestigation(Investigation investigation) {
+		if(investigation != null && this.investigation != null) {
+			logger.warn("Attaching " + this.toString() + " to " + investigation.toString() + ", was previously already attached " +
+						"to " + this.investigation.toString(), this);
+		}
+
 		this.investigation = investigation;
 	}
 

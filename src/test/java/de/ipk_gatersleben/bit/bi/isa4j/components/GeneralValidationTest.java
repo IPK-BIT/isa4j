@@ -7,15 +7,10 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import de.ipk_gatersleben.bit.bi.isa4j.configurations.GeneralValidation;
-import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
-import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
 
 /**
  * Collection of simple unit test to check the implementation of the general
@@ -32,7 +27,7 @@ public class GeneralValidationTest {
 	 * association is working
 	 */
 	@Test
-	void testInvestigationStudy() {
+	void testValidateInvestigation() {
 
 		Investigation investigation = new Investigation("Investigation");
 
@@ -53,6 +48,32 @@ public class GeneralValidationTest {
 
 		Assertions.assertTrue(GeneralValidation.validateInvestigationFile(investigation));
 
+	}
+	
+	@Test
+	void testValidateStudy() {
+		Study study = new Study("study");
+		
+		Assertions.assertThrows(IllegalStateException.class, () -> GeneralValidation.validateStudyFile(study),
+				"Should not be possible to validate Study without attached Investigation");
+		
+		Investigation investigation = new Investigation("Investigation");
+		investigation.addStudy(study);
+		
+		Assertions.assertTrue(GeneralValidation.validateStudyFile(study));
+	}
+	
+	@Test
+	void testValidateAssay() {
+		Assay assay = new Assay("assay");
+		
+		Assertions.assertThrows(IllegalStateException.class, () -> GeneralValidation.validateAssayFile(assay),
+				"Should not be possible to validate Assay without attached Study");
+		
+		Study study = new Study("study");
+		study.addAssay(assay);
+		
+		Assertions.assertTrue(GeneralValidation.validateAssayFile(assay));
 	}
 
 }
