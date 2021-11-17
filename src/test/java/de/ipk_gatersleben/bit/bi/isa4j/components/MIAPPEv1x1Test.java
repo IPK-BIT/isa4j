@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.ipk_gatersleben.bit.bi.isa4j.configurations.MIAPPEv1x1;
@@ -25,116 +26,126 @@ import de.ipk_gatersleben.bit.bi.isa4j.exceptions.MissingFieldException;
  */
 
 public class MIAPPEv1x1Test {
-
+	
+	private Investigation validInvestigation;
+	private Study validStudy;
+	private Assay validAssay;
+	
+	@BeforeEach
+	void prepareObjects () {
+		this.validInvestigation = new Investigation("Valid Investigation");
+		validInvestigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
+		
+		this.validStudy = new Study("Valid Study");
+		this.validStudy.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
+		this.validStudy.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
+		this.validStudy.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
+		this.validStudy.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
+		this.validStudy.comments().add(
+				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
+		this.validStudy.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));
+		
+		this.validAssay = new Assay("Valid Assay");
+	}
+	
+	/**
+	 * This test is just to make sure the MIAPPEv1x1 validation internally also calls the general validation procudure
+	 * (which checks whether there are at least one study/assay connected)
+	 */
+	@Test
+	void testGeneralConfigurationValidation() {
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> MIAPPEv1x1.InvestigationFile.validate(this.validInvestigation),
+				"It should not be allowed to create investigation without connected studies. " +
+				"Perhaps the general validation procedure is not being called?");
+	}
+	
 	/**
 	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the
-	 * investigation file. MIAPPE_VERSION is required, INVESTIGATION_LICENSE is not
-	 * required
+	 * investigation file, just of the Investigation object.
 	 */
 	@Test
-	void testInvestigationForRequiedFields() {
-
-		Comment commentLicense = new Comment(MIAPPEv1x1.InvestigationFile.INVESTIGATION_LICENSE, "CC-BY 4.0");
-		Comment commentVersion = new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1");
-
-		Investigation investigationOne = new Investigation("Investigation Without_MIAPPE_Version");
-
-		Investigation investigationTwo = new Investigation("Investigation Without_License");
-
-		investigationOne.comments().add(commentLicense);
-
-		Study study = new Study("myStudyID");
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
-		study.comments().add(
-				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));
-
-		Assay assay = new Assay("myAssayID");
-
-		study.addAssay(assay);
-
-		investigationOne.addStudy(study);
-		investigationTwo.addStudy(study);
-
+	void testInvestigationFileFaultyInvestigation() {
+		Investigation faultyInvestigation = new Investigation("Faulty Investigation");
+		faultyInvestigation.addStudy(this.validStudy);
+		this.validStudy.addAssay(this.validAssay);
+		
 		Assertions.assertThrows(MissingFieldException.class,
-				() -> MIAPPEv1x1.InvestigationFile.validate(investigationOne),
-				"It should not be allowed to create investigation without 'MIAPPE_VERSION");
-
-		investigationTwo.comments().add(commentVersion);
-
-		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(investigationTwo));
-
+				() -> MIAPPEv1x1.InvestigationFile.validate(faultyInvestigation),
+				"It should not be allowed to validate investigation without 'MIAPPE_VERSION");
 	}
-
+	
 	/**
-	 * Test for checking if the validation of the Investigation <-> Study <->
-	 * association is working
+	 * Test the required fields in the MIAPPE 1.1 configuration of the
+	 * investigation file, just of the Study object.
 	 */
 	@Test
-	void testInvestigationStudy() {
-
-		Investigation investigation = new Investigation("Investigation");
-
-		investigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
-
-		Study study = new Study("myStudy");
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
-		study.comments().add(
-				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));
-
-		Assay assay = new Assay("myAssay");
-
-		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.InvestigationFile.validate(investigation),
-				"Should not be possible to validate Investigations without Studies");
-
-		investigation.addStudy(study);
-
-		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.InvestigationFile.validate(investigation),
-				"Should not be possible to validate Investigations with Studies that have no Assays");
-
-		study.addAssay(assay);
-
-		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(investigation));
-
+	void testInvestigationFileFaultyStudy() {
+		Study faultyStudy = new Study("Faulty Study");
+		this.validInvestigation.addStudy(faultyStudy);
+		// Case 1: Study has not assays attached to it
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> MIAPPEv1x1.InvestigationFile.validate(this.validInvestigation),
+				"It should not be allowed to validate investigation without valid Study");
+		
+		// Case 2: Study is missing required fields
+		faultyStudy.addAssay(this.validAssay);
+		Assertions.assertThrows(MissingFieldException.class,
+				() -> MIAPPEv1x1.InvestigationFile.validate(this.validInvestigation),
+				"It should not be allowed to validate investigation without valid Study");
+		
+	}
+	
+	/**
+	 * Test that a valid investigation file is returns true.
+	 */
+	@Test
+	void testInvestigationFileValid() {
+		this.validInvestigation.addStudy(this.validStudy);
+		this.validStudy.addAssay(this.validAssay);
+		
+		Assertions.assertTrue(MIAPPEv1x1.InvestigationFile.validate(this.validInvestigation));
 	}
 
 	/**
-	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the study
+	 * Test the required fields and structures in the MIAPPE 1.1 configuration of the study
 	 * file, e.g. 'Charateristics[Organism]' is required.
 	 */
 	@Test
-	void testStudyForRequiredFields() throws IOException {
+	void testStudyFile() throws IOException {
 
-		Investigation investigation = new Investigation("Investigation");
-
-		investigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
-
-		// create simple Study //
-		Study study = new Study("myStudy");
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
-		study.comments().add(
-				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));		
+		Study study = this.validStudy;
+		this.validInvestigation.addStudy(study);
+		Protocol growing = new Protocol("Growth");
+		Protocol phenotyping = new Protocol("Phenotyping");
 		
+		// Case 1: Missing Organism and Observation Unit Type characteristics
 		// just write the study into memory without saving into a file //
 		study.setOutputStream(new ByteArrayOutputStream());
 
-		Protocol growing = new Protocol("Growing");
+		for (int i = 0; i < 5; i++) {
+			Source source = new Source("Plant " + i);
+			Sample sample = new Sample("Sample " + i);
+			Process growthProcess = new Process(growing);
+			growthProcess.setInput(source);
+			growthProcess.setOutput(sample);
+
+			study.writeLine(source);
+		}
+		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.StudyFile.validate(study),
+				"It should not be possible to write a study without Characteristics[Organism]");
+
+		study.closeFile();
+		
+		
+		// Case 2: Missing Growth or Phenotyping Protocol
+		study.setOutputStream(new ByteArrayOutputStream());
 
 		for (int i = 0; i < 5; i++) {
 			Source source = new Source("Plant " + i);
-//			source.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.ORGANISM, "barley"));
+			source.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.ORGANISM, "barley"));
 			Sample sample = new Sample("Sample " + i);
+			sample.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.OBSERVATION_UNIT_TYPE, "plant"));
 			Process growthProcess = new Process(growing);
 			growthProcess.setInput(source);
 			growthProcess.setOutput(sample);
@@ -143,57 +154,35 @@ public class MIAPPEv1x1Test {
 		}
 
 		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.StudyFile.validate(study),
-				"It should not be possible to write a study without Characteristics[Organism]");
+				"It should not be possible to write a study without Growth or Phenotyping Protocols");
 
 		study.closeFile();
-
-	}
-
-	/**
-	 * Test the "is_required" fields in the MIAPPE 1.1 configuration of the assay
-	 * file -> no specific field is required.
-	 */
-	@Test
-	void testAssayForRequiredFields() throws IOException {
-
-		Investigation investigation = new Investigation("Investigation");
-
-		investigation.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.MIAPPE_VERSION, "1.1"));
-
-		Study study = new Study("myStudy");
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_START_DATE, "01.01.2021"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_CONTACT_INSTITUTION, "IPK"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_COUNTRY, "Germany"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.STUDY_EXPERIMENTAL_SITE_NAME, "IPK"));
-		study.comments().add(
-				new Comment(MIAPPEv1x1.InvestigationFile.DESCRIPTION_OF_GROWTH_FACILITY, "Plant cultivation hall"));
-		study.comments().add(new Comment(MIAPPEv1x1.InvestigationFile.TRAIT_DEFINITION_FILE, "TDF File"));		
 		
-		// create simple Assay //
-		Assay assay = new Assay("myAssay");
-
-		// just write the assay into memory without saving into a file //
-		assay.setOutputStream(new ByteArrayOutputStream());
-
-		Protocol growing = new Protocol("Growing");
+		study.addProtocol(growing);
+		study.addProtocol(phenotyping);
+		
+		// Case 3: Valid Study but validation called without headers being written
+		Assertions.assertThrows(IllegalStateException.class, () -> MIAPPEv1x1.StudyFile.validate(study),
+				"It should not be possible to validate Study without headers");
+		
+		// Case 4: Valid Study
+		study.setOutputStream(new ByteArrayOutputStream());
 
 		for (int i = 0; i < 5; i++) {
 			Source source = new Source("Plant " + i);
+			source.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.ORGANISM, "barley"));
 			Sample sample = new Sample("Sample " + i);
+			sample.addCharacteristic(new Characteristic(MIAPPEv1x1.StudyFile.OBSERVATION_UNIT_TYPE, "plant"));
 			Process growthProcess = new Process(growing);
 			growthProcess.setInput(source);
 			growthProcess.setOutput(sample);
 
-			assay.writeLine(source);
+			study.writeLine(source);
 		}
 
-		investigation.addStudy(study);
-		
-		study.addAssay(assay);
-		
-		Assertions.assertTrue(MIAPPEv1x1.AssayFile.validate(assay));
+		Assertions.assertTrue(MIAPPEv1x1.StudyFile.validate(study));
 
-		assay.closeFile();
+		study.closeFile();
 
 	}
 
