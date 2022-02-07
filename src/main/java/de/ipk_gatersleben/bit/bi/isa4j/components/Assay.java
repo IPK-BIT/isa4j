@@ -7,6 +7,9 @@
  */
 package de.ipk_gatersleben.bit.bi.isa4j.components;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
@@ -18,6 +21,9 @@ import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
  */
 public class Assay extends WideTableFile implements Commentable {
 
+	
+	private final Logger logger = LoggerFactory.getLogger(Assay.class);
+	
 	/**
 	 * the measurement being observed in this assay
 	 */
@@ -94,6 +100,11 @@ public class Assay extends WideTableFile implements Commentable {
 	 * @param study the associated {@link Study} to set
 	 */
 	protected void setStudy(Study study) {
+		if(study != null && this.study != null) {
+			logger.warn("Attaching " + this.toString() + " to " + study.toString() + ", was previously already attached " +
+						"to " + this.study.toString(), this);
+		}
+		
 		this.study = study;
 	}
 

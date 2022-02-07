@@ -5,17 +5,12 @@
  * Contributors:
  *      Leibniz Institute of Plant Genetics and Crop Plant Research (IPK), Gatersleben, Germany
  */
-package de.ipk_gatersleben.bit.bi.isa4j.components;
+package de.ipk_gatersleben.bit.bi.isa4j.exceptions;
 
-/**
- * Interface, which allows to enrich a component with a list of
- * {@link Comment}s.
- * 
- * @author psaroudakis, arendd
- *
- */
-public interface Commentable {
-
-	public CommentCollection comments();
+public class MissingFieldException extends IllegalStateException {
+	
+	public MissingFieldException(String errorMsg) {
+		super(errorMsg);
+	}
 
 }

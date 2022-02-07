@@ -235,7 +235,7 @@ public class Investigation implements Commentable {
 	 * The title of the {@link Investigation}.
 	 */
 	private String title;
-
+	
 	/**
 	 * Constructor, every Investigation should have an identifier.
 	 *
@@ -479,7 +479,7 @@ public class Investigation implements Commentable {
 	public List<Person> getContacts() {
 		return contacts;
 	}
-
+	
 	/**
 	 * Get Description
 	 *

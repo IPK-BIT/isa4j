@@ -9,6 +9,7 @@ package de.ipk_gatersleben.bit.bi.isa4j.components;
 
 import java.util.Objects;
 
+import de.ipk_gatersleben.bit.bi.isa4j.configurations.InvestigationConfigEnum;
 import de.ipk_gatersleben.bit.bi.isa4j.util.StringUtil;
 
 /**
@@ -39,6 +40,11 @@ public class Comment {
 	 */
 	public Comment(String name, String value) {
 		this.setName(name);
+		this.value = value;
+	}
+	
+	public Comment(InvestigationConfigEnum name, String value) {
+		this.setName(name.getFieldName());
 		this.value = value;
 	}
 
