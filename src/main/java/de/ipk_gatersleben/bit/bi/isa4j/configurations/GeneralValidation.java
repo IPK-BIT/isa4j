@@ -24,7 +24,7 @@ public class GeneralValidation {
 	 * {@link Assay}
 	 * 
 	 * @param investigation the {@link Investigation} to check
-	 * @return <code>true<code> if the validation was successful
+	 * @return <code>true</code> if the validation was successful
 	 * 
 	 */
 	public static boolean validateInvestigationFile(Investigation investigation) {
@@ -42,7 +42,7 @@ public class GeneralValidation {
 	 * Test if the given {@link Study} is linked to an {@link Investigation}
 	 * 
 	 * @param study the {@link Study} to check
-	 * @return <code>true<code> if the validation was successful
+	 * @return <code>true</code> if the validation was successful
 	 */
 	public static boolean validateStudyFile(Study study) {
 		if (study.getInvestigation() == null)
@@ -54,7 +54,7 @@ public class GeneralValidation {
 	 * Test if the given {@link Assay} is linked to a {@link Study}
 	 * 
 	 * @param assay the {@link Assay} to check
-	 * @return <code>true<code> if the validation was successful
+	 * @return <code>true</code> if the validation was successful
 	 */
 	public static boolean validateAssayFile(Assay assay) {
 		if (assay.getStudy() == null)
